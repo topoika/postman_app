@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "515814555723",
+    "firebase_url": "https://new-postman-f7033.firebaseio.com",
+    "project_id": "new-postman-f7033",
+    "storage_bucket": "new-postman-f7033.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515814555723:android:82979f99060a1e8140cdce",
+        "android_client_info": {
+          "package_name": "com.it.postman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515814555723-hhjmm5gmbjm5nolne1a5b9s1oaiqeile.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.it.postman",
+            "certificate_hash": "6956fd0acb8147b92555d0963d4d2396313d09ae"
+          }
+        },
+        {
+          "client_id": "515814555723-qr7e5mhcscdq0vdq2sr5l8ji3bekl35s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.it.postman",
+            "certificate_hash": "d5ee2e376ebc156c1ee526b16710c8f6e38b1795"
+          }
+        },
+        {
+          "client_id": "515814555723-du8aiom65on1p7mn6isiibatbcjp598o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYUS6bk7vS2far68Es9yagIm767LmyN-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515814555723-du8aiom65on1p7mn6isiibatbcjp598o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "515814555723-aps1gmfbm0tni2529ihrofpd4hlfctl5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.it.postman"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
