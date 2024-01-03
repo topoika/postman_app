@@ -14,8 +14,8 @@ class Package {
   double? dimLength;
   double? dimWidth;
   double? dimHeight;
-  Address? shipmentAddress;
-  Address? destinationAddress;
+  PackageAddress? shipmentAddress;
+  PackageAddress? destinationAddress;
   String? date;
   String? createAt;
   String? updatedAt;
@@ -86,16 +86,44 @@ class Package {
       dimWidth: map['dimWidth'] != null ? map['dimWidth'] as double : null,
       dimHeight: map['dimHeight'] != null ? map['dimHeight'] as double : null,
       shipmentAddress: map['shipmentAddress'] != null
-          ? Address.fromMap(map['shipmentAddress'] as Map<String, dynamic>)
+          ? PackageAddress.fromMap(
+              map['shipmentAddress'] as Map<String, dynamic>)
           : null,
       destinationAddress: map['destinationAddress'] != null
-          ? Address.fromMap(map['destinationAddress'] as Map<String, dynamic>)
+          ? PackageAddress.fromMap(
+              map['destinationAddress'] as Map<String, dynamic>)
           : null,
       date: map['date'] != null ? map['date'] as String : null,
       createAt: map['createAt'] != null ? map['createAt'] as String : null,
       updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
       userDetails: map['userDetails'] != null
           ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+}
+
+class PackageAddress {
+  String? intersection;
+  Address? address;
+  PackageAddress({
+    this.intersection,
+    this.address,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'intersection': intersection,
+      'address': address?.toMap(),
+    };
+  }
+
+  factory PackageAddress.fromMap(Map<String, dynamic> map) {
+    return PackageAddress(
+      intersection:
+          map['intersection'] != null ? map['intersection'] as String : null,
+      address: map['address'] != null
+          ? Address.fromMap(map['address'] as Map<String, dynamic>)
           : null,
     );
   }

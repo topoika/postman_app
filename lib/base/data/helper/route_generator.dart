@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../views/pages/conversation.dart';
 import '../../views/pages/dashboard.dart';
+import '../../views/pages/input/new.package.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/rate.transaction.dart';
 import '../../views/pages/splash.dart';
@@ -41,6 +42,10 @@ class RouteGenerator {
             builder: (_) => RateTransaction(id: args as String));
       case '/TripDetailsPage':
         return MaterialPageRoute(builder: (_) => const TripDetailsPage());
+      case '/NewPackagePage':
+        return MaterialPageRoute(builder: (_) => const NewPackagePage());
+      // case '/TripDetailsPage':
+      //   return MaterialPageRoute(builder: (_) => const TripDetailsPage());
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
     }

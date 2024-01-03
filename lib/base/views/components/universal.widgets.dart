@@ -45,3 +45,38 @@ Widget userImage(context, image, File? fl) => Container(
               ),
       ),
     );
+
+// ignore: must_be_immutable
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  List<Widget>? actions;
+
+  CustomAppBar({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leadingWidth: 64,
+      leading: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Image.asset("assets/icons/back.png")),
+      ),
+      centerTitle: true,
+      elevation: 0,
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+      ),
+      actions: actions ?? [],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}

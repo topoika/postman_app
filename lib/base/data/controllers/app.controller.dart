@@ -5,12 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:place_picker/place_picker.dart';
 
+import '../../../env.dart';
 import '../helper/helper.dart';
+import '../models/address.dart';
 import '../models/user.dart' as userModel;
 
 import '../helper/constants.dart';
@@ -66,6 +70,41 @@ class AppController extends ControllerMVC {
       print('Error uploading image to Firebase Storage: $e');
       return null;
     }
+  }
+
+  Future<Address?> pickLocation() async {
+    try {
+      // LocationData currentLocation = await Location().getLocation();
+      LocationResult? result =
+          await Navigator.of(scaffoldKey.currentContext!).push(
+        MaterialPageRoute(
+          builder: (context) => PlacePicker(
+            MAP_API,
+            defaultLocation: const LatLng(56.1304, 106.3468),
+          ),
+        ),
+      );
+
+      if (result != null) {
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            result.latLng!.latitude, result.latLng!.longitude);
+
+        Placemark place = placemarks.first;
+
+        // Return the address details in the specified format
+        return Address(
+            address: place.street ?? '',
+            country: place.country ?? '',
+            state: place.administrativeArea ?? '',
+            latitude: result.latLng!.latitude,
+            longitude: result.latLng!.longitude,
+            nameAddress: result.name ?? "");
+      }
+      return null;
+    } catch (e) {
+      print('Error picking location: $e');
+    }
+    return null;
   }
 }
 

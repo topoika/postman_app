@@ -5,14 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:postman_app/base/data/helper/helper.dart';
 import 'package:postman_app/base/views/components/buttons.dart';
-import 'package:place_picker/place_picker.dart';
-import 'package:geocoding/geocoding.dart' hide Location;
-import 'package:postman_app/env.dart';
 
 import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/user.controller.dart';
 import '../../../data/helper/constants.dart';
-import '../../../data/models/address.dart';
 import '../../components/auth/universal.widgets.dart';
 import '../../components/universal.widgets.dart';
 
@@ -147,7 +143,7 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
               context,
               "Address",
               () {
-                pickLocation(context).then((value) {
+                con.pickLocation().then((value) {
                   activeUser.value.address = value;
                   setState(() {});
                 });
@@ -317,39 +313,5 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
         ),
       ),
     );
-  }
-
-  Future<Address?> pickLocation(BuildContext context) async {
-    try {
-      // LocationData currentLocation = await Location().getLocation();
-      LocationResult? result = await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PlacePicker(
-            MAP_API,
-            defaultLocation: const LatLng(56.1304, 106.3468),
-          ),
-        ),
-      );
-
-      if (result != null) {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-            result.latLng!.latitude, result.latLng!.longitude);
-
-        Placemark place = placemarks.first;
-
-        // Return the address details in the specified format
-        return Address(
-            address: place.street ?? '',
-            country: place.country ?? '',
-            state: place.administrativeArea ?? '',
-            latitude: result.latLng!.latitude,
-            longitude: result.latLng!.longitude,
-            nameAddress: result.name ?? "");
-      }
-      return null;
-    } catch (e) {
-      print('Error picking location: $e');
-    }
-    return null;
   }
 }

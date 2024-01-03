@@ -110,6 +110,7 @@ class _HomepageState extends StateMVC<Homepage> {
               GestureDetector(
                 onTap: () {
                   // TODO:Go to the add a package page
+                  Navigator.pushNamed(context, "/NewPackagePage");
                 },
                 child: Container(
                   alignment: Alignment.center,
