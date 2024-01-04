@@ -5,21 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:place_picker/place_picker.dart';
 
-import '../../../env.dart';
-import '../helper/helper.dart';
-import '../models/address.dart';
 import '../models/user.dart' as userModel;
 
 import '../helper/constants.dart';
+import 'main.controller.dart';
 
-class AppController extends ControllerMVC {
+class AppController extends MainController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -27,18 +22,13 @@ class AppController extends ControllerMVC {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   bool isloggedIn = FirebaseAuth.instance.currentUser != null;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  OverlayEntry loader = Helper.overlayLoader();
-  late GlobalKey<ScaffoldState> scaffoldKey;
 
   // COLLECTIONS STRINGS
   String userCol = "users";
   String feedsCol = "feeds";
   String carsCol = "cars";
   String commentsCol = "comments";
-  AppController() {
-    scaffoldKey = GlobalKey<ScaffoldState>();
-  }
+
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());
   }
@@ -71,41 +61,6 @@ class AppController extends ControllerMVC {
       return null;
     }
   }
-
-  Future<Address?> pickLocation() async {
-    try {
-      // LocationData currentLocation = await Location().getLocation();
-      LocationResult? result =
-          await Navigator.of(scaffoldKey.currentContext!).push(
-        MaterialPageRoute(
-          builder: (context) => PlacePicker(
-            MAP_API,
-            defaultLocation: const LatLng(56.1304, 106.3468),
-          ),
-        ),
-      );
-
-      if (result != null) {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-            result.latLng!.latitude, result.latLng!.longitude);
-
-        Placemark place = placemarks.first;
-
-        // Return the address details in the specified format
-        return Address(
-            address: place.street ?? '',
-            country: place.country ?? '',
-            state: place.administrativeArea ?? '',
-            latitude: result.latLng!.latitude,
-            longitude: result.latLng!.longitude,
-            nameAddress: result.name ?? "");
-      }
-      return null;
-    } catch (e) {
-      print('Error picking location: $e');
-    }
-    return null;
-  }
 }
 
 ValueNotifier<userModel.User> activeUser =
@@ -120,6 +75,26 @@ void loadProfilePicker(ImageSource source, context, onsaved, type) async {
       imageQuality: 100);
   cropImage(File(pickedFile!.path), context, onsaved, type);
   Navigator.pop(context);
+}
+
+Future<List<File>> loadImages(context) async {
+  List<File> files = [];
+  final pickedImages = await filePicker.pickMultiImage(imageQuality: 100);
+  for (var file in pickedImages) {
+    files.add(File(file.path));
+  }
+  Navigator.pop(context);
+  return files;
+}
+
+Future<File> takePackageImage(context) async {
+  final pickedFile = await filePicker.pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.rear,
+      imageQuality: 100);
+  Navigator.pop(context);
+
+  return File(pickedFile!.path);
 }
 
 cropImage(File picked, context, onsaved, type) async {

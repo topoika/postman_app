@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:intl/intl.dart';
 
 import 'constants.dart';
 
@@ -30,6 +31,23 @@ class Helper {
     );
     return loader;
   }
+}
+
+// DATE TIME FORMATES
+
+// date only
+String dateOnLy(dateTime) {
+  if (dateTime.toString().isEmpty) {
+    return "";
+  }
+  return DateFormat("D-MM-yyyy").format(DateTime.parse(dateTime));
+}
+
+String timeOnly(dateTime) {
+  if (dateTime.toString().isEmpty) {
+    return "";
+  }
+  return DateFormat.jm().format(DateTime.parse(dateTime));
 }
 
 void toastShow(context, String txt, String errorText) {

@@ -3,12 +3,14 @@ class Address {
   String? state;
   String? address;
   String? nameAddress;
+  String? city;
   double? latitude;
   double? longitude;
   Address({
     this.country,
     this.state,
     this.address,
+    this.city,
     this.nameAddress,
     this.latitude,
     this.longitude,
@@ -20,6 +22,7 @@ class Address {
       'state': state,
       'address': address,
       'nameAddress': nameAddress,
+      'city': city,
       'latitude': latitude,
       'longitude': longitude,
     };
@@ -29,6 +32,7 @@ class Address {
     return Address(
       country: map['country'] != null ? map['country'] as String : null,
       state: map['state'] != null ? map['state'] as String : null,
+      city: map['city'] != null ? map['city'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
       nameAddress:
           map['nameAddress'] != null ? map['nameAddress'] as String : null,

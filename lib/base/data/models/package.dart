@@ -6,6 +6,7 @@ class Package {
   String? postManId;
   String? name;
   double? value;
+  double? approximateValue;
   List<String>? image;
   bool? insurance;
   bool? packBySender;
@@ -26,6 +27,7 @@ class Package {
     this.postManId,
     this.name,
     this.value,
+    this.approximateValue,
     this.image,
     this.insurance,
     this.packBySender,
@@ -49,6 +51,7 @@ class Package {
       'postManId': postManId,
       'name': name,
       'value': value,
+      'approximateValue': approximateValue,
       'image': image,
       'insurance': insurance,
       'packBySender': packBySender,
@@ -73,6 +76,9 @@ class Package {
       postManId: map['postManId'] != null ? map['postManId'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       value: map['value'] != null ? map['value'] as double : null,
+      approximateValue: map['approximateValue'] != null
+          ? map['approximateValue'] as double
+          : null,
       image: map['image'] != null
           ? List<String>.from((map['image'] as List<String>))
           : null,
