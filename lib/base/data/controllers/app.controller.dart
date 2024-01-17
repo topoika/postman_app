@@ -25,9 +25,10 @@ class AppController extends MainController {
 
   // COLLECTIONS STRINGS
   String userCol = "users";
-  String feedsCol = "feeds";
-  String carsCol = "cars";
+  String tripsCol = "trips";
   String commentsCol = "comments";
+  String chatsColl = "chats";
+  String messagesColl = "messages";
 
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());

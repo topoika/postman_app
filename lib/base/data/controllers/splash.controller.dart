@@ -16,7 +16,7 @@ class SplashController extends AppController {
         route = "/Login";
       }
     }
-    Future.delayed(const Duration(milliseconds: 10)).then((value) =>
+    Future.delayed(const Duration(milliseconds: 1)).then((value) =>
         Navigator.pushReplacementNamed(scaffoldKey.currentContext!, route,
             arguments: 0));
   }

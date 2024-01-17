@@ -81,7 +81,7 @@ class _HomepageState extends StateMVC<Homepage> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  // TODO:Go to the add a itianary page
+                  Navigator.pushNamed(context, "/NewTripPage");
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -109,7 +109,6 @@ class _HomepageState extends StateMVC<Homepage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // TODO:Go to the add a package page
                   Navigator.pushNamed(context, "/NewPackagePage");
                 },
                 child: Container(

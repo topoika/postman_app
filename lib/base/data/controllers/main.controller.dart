@@ -50,6 +50,35 @@ class MainController extends ControllerMVC {
     return null;
   }
 
+  Future<DateTime?> pickTime(BuildContext context) async {
+    DateTime? selectedDate;
+    TimeOfDay? selectedTime;
+
+    // Show Date Picker
+    selectedDate = DateTime.now();
+
+    // Check if the user selected a date
+    // Show Time Picker
+    selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (selectedTime != null) {
+      DateTime selectedDateTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        selectedTime.hour,
+        selectedTime.minute,
+      );
+
+      return selectedDateTime;
+    }
+
+    return null;
+  }
+
   // Pick location function
   Future<Address?> pickLocation() async {
     try {

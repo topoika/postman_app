@@ -1,0 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../models/trip.dart';
+
+class TripsRepo {
+  // fetch all the trips
+  static Future<List<Trip>> fetchTrips() async {
+    try {
+      CollectionReference tripsColl =
+          FirebaseFirestore.instance.collection('trips');
+      QuerySnapshot querySnapshot = await tripsColl.get().onError(
+          (error, stackTrace) => throw Exception('Failed to load trips'));
+      // Convert documents to Trip objects
+      List<Trip> trips = querySnapshot.docs
+          .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return trips;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  // fetch all my trips
+}

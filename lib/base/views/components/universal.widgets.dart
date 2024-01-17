@@ -28,6 +28,21 @@ showLargeImage(context, img, fl) => showDialog<void>(
       },
     );
 
+
+Widget emptyWidget(context, double h, String txt) => Container(
+      alignment: Alignment.center,
+      width: getWidth(context, 100),
+      height: h,
+      child: Center(
+        child: Text(txt,
+            textScaleFactor: 1,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            )),
+      ),
+    );
 Widget userImage(context, image, File? fl) => Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
       width: double.maxFinite,

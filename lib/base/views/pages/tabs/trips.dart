@@ -1,17 +1,43 @@
+
 import 'package:flutter/material.dart';
-import 'package:postman_app/base/data/helper/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/data/bloc/events/trips.events.dart';
+import 'package:postman_app/base/data/bloc/state/trips.state.dart';
+
+import '../../../data/bloc/providers/trips.provider.dart';
+import '../../../data/controllers/trip.controller.dart';
+import '../../components/trips/trips.list.dart';
+import '../../components/universal.widgets.dart';
 
 class TripsPage extends StatefulWidget {
   const TripsPage({super.key});
 
   @override
-  State<TripsPage> createState() => _TripsPageState();
+  _TripsPageState createState() => _TripsPageState();
 }
 
-class _TripsPageState extends State<TripsPage> {
+class _TripsPageState extends StateMVC<TripsPage> {
+  late TripController con;
+  _TripsPageState() : super(TripController()) {
+    con = controller as TripController;
+  }
+  TripsBloc tripsBloc = TripsBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() {
+    tripsBloc.add(FetchAllTripsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: con.scaffoldKey,
       appBar: AppBar(
         leading: GestureDetector(
           child: const Icon(
@@ -27,7 +53,6 @@ class _TripsPageState extends State<TripsPage> {
         ),
         actions: [
           GestureDetector(
-            // onTap: () => con.logOut(),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Icon(
@@ -39,139 +64,48 @@ class _TripsPageState extends State<TripsPage> {
           )
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        children: [
-          const Text(
-            'Trips in your zone',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          init();
+          await Future.delayed(const Duration(seconds: 1));
+        },
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          children: [
+            const Text(
+              'Trips in your zone',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: 20,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () => Navigator.pushNamed(context, "/TripDetailsPage"),
-                  splashColor: Colors.transparent,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 15),
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: greyColor,
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        const Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.orangeAccent,
-                                    size: 15,
-                                  ),
-                                  Text(
-                                    'Starting city',
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'New York',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: greenColor),
-                              ),
-                              Text(
-                                'Jan 29, 13:09',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
-                              )
-                            ],
-                          ),
-                        ),
-                        const Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.blue,
-                                    size: 15,
-                                  ),
-                                  Text(
-                                    'Desination city',
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'Toronto',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: greenColor),
-                              ),
-                              Text(
-                                'Jan 29, 13:09',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                'Airplane',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor),
-                              ),
-                              Image.asset("assets/icons/airplane.png",
-                                  height: 30)
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-        ],
+            const SizedBox(height: 8),
+            BlocConsumer<TripsBloc, TripsState>(
+              bloc: tripsBloc,
+              listener: (context, state) {},
+              builder: (context, state) {
+                switch (state.runtimeType) {
+                  case TripsLoadingState:
+                    return const Center(child: CircularProgressIndicator());
+                  case TripsErrorState:
+                    final error = state as TripsErrorState;
+                    return emptyWidget(context, 95, error.message);
+                  case TripsLoadedState:
+                    final suc = state as TripsLoadedState;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15)
+                          .copyWith(left: 11),
+                      child: suc.trips.isEmpty
+                          ? emptyWidget(context, 95, "No Trips Found")
+                          : tripsItems(context, suc.trips),
+                    );
+                  default:
+                    return const SizedBox();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

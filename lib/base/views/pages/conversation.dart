@@ -1,15 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/data/controllers/app.controller.dart';
 
 import '../../data/controllers/chats.controller.dart';
 import '../../data/helper/constants.dart';
+import '../../data/models/conversation.dart';
 import '../../data/models/message.dart';
 import '../../data/models/user.dart';
 import '../components/chats/universal.widget.dart';
 
 class ConversationPage extends StatefulWidget {
-  final User user;
-  const ConversationPage({super.key, required this.user});
+  User user;
+  ConversationPage({super.key, required this.user});
 
   @override
   _ConversationPageState createState() => _ConversationPageState();
@@ -22,10 +25,28 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
   }
   TextEditingController message = TextEditingController();
   int text = 0;
+
+  Conversation conversation = Conversation();
+
+  @override
+  void initState() {
+    super.initState();
+    setUser();
+  }
+
+  Future<void> setUser() async {
+    await con
+        .getOtherUser()
+        .then((value) => setState(() => widget.user = value));
+    await con
+        .getConversation('pvcXVfCdjqfKcEBdzJoHPmrLJhG2')
+        .then((value) => setState(() => conversation = value));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: con.formKey,
+      key: con.scaffoldKey,
       appBar: AppBar(
         leadingWidth: 64,
         leading: GestureDetector(
@@ -50,7 +71,6 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
         ),
         actions: [
           GestureDetector(
-            // onTap: () => con.logOut(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Image.asset("assets/icons/phone.png", height: 18),
@@ -61,17 +81,40 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              shrinkWrap: true,
-              reverse: true,
-              physics: const ScrollPhysics(),
-              itemBuilder: (context, index) {
-                bool byMe = index.isOdd;
-                return conversationItem(context, byMe, Message(), index: index);
-              },
-            ),
+            child: conversation.id == null
+                ? const SizedBox()
+                : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: con.getMessageStream(conversation.id!),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      List<Message> messages = snapshot.data?.docs.map(
+                              (QueryDocumentSnapshot<Map<String, dynamic>>
+                                  doc) {
+                            return Message.fromMap(doc.data());
+                          }).toList() ??
+                          [];
+
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        shrinkWrap: true,
+                        reverse: true,
+                        physics: const ScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final message = messages[index];
+                          bool byMe = message.sendBy == activeUser.value.id!;
+                          return conversationItem(context, byMe, message,
+                              index: index);
+                        },
+                      );
+                    },
+                  ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -89,8 +132,6 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                           child: Form(
                             child: TextFormField(
                               controller: message,
-                              autovalidateMode: AutovalidateMode.always,
-                              autocorrect: false,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black,
@@ -126,17 +167,42 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 15),
-                  padding: const EdgeInsets.all(9),
-                  decoration: const BoxDecoration(
-                    color: greenColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    text > 0 ? Icons.send : Icons.mic_rounded,
-                    color: Colors.white,
-                    size: 28,
+                GestureDetector(
+                  onTap: () {
+                    if (conversation.id != null) {
+                      con.addMessage(
+                          conversation,
+                          Message(
+                              text: message.text,
+                              createAt: DateTime.now().toString(),
+                              sendBy: activeUser.value.id,
+                              readBy: [activeUser.value.id!]));
+                    } else {
+                      con
+                          .addMessageToNewChat(
+                              widget.user,
+                              Message(
+                                  text: message.text,
+                                  createAt: DateTime.now().toString(),
+                                  sendBy: activeUser.value.id,
+                                  readBy: [activeUser.value.id!]))
+                          .then(
+                              (value) => setState(() => conversation = value));
+                    }
+                    message.clear();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.all(9),
+                    decoration: const BoxDecoration(
+                      color: greenColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      text > 0 ? Icons.send : Icons.mic_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                 ),
               ],
