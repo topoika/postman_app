@@ -317,6 +317,13 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                           context, "Select package address to contiue", 'err');
                     } else if (con.package.date == null) {
                       toastShow(context, "Select date to continue", 'err');
+                    } else {
+                      toastShow(context, "Success on this", 'suc');
+                      con.package.insurance = insurance;
+                      con.package.packBySender = packBySender;
+                      con.package.weight = weight;
+                      Navigator.pushNamed(context, "/ReceiverDetailsPage",
+                          arguments: [con.package, packageImage]);
                     }
                   } else {
                     con.error != null

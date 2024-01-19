@@ -29,6 +29,7 @@ class AppController extends MainController {
   String commentsCol = "comments";
   String chatsColl = "chats";
   String messagesColl = "messages";
+  String packageColl = "packages";
 
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());
@@ -57,6 +58,25 @@ class AppController extends MainController {
       await storageReference.putFile(file);
       final String downloadURL = await storageReference.getDownloadURL();
       return downloadURL;
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+      return null;
+    }
+  }
+
+  Future<List<String>?> uploadImagesToFirebase(
+      List<File> files, String path) async {
+    List<String> results = [];
+    try {
+      for (var file in files) {
+        final Reference storageReference = storage
+            .ref()
+            .child('images/$path/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        await storageReference.putFile(file);
+        final String downloadURL = await storageReference.getDownloadURL();
+        results.add(downloadURL);
+      }
+      return results;
     } catch (e) {
       print('Error uploading image to Firebase Storage: $e');
       return null;

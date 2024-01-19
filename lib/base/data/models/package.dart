@@ -7,7 +7,7 @@ class Package {
   String? name;
   double? value;
   double? approximateValue;
-  List<String>? image;
+  List<String>? images;
   bool? insurance;
   bool? packBySender;
   String? description;
@@ -28,7 +28,7 @@ class Package {
     this.name,
     this.value,
     this.approximateValue,
-    this.image,
+    this.images,
     this.insurance,
     this.packBySender,
     this.description,
@@ -52,7 +52,7 @@ class Package {
       'name': name,
       'value': value,
       'approximateValue': approximateValue,
-      'image': image,
+      'images': images,
       'insurance': insurance,
       'packBySender': packBySender,
       'description': description,
@@ -79,8 +79,8 @@ class Package {
       approximateValue: map['approximateValue'] != null
           ? map['approximateValue'] as double
           : null,
-      image: map['image'] != null
-          ? List<String>.from((map['image'] as List<String>))
+      images: map['images'] != null
+          ? List<String>.from((map['images'] as List<dynamic>))
           : null,
       insurance: map['insurance'] != null ? map['insurance'] as bool : null,
       packBySender:

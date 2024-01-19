@@ -4,6 +4,7 @@ import '../../views/pages/conversation.dart';
 import '../../views/pages/dashboard.dart';
 import '../../views/pages/input/new.package.dart';
 import '../../views/pages/input/new.trip.dart';
+import '../../views/pages/input/reciever.details.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/rate.transaction.dart';
 import '../../views/pages/splash.dart';
@@ -45,6 +46,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const TripDetailsPage());
       case '/NewPackagePage':
         return MaterialPageRoute(builder: (_) => const NewPackagePage());
+      case '/ReceiverDetailsPage':
+        return MaterialPageRoute(
+            builder: (_) => ReceiverDetailsPage(data: args));
       case '/NewTripPage':
         return MaterialPageRoute(builder: (_) => const NewTripPage());
       default:
