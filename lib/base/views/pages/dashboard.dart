@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/controllers/app.controller.dart';
 import '../../data/helper/constants.dart';
+import '../components/home/drawer.widget.dart';
 import 'tabs/chats.dart';
 import 'tabs/home.dart';
 import 'tabs/profile.dart';
@@ -30,6 +31,7 @@ class _DashboardState extends State<Dashboard> {
         return true;
       },
       child: Scaffold(
+        drawer: const DrawerWidget(),
         body: _buildBody(),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,

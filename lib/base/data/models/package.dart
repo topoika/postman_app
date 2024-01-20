@@ -3,7 +3,6 @@ import 'address.dart';
 class Package {
   String? id;
   String? senderId;
-  String? postManId;
   String? name;
   double? value;
   double? approximateValue;
@@ -21,10 +20,10 @@ class Package {
   String? createAt;
   String? updatedAt;
   UserDetails? userDetails;
+  bool? ordered;
   Package({
     this.id,
     this.senderId,
-    this.postManId,
     this.name,
     this.value,
     this.approximateValue,
@@ -36,19 +35,17 @@ class Package {
     this.dimLength,
     this.dimWidth,
     this.dimHeight,
-    this.shipmentAddress,
-    this.destinationAddress,
     this.date,
     this.createAt,
     this.updatedAt,
     this.userDetails,
+    this.ordered,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
       'senderId': senderId,
-      'postManId': postManId,
       'name': name,
       'value': value,
       'approximateValue': approximateValue,
@@ -60,11 +57,10 @@ class Package {
       'dimLength': dimLength,
       'dimWidth': dimWidth,
       'dimHeight': dimHeight,
-      'shipmentAddress': shipmentAddress?.toMap(),
-      'destinationAddress': destinationAddress?.toMap(),
       'date': date,
       'createAt': createAt,
       'updatedAt': updatedAt,
+      'ordered': ordered ?? false,
       'userDetails': userDetails?.toMap(),
     };
   }
@@ -73,7 +69,6 @@ class Package {
     return Package(
       id: map['id'] != null ? map['id'] as String : null,
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
-      postManId: map['postManId'] != null ? map['postManId'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       value: map['value'] != null ? map['value'] as double : null,
       approximateValue: map['approximateValue'] != null
@@ -91,17 +86,10 @@ class Package {
       dimLength: map['dimLength'] != null ? map['dimLength'] as double : null,
       dimWidth: map['dimWidth'] != null ? map['dimWidth'] as double : null,
       dimHeight: map['dimHeight'] != null ? map['dimHeight'] as double : null,
-      shipmentAddress: map['shipmentAddress'] != null
-          ? PackageAddress.fromMap(
-              map['shipmentAddress'] as Map<String, dynamic>)
-          : null,
-      destinationAddress: map['destinationAddress'] != null
-          ? PackageAddress.fromMap(
-              map['destinationAddress'] as Map<String, dynamic>)
-          : null,
       date: map['date'] != null ? map['date'] as String : null,
       createAt: map['createAt'] != null ? map['createAt'] as String : null,
       updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
+      ordered: map['ordered'] != null ? map['ordered'] as bool : null,
       userDetails: map['userDetails'] != null
           ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
           : null,

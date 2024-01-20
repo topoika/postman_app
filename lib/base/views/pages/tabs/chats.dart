@@ -24,6 +24,7 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
       key: con.scaffoldKey,
       appBar: AppBar(
         leading: GestureDetector(
+          onTap: () => con.openDrawer(),
           child: const Icon(
             Icons.sort,
             size: 32,
@@ -37,7 +38,6 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
         ),
         actions: [
           GestureDetector(
-            // onTap: () => con.logOut(),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Icon(

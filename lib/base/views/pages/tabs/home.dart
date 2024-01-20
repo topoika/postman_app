@@ -31,6 +31,7 @@ class _HomepageState extends StateMVC<Homepage> {
       key: con.scaffoldKey,
       appBar: AppBar(
         leading: GestureDetector(
+          onTap: () => con.openDrawer(),
           child: const Icon(
             Icons.sort,
             size: 32,

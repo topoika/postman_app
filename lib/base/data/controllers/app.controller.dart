@@ -31,6 +31,7 @@ class AppController extends MainController {
   String messagesColl = "messages";
   String packageColl = "packages";
 
+  void openDrawer() => Scaffold.of(scaffoldKey.currentContext!).openDrawer();
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());
   }

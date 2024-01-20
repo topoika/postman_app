@@ -27,9 +27,11 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
       appBar: AppBar(
         leadingWidth: 70,
         leading: GestureDetector(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Image.asset("assets/icons/back.png")),
+          onTap: () => con.openDrawer(),
+          child: const Icon(
+            Icons.sort,
+            size: 32,
+          ),
         ),
         centerTitle: true,
         elevation: 0,

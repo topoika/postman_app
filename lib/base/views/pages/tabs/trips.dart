@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -40,6 +39,7 @@ class _TripsPageState extends StateMVC<TripsPage> {
       key: con.scaffoldKey,
       appBar: AppBar(
         leading: GestureDetector(
+          onTap: () => con.openDrawer(),
           child: const Icon(
             Icons.sort,
             size: 32,
