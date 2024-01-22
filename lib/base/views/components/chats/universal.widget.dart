@@ -157,17 +157,18 @@ Widget chatTileItem(context, Conversation conversation, index) {
                       ),
                     ),
                     // const SizedBox(height: 5),
-                    Text(
-                      conversation.lastMessage!.text ?? "",
-                      textScaleFactor: 1,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                          color: [0, 1, 2].contains(index)
-                              ? Colors.black
-                              : Colors.grey),
+                    Visibility(
+                      visible: conversation.lastMessage != null,
+                      child: Text(conversation.lastMessage!.text ?? "",
+                          textScaleFactor: 1,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: [0, 1, 2].contains(index)
+                                  ? Colors.black
+                                  : Colors.grey)),
                     ),
                   ],
                 ),

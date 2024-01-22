@@ -4,3 +4,5 @@ import 'package:flutter/material.dart';
 abstract class TripsEvent {}
 
 class FetchAllTripsEvent extends TripsEvent {}
+
+class FetchRouteTripsEvent extends TripsEvent {}

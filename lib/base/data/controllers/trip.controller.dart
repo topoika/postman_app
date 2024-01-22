@@ -19,6 +19,9 @@ class TripController extends AppController {
     if (ticket != null) {
       trip.ticketUrl = await uploadImageToFirebase(ticket, "trips/images");
     }
+    trip.traveller = activeUser.value;
+    trip.travellersId = activeUser.value.id;
+    trip.travelledAt = trip.departureDetails!.date;
     try {
       await db.collection(tripsCol).add(trip.toMap()).then((value) async {
         await value.update({"id": value.id});
@@ -35,6 +38,15 @@ class TripController extends AppController {
       log(e.toString());
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');
+    }
+  }
+
+  Future<Trip> getOneTrip(String id) async {
+    try {
+      final doc = await db.collection(tripsCol).doc(id).get();
+      return Trip.fromMap(doc.data() as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
     }
   }
 }

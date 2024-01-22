@@ -88,8 +88,8 @@ class _DrawerWidgetState extends StateMVC<DrawerWidget> {
                   ),
                   const SizedBox(height: 10),
                   menuItem(Icons.airplane_ticket_sharp, "My Trips", () {}),
-                  menuItem(
-                      Icons.breakfast_dining_rounded, "My Shipments", () {}),
+                  menuItem(Icons.breakfast_dining_rounded, "My Packages",
+                      () => Navigator.pushNamed(context, "/MyPackagesPage")),
                   menuItem(
                       Icons.notifications_active,
                       "Available Orders",

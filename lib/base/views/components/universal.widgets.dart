@@ -28,7 +28,6 @@ showLargeImage(context, img, fl) => showDialog<void>(
       },
     );
 
-
 Widget emptyWidget(context, double h, String txt) => Container(
       alignment: Alignment.center,
       width: getWidth(context, 100),
@@ -86,8 +85,51 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: Text(
         title,
+        textScaleFactor: 1,
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
       ),
+      actions: actions ?? [],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+// black app bar
+class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Widget title;
+  List<Widget>? actions;
+
+  BlackAppBar({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leadingWidth: 68,
+      backgroundColor: scafoldBlack,
+      leading: GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: .4, color: Colors.grey)),
+          child: const Icon(
+            Icons.arrow_back_ios_outlined,
+            color: Colors.white,
+            size: 16,
+          ),
+        ),
+      ),
+      centerTitle: true,
+      elevation: 0,
+      title: title,
       actions: actions ?? [],
     );
   }

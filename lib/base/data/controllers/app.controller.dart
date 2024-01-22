@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:postman_app/base/data/models/package.dart';
 
 import '../models/user.dart' as userModel;
 
@@ -87,6 +88,7 @@ class AppController extends MainController {
 
 ValueNotifier<userModel.User> activeUser =
     ValueNotifier<userModel.User>(userModel.User());
+ValueNotifier<Package> activePackage = ValueNotifier<Package>(Package());
 
 final filePicker = ImagePicker();
 

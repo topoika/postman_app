@@ -9,6 +9,7 @@ import '../../data/models/conversation.dart';
 import '../../data/models/message.dart';
 import '../../data/models/user.dart';
 import '../components/chats/universal.widget.dart';
+import '../components/universal.widgets.dart';
 
 class ConversationPage extends StatefulWidget {
   User user;
@@ -36,10 +37,7 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
 
   Future<void> setUser() async {
     await con
-        .getOtherUser()
-        .then((value) => setState(() => widget.user = value));
-    await con
-        .getConversation('pvcXVfCdjqfKcEBdzJoHPmrLJhG2')
+        .getConversation(widget.user.id!)
         .then((value) => setState(() => conversation = value));
   }
 
@@ -47,24 +45,20 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: AppBar(
-        leadingWidth: 64,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Image.asset("assets/icons/back.png")),
-        ),
-        centerTitle: true,
-        elevation: 0,
+      appBar: BlackAppBar(
         title: Column(
           children: [
             Text(
               widget.user.username ?? "",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              textScaleFactor: 1,
+              style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700),
             ),
             const Text(
               "Online",
+              textScaleFactor: 1,
               style: TextStyle(fontSize: 13, color: greenColor),
             ),
           ],
@@ -73,51 +67,63 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
           GestureDetector(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Image.asset("assets/icons/phone.png", height: 18),
+              child: Image.asset("assets/icons/phone.png",
+                  height: 18, color: Colors.white),
             ),
           )
         ],
       ),
+      backgroundColor: scafoldBlack,
       body: Column(
         children: [
           Expanded(
             child: conversation.id == null
                 ? const SizedBox()
-                : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                    stream: con.getMessageStream(conversation.id!),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                            snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
+                : Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: con.getMessageStream(conversation.id!),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
 
-                      List<Message> messages = snapshot.data?.docs.map(
-                              (QueryDocumentSnapshot<Map<String, dynamic>>
-                                  doc) {
-                            return Message.fromMap(doc.data());
-                          }).toList() ??
-                          [];
+                        List<Message> messages = snapshot.data?.docs.map(
+                                (QueryDocumentSnapshot<Map<String, dynamic>>
+                                    doc) {
+                              return Message.fromMap(doc.data());
+                            }).toList() ??
+                            [];
 
-                      return ListView.builder(
-                        itemCount: messages.length,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
-                        shrinkWrap: true,
-                        reverse: true,
-                        physics: const ScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final message = messages[index];
-                          bool byMe = message.sendBy == activeUser.value.id!;
-                          return conversationItem(context, byMe, message,
-                              index: index);
-                        },
-                      );
-                    },
+                        return ListView.builder(
+                          itemCount: messages.length,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          shrinkWrap: true,
+                          reverse: true,
+                          physics: const ScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final message = messages[index];
+                            bool byMe = message.sendBy == activeUser.value.id!;
+                            return conversationItem(context, byMe, message,
+                                index: index);
+                          },
+                        );
+                      },
+                    ),
                   ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             child: Row(
               children: <Widget>[
                 Expanded(

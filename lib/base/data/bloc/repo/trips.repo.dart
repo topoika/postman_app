@@ -20,5 +20,26 @@ class TripsRepo {
       throw Exception(e);
     }
   }
+
+  // fetch all the route trips
+  static Future<List<Trip>> fetchRouteTrips() async {
+    try {
+      CollectionReference tripsColl =
+          FirebaseFirestore.instance.collection('trips');
+      QuerySnapshot querySnapshot = await tripsColl
+          .where("travelledAt", isGreaterThan: DateTime.now().toString())
+          .get()
+          .onError(
+              (error, stackTrace) => throw Exception('Failed to load trips'));
+      // Convert documents to Trip objects
+      List<Trip> trips = querySnapshot.docs
+          .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return trips;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
   // fetch all my trips
 }

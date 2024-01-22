@@ -12,11 +12,13 @@ Widget statsItem(context, txt, stat) {
       children: <Widget>[
         Text(
           txt,
+          textScaleFactor: 1,
           style: const TextStyle(fontSize: 13, color: greenColor),
         ),
         const SizedBox(height: 5),
         Text(
           stat,
+          textScaleFactor: 1,
           style: const TextStyle(
               fontSize: 22, color: Colors.black, fontWeight: FontWeight.w800),
         )

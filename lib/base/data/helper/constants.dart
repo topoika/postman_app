@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const Color btnColor = Color(0xFFCCFFE4);
 const Color greenColor = Color(0xFF009B47);
 const Color blackColor = Color(0xFF010101);
+const Color scafoldBlack = Color(0xFF2A2B2F);
 // const Color greenColor = Color(0xFF009B47);
 const Color navItems = Color(0xFFA1BDAE);
 const Color greyColor = Color(0xFFF0F0F5);

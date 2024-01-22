@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../../data/bloc/events/packages.events.dart';
 import '../../data/bloc/providers/package.provider.dart';
@@ -7,14 +8,14 @@ import '../../data/bloc/state/packages.state.dart';
 import '../components/packages/packages.list.dart';
 import '../components/universal.widgets.dart';
 
-class AvailableOrdersPage extends StatefulWidget {
-  const AvailableOrdersPage({super.key});
+class MyPackagesPage extends StatefulWidget {
+  const MyPackagesPage({super.key});
 
   @override
-  State<AvailableOrdersPage> createState() => _AvailableOrdersPageState();
+  _MyPackagesPageState createState() => _MyPackagesPageState();
 }
 
-class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
+class _MyPackagesPageState extends StateMVC<MyPackagesPage> {
   PackagesBloc packagesBloc = PackagesBloc();
 
   @override
@@ -24,13 +25,13 @@ class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
   }
 
   void init() {
-    packagesBloc.add(FetchAllPackagesEvent());
+    packagesBloc.add(FetchMyPackagesEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Available Orders"),
+      appBar: CustomAppBar(title: "My Packages"),
       body: RefreshIndicator(
         onRefresh: () async {
           init();
@@ -39,15 +40,6 @@ class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           children: [
-            const Text(
-              'Packages in your zone',
-              textScaleFactor: 1,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 8),
             BlocConsumer<PackagesBloc, PackagesState>(
               bloc: packagesBloc,
               listener: (context, state) {},
@@ -64,8 +56,9 @@ class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
                       margin: const EdgeInsets.symmetric(horizontal: 15)
                           .copyWith(left: 11),
                       child: suc.packages.isEmpty
-                          ? emptyWidget(context, 95, "No Packages Found")
-                          : packagesItems(context, suc.packages),
+                          ? emptyWidget(context, 95,
+                              "You don't have packages at the moment")
+                          : packagesItems(context, suc.packages, mine: true),
                     );
                   default:
                     return const SizedBox();

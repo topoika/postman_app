@@ -39,7 +39,7 @@ class ChatsController extends AppController {
   Stream<QuerySnapshot<Map<String, dynamic>>> getConversations() {
     return db
         .collection(chatsColl)
-        .where('participants',arrayContains: activeUser.value.id)
+        .where('participants', arrayContains: activeUser.value.id)
         .orderBy("updatedAt", descending: true)
         .snapshots();
   }
@@ -75,6 +75,7 @@ class ChatsController extends AppController {
       Conversation conversation0 = Conversation(
         participants: [activeUser.value.id!, user.id!],
         involved: [activeUser.value, user],
+        package: activePackage.value,
         createAt: DateTime.now().toString(),
         updatedAt: DateTime.now().toString(),
         unreadMessages: getUnreadMessages(
@@ -142,9 +143,9 @@ class ChatsController extends AppController {
     return result;
   }
 
-  Future<User> getOtherUser() async => await db
+  Future<User> getOtherUser(String id) async => await db
       .collection(userCol)
-      .doc("pvcXVfCdjqfKcEBdzJoHPmrLJhG2")
+      .doc(id)
       .get()
       .then((value) => User.fromMap(value.data() as Map<String, dynamic>));
 }

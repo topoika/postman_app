@@ -21,12 +21,22 @@ class Package {
   String? updatedAt;
   UserDetails? userDetails;
   bool? ordered;
+
+  // Extras
+
+  String? city;
+  String? intersection;
+  String? toCity;
+  String? toIntersection;
+
   Package({
     this.id,
     this.senderId,
     this.name,
     this.value,
     this.approximateValue,
+    this.shipmentAddress,
+    this.destinationAddress,
     this.images,
     this.insurance,
     this.packBySender,
@@ -40,6 +50,10 @@ class Package {
     this.updatedAt,
     this.userDetails,
     this.ordered,
+    this.city,
+    this.intersection,
+    this.toCity,
+    this.toIntersection,
   });
 
   Map<String, dynamic> toMap() {
@@ -62,7 +76,38 @@ class Package {
       'updatedAt': updatedAt,
       'ordered': ordered ?? false,
       'userDetails': userDetails?.toMap(),
+      'destinationAddress': destinationAddress?.toMap(),
+      'shipmentAddress': shipmentAddress?.toMap(),
     };
+  }
+
+  Map<String, dynamic> toMessageMap() {
+    return <String, dynamic>{
+      'id': id,
+      'image': images,
+      'city': city,
+      'intersection': intersection,
+      'value': value,
+      'toCity': toCity,
+      'toIntersection': toIntersection,
+    };
+  }
+
+  factory Package.fromMessageMap(Map<String, dynamic> map) {
+    return Package(
+      id: map['id'] != null ? map['id'] as String : null,
+      value: map['value'] != null ? map['value'] as double : null,
+      intersection:
+          map['intersection'] != null ? map['intersection'] as String : null,
+      city: map['city'] != null ? map['city'] as String : null,
+      toCity: map['toCity'] != null ? map['toCity'] as String : null,
+      toIntersection: map['toIntersection'] != null
+          ? map['toIntersection'] as String
+          : null,
+      images: map['images'] != null
+          ? List<String>.from((map['images'] as List<dynamic>))
+          : null,
+    );
   }
 
   factory Package.fromMap(Map<String, dynamic> map) {
@@ -92,6 +137,14 @@ class Package {
       ordered: map['ordered'] != null ? map['ordered'] as bool : null,
       userDetails: map['userDetails'] != null
           ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
+          : null,
+      shipmentAddress: map['shipmentAddress'] != null
+          ? PackageAddress.fromMap(
+              map['shipmentAddress'] as Map<String, dynamic>)
+          : null,
+      destinationAddress: map['destinationAddress'] != null
+          ? PackageAddress.fromMap(
+              map['destinationAddress'] as Map<String, dynamic>)
           : null,
     );
   }

@@ -44,6 +44,7 @@ class _HomepageState extends StateMVC<Homepage> {
           children: <Widget>[
             const Text(
               "👋 Welcome!",
+              textScaleFactor: 1,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
             ),
             Text(
@@ -174,6 +175,7 @@ class _HomepageState extends StateMVC<Homepage> {
                               color: Colors.black),
                           child: const Text(
                             "Learn more",
+                            textScaleFactor: 1,
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
                         ),
@@ -258,6 +260,7 @@ class _HomepageState extends StateMVC<Homepage> {
                     textAlign: TextAlign.left),
                 const SizedBox(height: 10),
                 const Text(
+                    textScaleFactor: 1,
                     "Let your friend know what's up,  invite them to join this growing community of people helping each other  and making money while having fun!",
                     style: TextStyle()),
                 Container(
@@ -269,6 +272,7 @@ class _HomepageState extends StateMVC<Homepage> {
                       color: Colors.black),
                   child: const Text(
                     "Invite now",
+                    textScaleFactor: 1,
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 )

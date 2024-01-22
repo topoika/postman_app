@@ -1,4 +1,5 @@
 import 'message.dart';
+import 'package.dart';
 import 'user.dart';
 
 class Conversation {
@@ -9,6 +10,7 @@ class Conversation {
   String? createAt;
   String? updatedAt;
   dynamic unreadMessages;
+  Package? package;
   Conversation({
     this.id,
     this.lastMessage,
@@ -17,6 +19,7 @@ class Conversation {
     this.createAt,
     this.updatedAt,
     this.unreadMessages,
+    this.package,
   });
 
   Map<String, dynamic> toMap() {
@@ -27,6 +30,7 @@ class Conversation {
       'involved': involved!.map((x) => x.toMap()).toList(),
       'createAt': createAt,
       'updatedAt': updatedAt,
+      'package': package!.toMessageMap(),
       'unreadMessages': unreadMessages as Map,
     };
   }
@@ -36,6 +40,9 @@ class Conversation {
       id: map['id'] != null ? map['id'] as String : null,
       lastMessage: map['lastMessage'] != null
           ? Message.fromMap(map['lastMessage'] as Map<String, dynamic>)
+          : null,
+      package: map['package'] != null
+          ? Package.fromMessageMap(map['package'] as Map<String, dynamic>)
           : null,
       participants: map['participants'] != null
           ? List<String>.from((map['participants'] as List<dynamic>))

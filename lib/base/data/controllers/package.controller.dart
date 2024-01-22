@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../views/components/auth/success.dialog.dart';
@@ -34,6 +35,15 @@ class PackageController extends AppController {
       log(e.toString());
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');
+    }
+  }
+
+  Future<Package> getOnePackage(String id) async {
+    try {
+      DocumentSnapshot doc = await db.collection(packageColl).doc(id).get();
+      return Package.fromMap(doc.data() as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
     }
   }
 }

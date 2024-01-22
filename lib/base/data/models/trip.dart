@@ -1,5 +1,6 @@
 import 'address.dart';
 import 'travel.method.dart';
+import 'user.dart';
 
 class Trip {
   String? id;
@@ -14,6 +15,14 @@ class Trip {
   String? ticketUrl;
   TravelMethod? travelMethod;
   double? postageFee;
+  User? traveller;
+  String? travellersId;
+  String? travelledAt;
+
+  // Extras
+
+  String? city;
+  String? time;
   Trip({
     this.id,
     this.travellerIs,
@@ -27,6 +36,13 @@ class Trip {
     this.planDetails,
     this.travelMethod,
     this.postageFee,
+    this.traveller,
+    this.travellersId,
+    this.travelledAt,
+
+    // Extras
+    this.city,
+    this.time,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,12 +54,35 @@ class Trip {
       'destinationDetails': destinationDetails?.toMap(),
       'trainDetails': trainDetails?.toMap(),
       'planDetails': planDetails?.toMap(),
+      'traveller': traveller?.toMap(),
       'packagePrefernces': packagePrefernces,
       'guideToMeet': guideToMeet,
       'ticketUrl': ticketUrl,
       'travelMethod': travelMethod?.id,
       'postageFee': postageFee,
+      'travellersId': travellersId,
+      'travelledAt': travelledAt,
     };
+  }
+
+  Map<String, dynamic> toMessageMap() {
+    return <String, dynamic>{
+      'id': id,
+      'city': departureDetails!.address!.city,
+      'time': departureDetails!.time,
+      'travelMethod': travelMethod?.id,
+    };
+  }
+
+  factory Trip.fromMessageMap(Map<String, dynamic> map) {
+    return Trip(
+      id: map['id'] != null ? map['id'] as String : null,
+      city: map['city'] != null ? map['city'] as String : null,
+      time: map['time'] != null ? map['time'] as String : null,
+      travelMethod: map['travelMethod'] != null
+          ? travelMethods.firstWhere((i) => i.id == map['travelMethod'])
+          : null,
+    );
   }
 
   factory Trip.fromMap(Map<String, dynamic> map) {
@@ -69,6 +108,9 @@ class Trip {
       planDetails: map['planDetails'] != null
           ? PlaneDetails.fromMap(map['planDetails'] as Map<String, dynamic>)
           : null,
+      traveller: map['traveller'] != null
+          ? User.fromMap(map['traveller'] as Map<String, dynamic>)
+          : null,
       packagePrefernces: map['packagePrefernces'] != null
           ? map['packagePrefernces'] as String
           : null,
@@ -80,6 +122,10 @@ class Trip {
           : null,
       postageFee:
           map['postageFee'] != null ? map['postageFee'] as double : null,
+      travellersId:
+          map['travellersId'] != null ? map['travellersId'] as String : null,
+      travelledAt:
+          map['travelledAt'] != null ? map['travelledAt'] as String : null,
     );
   }
 }
