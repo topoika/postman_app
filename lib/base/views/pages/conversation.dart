@@ -11,6 +11,7 @@ import '../../data/models/user.dart';
 import '../components/chats/universal.widget.dart';
 import '../components/universal.widgets.dart';
 
+// ignore: must_be_immutable
 class ConversationPage extends StatefulWidget {
   User user;
   ConversationPage({super.key, required this.user});

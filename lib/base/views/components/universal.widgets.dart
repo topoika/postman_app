@@ -97,6 +97,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 // black app bar
+// ignore: must_be_immutable
 class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
   List<Widget>? actions;

@@ -28,30 +28,25 @@ class _HomepageState extends StateMVC<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: scafoldBlack,
       key: con.scaffoldKey,
       appBar: AppBar(
+        backgroundColor: scafoldBlack,
         leading: GestureDetector(
           onTap: () => con.openDrawer(),
           child: const Icon(
             Icons.sort,
             size: 32,
+            color: Colors.white,
           ),
         ),
         centerTitle: false,
         elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              "👋 Welcome!",
-              textScaleFactor: 1,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-            ),
-            Text(
-              activeUser.value.username ?? "",
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-            ),
-          ],
+        title: Text(
+          "👋 Welcome! ${activeUser.value.username}",
+          textScaleFactor: 1,
+          style: const TextStyle(
+              fontSize: 17, color: Colors.white, fontWeight: FontWeight.w700),
         ),
         actions: [
           GestureDetector(
@@ -61,7 +56,7 @@ class _HomepageState extends StateMVC<Homepage> {
               child: Icon(
                 Icons.notifications,
                 size: 26,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           )

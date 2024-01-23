@@ -10,7 +10,7 @@ import '../../../data/models/user.dart';
 import '../universal.widgets.dart';
 
 Widget conversationItem(context, byMe, Message message, {index}) {
-  bool read = message.readBy!.isEmpty;
+  bool read = message.readBy!.contains(message.sendBy);
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: Column(
@@ -104,7 +104,8 @@ Widget chatTileItem(context, Conversation conversation, index) {
   return InkWell(
     splashColor: primaryColor.withOpacity(.4),
     onTap: () => Navigator.pushNamed(context, "/ConversationPage",
-        arguments: activeUser.value),
+        arguments: conversation.involved!
+            .firstWhere((i) => i.id != activeUser.value.id)),
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 5).copyWith(top: 5),
       child: Column(

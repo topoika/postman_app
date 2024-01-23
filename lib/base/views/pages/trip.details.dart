@@ -296,16 +296,19 @@ Widget detailsItem(txt, desc) {
           style: const TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.w400,
-            fontSize: 12.5,
+            fontSize: 12,
           ),
         ),
-        Text(
-          desc,
-          textScaleFactor: 1,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
+        Flexible(
+          child: Text(
+            desc,
+            textAlign: TextAlign.end,
+            textScaleFactor: 1,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
           ),
         ),
       ],
