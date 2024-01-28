@@ -57,14 +57,14 @@ class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
                     return const Center(child: CircularProgressIndicator());
                   case PackagesErrorState:
                     final error = state as PackagesErrorState;
-                    return emptyWidget(context, 95, error.message);
+                    return emptyWidget(context, error.message);
                   case PackagesLoadedState:
                     final suc = state as PackagesLoadedState;
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15)
                           .copyWith(left: 11),
                       child: suc.packages.isEmpty
-                          ? emptyWidget(context, 95, "No Packages Found")
+                          ? emptyWidget(context, "No Packages Found")
                           : packagesItems(context, suc.packages),
                     );
                   default:

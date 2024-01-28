@@ -28,10 +28,10 @@ showLargeImage(context, img, fl) => showDialog<void>(
       },
     );
 
-Widget emptyWidget(context, double h, String txt) => Container(
+Widget emptyWidget(context, String txt) => Container(
       alignment: Alignment.center,
       width: getWidth(context, 100),
-      height: h,
+      height: getHeight(context, 100 - 20),
       child: Center(
         child: Text(txt,
             textScaleFactor: 1,
@@ -112,7 +112,6 @@ class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leadingWidth: 68,
-      backgroundColor: scafoldBlack,
       leading: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
@@ -123,7 +122,7 @@ class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
               border: Border.all(width: .4, color: Colors.grey)),
           child: const Icon(
             Icons.arrow_back_ios_outlined,
-            color: Colors.white,
+            color: Colors.black,
             size: 16,
           ),
         ),

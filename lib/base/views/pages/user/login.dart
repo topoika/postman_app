@@ -31,7 +31,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           children: [
             const SizedBox(height: 30),
-            Image.asset("assets/images/logo.png", height: 90),
+            Image.asset("assets/images/logo.png", height: 120),
             const SizedBox(height: 50),
             topColumnText(context, "Welcome Back", "Please sign in here"),
             const SizedBox(height: 30),

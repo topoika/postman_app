@@ -1,15 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../controllers/app.controller.dart';
 import '../../models/trip.dart';
 
 class TripsRepo {
   // fetch all the trips
-  static Future<List<Trip>> fetchTrips() async {
+  static Future<List<Trip>> fetchMyTrips() async {
     try {
       CollectionReference tripsColl =
           FirebaseFirestore.instance.collection('trips');
-      QuerySnapshot querySnapshot = await tripsColl.get().onError(
-          (error, stackTrace) => throw Exception('Failed to load trips'));
+      QuerySnapshot querySnapshot = await tripsColl
+          .where("travellersId", isEqualTo: activeUser.value.id)
+          .orderBy("travelledAt", descending: true)
+          .get()
+          .onError(
+              (error, stackTrace) => throw Exception('Failed to load trips'));
       // Convert documents to Trip objects
       List<Trip> trips = querySnapshot.docs
           .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
@@ -27,7 +32,7 @@ class TripsRepo {
       CollectionReference tripsColl =
           FirebaseFirestore.instance.collection('trips');
       QuerySnapshot querySnapshot = await tripsColl
-          .where("travelledAt", isGreaterThan: DateTime.now().toString())
+          // .where("travelledAt", isGreaterThan: DateTime.now().toString())
           .get()
           .onError(
               (error, stackTrace) => throw Exception('Failed to load trips'));

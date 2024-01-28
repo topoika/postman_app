@@ -42,9 +42,9 @@ class _DashboardState extends State<Dashboard> {
           selectedItemColor: greenColor,
           unselectedItemColor: navItems,
           selectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
           unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
           items: [
             BottomNavigationBarItem(
               activeIcon: Image.asset("assets/icons/home.png",
@@ -57,12 +57,12 @@ class _DashboardState extends State<Dashboard> {
               activeIcon: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Image.asset("assets/icons/trips.png",
-                    height: 22, color: greenColor),
+                    height: 27, color: greenColor),
               ),
               icon: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Image.asset("assets/icons/trips.png",
-                    height: 22, color: navItems),
+                    height: 27, color: navItems),
               ),
               label: 'Trips',
             ),

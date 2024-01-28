@@ -67,7 +67,18 @@ class ChatsController extends AppController {
         .doc(conversation.id)
         .update(conversation.toMap())
         .onError((error, stackTrace) => log(error.toString()));
+
+    setState(() {});
   }
+
+  // read all messages
+  void updateUnreadMessage(Conversation conversation) {
+    db
+        .collection(chatsColl)
+        .doc(conversation.id)
+        .update({"unreadMessages": getUnreadMessages(conversation, Message())});
+  }
+
   // CREATE CONVERSATION AND ADD A FIRST MESSAGE
 
   Future<Conversation> createConversation(User user) async {
@@ -136,7 +147,7 @@ class ChatsController extends AppController {
       String receiverId = conversation.participants!
           .firstWhere((i) => i != activeUser.value.id);
       result[receiverId] ??= conversation.unreadMessages[receiverId] ?? [];
-      result[receiverId]!.add(message!.id!);
+      result[receiverId]!.add(message!.id ?? "");
       result[activeUser.value.id!] ??= [];
     }
 

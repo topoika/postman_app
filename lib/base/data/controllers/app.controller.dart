@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,11 +34,18 @@ class AppController extends MainController {
   String chatsColl = "chats";
   String messagesColl = "messages";
   String packageColl = "packages";
+  String requestColl = "requests";
 
   void openDrawer() => Scaffold.of(scaffoldKey.currentContext!).openDrawer();
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());
   }
+
+  Future<String> getUserFCM(String? id) async => await db
+      .collection(userCol)
+      .doc(id)
+      .get()
+      .then((value) => value.data()!['deviceToken']);
 
   Future<userModel.User?> getUserInfo(String id) async {
     return await db.collection(userCol).doc(id).get().then(
@@ -82,6 +92,37 @@ class AppController extends MainController {
     } catch (e) {
       print('Error uploading image to Firebase Storage: $e');
       return null;
+    }
+  }
+
+  Future<bool>? sendNotification(String token, String title, String id,
+      {String type = "message"}) async {
+    final Map<String, dynamic> data = {
+      'to': token,
+      'notification': {
+        'title': title,
+        'body':
+            "You have a new ${type == "request" ? "Order request" : "Message"}",
+      },
+      "data": {"id": id, "type": type}
+    };
+
+    final http.Response response = await http.post(
+      Uri.parse(SERVER_URL),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$SERVER_KEY',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      log('Notification sent successfully');
+      return true;
+    } else {
+      log('Failed to send notification. Response code: ${response.statusCode}');
+      log('Response body: ${response.body}');
+      return false;
     }
   }
 }

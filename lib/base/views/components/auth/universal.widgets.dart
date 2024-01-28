@@ -255,7 +255,7 @@ TextInputType getKeyboardInputType(type) {
   }
 }
 
-void showPickOptionsDialog(BuildContext context, cam, gal) {
+void showPickOptionsDialog(BuildContext context, cam, gal, {profile = true}) {
   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -270,25 +270,28 @@ void showPickOptionsDialog(BuildContext context, cam, gal) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ListTile(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: getWidth(context, 3)),
-                leading: Icon(
-                  Icons.photo,
-                  color: Colors.black,
-                  size: getWidth(context, 6),
-                ),
-                minLeadingWidth: getWidth(context, 1),
-                title: const Text(
-                  'Gallary',
-                  textScaleFactor: 1,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
+              Visibility(
+                visible: profile,
+                child: ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: getWidth(context, 3)),
+                  leading: Icon(
+                    Icons.photo,
                     color: Colors.black,
+                    size: getWidth(context, 6),
                   ),
+                  minLeadingWidth: getWidth(context, 1),
+                  title: const Text(
+                    'Gallary',
+                    textScaleFactor: 1,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () => gal(),
                 ),
-                onTap: () => gal(),
               ),
               ListTile(
                 contentPadding:

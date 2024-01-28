@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:postman_app/base/data/controllers/app.controller.dart';
 
+import '../../data/controllers/app.controller.dart';
 import '../../data/controllers/chats.controller.dart';
 import '../../data/helper/constants.dart';
 import '../../data/models/conversation.dart';
@@ -44,6 +44,10 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (conversation.id != null) {
+      
+      con.updateUnreadMessage(conversation);
+    }
     return Scaffold(
       key: con.scaffoldKey,
       appBar: BlackAppBar(
@@ -52,10 +56,7 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
             Text(
               widget.user.username ?? "",
               textScaleFactor: 1,
-              style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             const Text(
               "Online",
@@ -69,57 +70,54 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Image.asset("assets/icons/phone.png",
-                  height: 18, color: Colors.white),
+                  height: 18, color: Colors.black),
             ),
           )
         ],
       ),
-      backgroundColor: scafoldBlack,
       body: Column(
         children: [
           Expanded(
             child: conversation.id == null
                 ? const SizedBox()
-                : Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: con.getMessageStream(conversation.id!),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
+                : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: con.getMessageStream(conversation.id!),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
 
-                        List<Message> messages = snapshot.data?.docs.map(
-                                (QueryDocumentSnapshot<Map<String, dynamic>>
-                                    doc) {
-                              return Message.fromMap(doc.data());
-                            }).toList() ??
-                            [];
+                      List<Message> messages = snapshot.data?.docs.map(
+                              (QueryDocumentSnapshot<Map<String, dynamic>>
+                                  doc) {
+                            return Message.fromMap(doc.data());
+                          }).toList() ??
+                          [];
 
-                        return ListView.builder(
-                          itemCount: messages.length,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 15),
-                          shrinkWrap: true,
-                          reverse: true,
-                          physics: const ScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final message = messages[index];
-                            bool byMe = message.sendBy == activeUser.value.id!;
-                            return conversationItem(context, byMe, message,
-                                index: index);
-                          },
-                        );
-                      },
-                    ),
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        shrinkWrap: true,
+                        reverse: true,
+                        physics: const ScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final message = messages[index];
+                          bool byMe = message.sendBy == activeUser.value.id!;
+                          return conversationItem(
+                              context,
+                              byMe,
+                              unReadText(
+                                  index,
+                                  conversation.unreadMessages[widget.user.id]
+                                      .contains(message.id)),
+                              message,
+                              index: index);
+                        },
+                      );
+                    },
                   ),
           ),
           Container(
@@ -182,8 +180,7 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                           Message(
                               text: message.text,
                               createAt: DateTime.now().toString(),
-                              sendBy: activeUser.value.id,
-                              readBy: [activeUser.value.id!]));
+                              sendBy: activeUser.value.id));
                     } else {
                       con
                           .addMessageToNewChat(
@@ -191,8 +188,7 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                               Message(
                                   text: message.text,
                                   createAt: DateTime.now().toString(),
-                                  sendBy: activeUser.value.id,
-                                  readBy: [activeUser.value.id!]))
+                                  sendBy: activeUser.value.id))
                           .then(
                               (value) => setState(() => conversation = value));
                     }
@@ -219,4 +215,29 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
       ),
     );
   }
+
+  bool unReadText(int index, bool unRead) {
+    if (unRead && index > 0) {
+      return false;
+    }
+    return !unRead || index > 0;
+  }
+
+  // bool unReadText(index, unRead) {
+  //   log("$index $unRead");
+  //   if (unRead && index == 0) {
+  //     return false;
+  //   }
+  //   if (unRead && index > 0) {
+  //     return false;
+  //   }
+  //   if (!unRead && index == 0) {
+  //     return false;
+  //   }
+
+  //   if (!unRead) {
+  //     return true;
+  //   }
+  //   return true;
+  // }
 }

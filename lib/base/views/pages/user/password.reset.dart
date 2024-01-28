@@ -30,7 +30,7 @@ class _PasswordResetState extends StateMVC<PasswordReset> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           children: [
             const SizedBox(height: 30),
-            Image.asset("assets/images/logo.png", height: 90),
+            Image.asset("assets/images/logo.png", height: 120),
             const SizedBox(height: 40),
             topColumnText(context, "Password Reset",
                 "Enter your new password for ${activeUser.value.email}"),

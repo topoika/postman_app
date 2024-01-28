@@ -16,9 +16,22 @@ Widget buttonOne(String txt, active, ontap) => GestureDetector(
           txt,
           textScaleFactor: 1,
           style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-          ),
+              fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white),
+        ),
+      ),
+    );
+
+Widget learnMoreButton(txt, ontap) => GestureDetector(
+      onTap: () => ontap(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25), color: Colors.black),
+        child: Text(
+          txt,
+          textScaleFactor: 1,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
     );
@@ -76,8 +89,10 @@ Widget postManButton(String txt, filled, ontap) => GestureDetector(
         child: Text(
           txt,
           textScaleFactor: 1,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 14, color: Colors.black),
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: filled ? Colors.white : Colors.black),
         ),
       ),
     );

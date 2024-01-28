@@ -31,7 +31,7 @@ class _ForgetPasswordState extends StateMVC<ForgetPassword> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           children: [
             const SizedBox(height: 30),
-            Image.asset("assets/images/logo.png", height: 90),
+            Image.asset("assets/images/logo.png", height: 120),
             const SizedBox(height: 40),
             topColumnText(context, "Forgot Password?",
                 "Enter your email address so that we can send you the access code."),

@@ -4,13 +4,11 @@ import 'package:postman_app/base/data/models/conversation.dart';
 
 import '../../../data/controllers/app.controller.dart';
 import '../../../data/helper/constants.dart';
-import '../../../data/helper/theme.dart';
 import '../../../data/models/message.dart';
 import '../../../data/models/user.dart';
 import '../universal.widgets.dart';
 
-Widget conversationItem(context, byMe, Message message, {index}) {
-  bool read = message.readBy!.contains(message.sendBy);
+Widget conversationItem(context, byMe, read, Message message, {index}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: Column(
@@ -35,7 +33,7 @@ Widget conversationItem(context, byMe, Message message, {index}) {
             maxWidth: getWidth(context, 70),
             minWidth: getWidth(context, 5),
           ),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(15),
@@ -43,15 +41,15 @@ Widget conversationItem(context, byMe, Message message, {index}) {
               bottomLeft: Radius.circular(byMe ? 15 : 3),
               bottomRight: Radius.circular(byMe ? 3 : 15),
             ),
-            color: byMe
-                ? primaryColor.withOpacity(.6)
-                : Colors.grey.withOpacity(.5),
+            color: byMe ? btnColor : Colors.grey.withOpacity(.5),
           ),
           child: Text(
             message.text ?? "",
             textScaleFactor: 1,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: byMe ? Colors.white : Colors.black),
           ),
         ),
         const SizedBox(height: 5),
@@ -101,8 +99,11 @@ Widget conversationItem(context, byMe, Message message, {index}) {
 Widget chatTileItem(context, Conversation conversation, index) {
   User reciever =
       conversation.involved!.firstWhere((i) => i.id != activeUser.value.id);
+
+  bool read = !(conversation.unreadMessages[reciever.id]
+      .contains(conversation.lastMessage!.id));
   return InkWell(
-    splashColor: primaryColor.withOpacity(.4),
+    splashColor: Colors.transparent,
     onTap: () => Navigator.pushNamed(context, "/ConversationPage",
         arguments: conversation.involved!
             .firstWhere((i) => i.id != activeUser.value.id)),
@@ -207,23 +208,27 @@ Widget chatTileItem(context, Conversation conversation, index) {
                                 fontSize: 10),
                           ),
                         )
-                      : const Stack(
-                          alignment: Alignment.centerRight,
-                          children: [
-                            Icon(
-                              Icons.check,
-                              size: 18,
-                              color: Colors.black,
-                            ),
-                            Positioned(
-                              left: 3,
-                              child: Icon(
+                      : Visibility(
+                          visible: conversation.lastMessage!.sendBy ==
+                              activeUser.value.id,
+                          child: Stack(
+                            alignment: Alignment.centerRight,
+                            children: [
+                              Icon(
                                 Icons.check,
                                 size: 18,
-                                color: Colors.black,
+                                color: read ? Colors.blue : Colors.grey,
                               ),
-                            ),
-                          ],
+                              Positioned(
+                                left: 3,
+                                child: Icon(
+                                  Icons.check,
+                                  size: 18,
+                                  color: read ? Colors.blue : Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                 ],
               )

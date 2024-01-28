@@ -1,8 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/strings.dart';
 import '../../../data/helper/theme.dart';
+import '../buttons.dart';
 
 Widget statsItem(context, txt, stat) {
   return Expanded(
@@ -13,14 +15,15 @@ Widget statsItem(context, txt, stat) {
         Text(
           txt,
           textScaleFactor: 1,
-          style: const TextStyle(fontSize: 13, color: greenColor),
+          style: const TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
         ),
         const SizedBox(height: 5),
         Text(
           stat,
           textScaleFactor: 1,
           style: const TextStyle(
-              fontSize: 22, color: Colors.black, fontWeight: FontWeight.w800),
+              fontSize: 22, color: greenColor, fontWeight: FontWeight.w800),
         )
       ],
     ),
@@ -107,6 +110,85 @@ class _MyDialogState extends State<MyDialog> {
               fontWeight: FontWeight.w400,
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class NewOrderDialog extends StatefulWidget {
+  final String requestId;
+  const NewOrderDialog({
+    Key? key,
+    required this.requestId,
+  }) : super(key: key);
+
+  @override
+  State<NewOrderDialog> createState() => _NewOrderDialogState();
+}
+
+class _NewOrderDialogState extends State<NewOrderDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.only(bottom: 30),
+      color: Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.close,
+                        size: 18,
+                      ),
+                    )),
+                Image.asset(
+                  "assets/images/new_order.png",
+                  height: 145,
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  "You got an Order!",
+                  textScaleFactor: 1,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Congratulations on your new order! Click the 'View Order' button to access order information.",
+                  textScaleFactor: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black45),
+                ),
+                const SizedBox(height: 20),
+                buttonOne("View Order", true, () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/NewOrderPage",
+                      arguments: widget.requestId);
+                }),
+              ],
+            ),
+          ),
         ],
       ),
     );

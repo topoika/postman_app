@@ -37,7 +37,7 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           children: [
             const SizedBox(height: 30),
-            Image.asset("assets/images/logo.png", height: 90),
+            Image.asset("assets/images/logo.png", height: 120),
             const SizedBox(height: 20),
             topColumnText(context, "Let’s create your account",
                 "Enter your details to get things started."),
@@ -84,18 +84,18 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: () => showPickOptionsDialog(
-                      context,
-                      () => loadProfilePicker(
-                          ImageSource.camera,
-                          context,
-                          (val) => setState(() => image = File(val)),
-                          "profile"),
-                      () => loadProfilePicker(
-                          ImageSource.gallery,
-                          context,
-                          (val) => setState(() => image = File(val)),
-                          "profile"),
-                    ),
+                        context,
+                        () => loadProfilePicker(
+                            ImageSource.camera,
+                            context,
+                            (val) => setState(() => image = File(val)),
+                            "profile"),
+                        () => loadProfilePicker(
+                            ImageSource.gallery,
+                            context,
+                            (val) => setState(() => image = File(val)),
+                            "profile"),
+                        profile: false),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

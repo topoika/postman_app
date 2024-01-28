@@ -9,13 +9,14 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   TripsBloc() : super(TripsInitial()) {
     on<FetchAllTripsEvent>(_fetchCategories);
     on<FetchRouteTripsEvent>(_fetchRouteTrip);
+    on<FetchMyTripsEvent>(_fetchMyTrips);
   }
 
   Future<void> _fetchCategories(
       FetchAllTripsEvent event, Emitter<TripsState> emit) async {
     emit(TripsLoadingState());
     try {
-      List<Trip> trips = await TripsRepo.fetchTrips();
+      List<Trip> trips = await TripsRepo.fetchMyTrips();
 
       emit(TripsLoadedState(trips: trips));
     } catch (e) {
@@ -24,6 +25,21 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     }
     return;
   }
+
+  Future<void> _fetchMyTrips(
+      FetchMyTripsEvent event, Emitter<TripsState> emit) async {
+    emit(TripsLoadingState());
+    try {
+      List<Trip> trips = await TripsRepo.fetchMyTrips();
+
+      emit(TripsLoadedState(trips: trips));
+    } catch (e) {
+      print("State : $e");
+      emit(TripsErrorState(e.toString()));
+    }
+    return;
+  }
+
   Future<void> _fetchRouteTrip(
       FetchRouteTripsEvent event, Emitter<TripsState> emit) async {
     emit(TripsLoadingState());

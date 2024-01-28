@@ -57,6 +57,8 @@ dependencies:
   place_picker: ^0.10.0
   otp: ^3.1.4
   intl: ^0.18.1
+  http: ^0.13.6
+  permission_handler: ^11.2.0
   
 dev_dependencies:
   flutter_test:

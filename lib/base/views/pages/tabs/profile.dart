@@ -128,9 +128,34 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
                   : ""),
           profileItem(context, "Password",
               activeUser.value.password ?? "*************"),
-          buttonBlackOne("Delete Account", true, () {
-            //TODO: Call the function to delete the account
-          })
+          buttonBlackOne("Sign Out", true, () {
+            con.logOut();
+          }),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {
+              // TODO: make a function that deletes the user data
+            },
+            child: Container(
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.delete_outlined,
+                      color: Colors.redAccent, size: 18),
+                  SizedBox(width: 6),
+                  Text(
+                    "Delete Account",
+                    textScaleFactor: 1,
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

@@ -39,6 +39,7 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: con.scaffoldKey,
       appBar: AppBar(
         leadingWidth: 64,
         leading: GestureDetector(
@@ -222,7 +223,8 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                     ),
                     child: Column(
                       children: <Widget>[
-                        detailsItem("Distance From Customer", "2 KM"),
+                        detailsItem("Distance From Customer",
+                            "${calculateDistance(trip!.traveller!.address!).toStringAsFixed(1)} KM"),
                       ],
                     ),
                   ),
@@ -274,7 +276,15 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                                   arguments: trip!.traveller))),
                       const SizedBox(width: 10),
                       Expanded(
-                          child: postManButton("Hire Postman", true, () {})),
+                        child: postManButton(
+                          "Hire Postman",
+                          true,
+                          () {
+                            con.sendRequest(trip!);
+                            // TODO: send a notification and reuest to the postman device
+                          },
+                        ),
+                      ),
                     ],
                   )
                 ],
@@ -294,7 +304,7 @@ Widget detailsItem(txt, desc) {
           txt,
           textScaleFactor: 1,
           style: const TextStyle(
-            color: Colors.grey,
+            color: Colors.black45,
             fontWeight: FontWeight.w400,
             fontSize: 12,
           ),
