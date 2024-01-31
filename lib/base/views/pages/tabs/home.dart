@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../../../data/controllers/app.controller.dart';
@@ -33,8 +34,9 @@ class _HomepageState extends StateMVC<Homepage> {
       key: con.scaffoldKey,
       appBar: AppBar(
         backgroundColor: scafoldBlack,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: GestureDetector(
-          onTap: () => con.openDrawer(),
+          onTap: () => Navigator.pushNamed(context, "/MorePage"),
           child: const Icon(
             Icons.sort,
             size: 32,

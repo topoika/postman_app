@@ -37,23 +37,27 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
                     margin: const EdgeInsets.only(right: 10),
                     child: Stack(
                       alignment: Alignment.center,
-                      children: [
-                        ...package.images!.sublist(0, 3).map((e) {
-                          double i = package.images!.indexOf(e).toDouble();
-                          return Container(
-                            transform: Matrix4.translationValues(
-                                0 - (5 * i) + 5, 0, 0),
-                            height: 55 + (5 * i),
-                            width: 55 + (5 * i),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(e), fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: Colors.white, width: 1.2)),
-                          );
-                        }).toList(),
-                      ],
+                      children: package.images!
+                          .sublist(
+                              0,
+                              (package.images!.length >= 3
+                                  ? 3
+                                  : package.images!.length))
+                          .map((e) {
+                        double i = package.images!.indexOf(e).toDouble();
+                        return Container(
+                          transform:
+                              Matrix4.translationValues(0 + (5 * i) + 5, 0, 0),
+                          height: 65 - (5 * i),
+                          width: 65 - (5 * i),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(e), fit: BoxFit.cover),
+                              borderRadius: BorderRadius.circular(5),
+                              border:
+                                  Border.all(color: Colors.white, width: 1.2)),
+                        );
+                      }).toList(),
                     ),
                   ),
                   Expanded(
@@ -133,10 +137,12 @@ Widget rowItem(txt, txt1) => Row(
           style: const TextStyle(
               fontSize: 10, fontWeight: FontWeight.w500, color: Colors.grey),
         ),
-        Text(
-          txt1,
-          textScaleFactor: 1,
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+        Flexible(
+          child: Text(
+            txt1,
+            textScaleFactor: 1,
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );

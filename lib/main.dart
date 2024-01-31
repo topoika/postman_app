@@ -49,55 +49,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// AndroidNotificationChannel channel = const AndroidNotificationChannel(
-//     'high_importance_channel', 'High Importance Notifications',
-//     description: 'High Importance Notifications',
-//     importance: Importance.high,
-//     playSound: true,
-//     showBadge: true);
-
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp();
-//   print('///////////////////////////////////////');
-//   print('A bg message just showed up :  ${message.messageId} ${message.data} ');
-//   print('///////////////////////////////////////');
-// }
-
-// Future firebaseInnit() async {
-//   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//     print('Received message: $message');
-
-//     // Extract notification type
-//     String notificationType = message.data['type'] ?? '';
-
-//     // Handle the notification based on its type
-//     if (notificationType == 'request') {
-//       // Display overlay for request type
-//     }
-//   });
-
-//   await flutterLocalNotificationsPlugin
-//       .resolvePlatformSpecificImplementation<
-//           AndroidFlutterLocalNotificationsPlugin>()
-//       ?.createNotificationChannel(channel);
-
-//   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-//     alert: true,
-//     badge: true,
-//     sound: true,
-//   );
-//   await FirebaseMessaging.instance.requestPermission(
-//     alert: true,
-//     announcement: false,
-//     badge: true,
-//     carPlay: false,
-//     criticalAlert: false,
-//     provisional: false,
-//     sound: true,
-//   );
-// }
-
 class Get {
   static BuildContext? get context => navigatorKey.currentContext;
   static NavigatorState? get navigator => navigatorKey.currentState;

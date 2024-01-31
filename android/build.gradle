@@ -15,7 +15,11 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCentral()
+        jcenter()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:-options'
     }
 }
 

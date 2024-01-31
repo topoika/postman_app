@@ -101,12 +101,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
   List<Widget>? actions;
+  final bool? cancel;
 
-  BlackAppBar({
-    super.key,
-    required this.title,
-    this.actions = const [],
-  });
+  BlackAppBar(
+      {super.key,
+      required this.title,
+      this.actions = const [],
+      this.cancel = false});
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +121,10 @@ class BlackAppBar extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(width: .4, color: Colors.grey)),
-          child: const Icon(
-            Icons.arrow_back_ios_outlined,
+          child: Icon(
+            cancel! ? Icons.close : Icons.arrow_back_ios_outlined,
             color: Colors.black,
-            size: 16,
+            size: cancel! ? 18 : 16,
           ),
         ),
       ),

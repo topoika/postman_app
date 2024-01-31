@@ -115,7 +115,6 @@ exports.stripePaymentIntentRequest = functions.https.onRequest(
   async (req, res) => {
     try {
       let customerId;
-
       const customerList = await stripe.customers.list({
         email: req.body.email,
         limit: 1,
@@ -153,3 +152,13 @@ exports.stripePaymentIntentRequest = functions.https.onRequest(
     }
   }
 );
+
+
+exports.stripePaymentIntentRequest = functions.https.onRequest(
+  async (req, res) => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  });

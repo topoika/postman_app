@@ -60,13 +60,9 @@ class _AvailableOrdersPageState extends State<AvailableOrdersPage> {
                     return emptyWidget(context, error.message);
                   case PackagesLoadedState:
                     final suc = state as PackagesLoadedState;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15)
-                          .copyWith(left: 11),
-                      child: suc.packages.isEmpty
-                          ? emptyWidget(context, "No Packages Found")
-                          : packagesItems(context, suc.packages),
-                    );
+                    return suc.packages.isEmpty
+                        ? emptyWidget(context, "No Packages Found")
+                        : packagesItems(context, suc.packages);
                   default:
                     return const SizedBox();
                 }

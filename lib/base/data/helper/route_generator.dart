@@ -7,6 +7,8 @@ import '../../views/pages/dashboard.dart';
 import '../../views/pages/input/new.package.dart';
 import '../../views/pages/input/new.trip.dart';
 import '../../views/pages/input/reciever.details.dart';
+import '../../views/pages/more/more.screen.dart';
+import '../../views/pages/more/order.requests.dart';
 import '../../views/pages/my.packages.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/order.page.dart';
@@ -66,6 +68,10 @@ class RouteGenerator {
             builder: (_) => ReceiverDetailsPage(data: args));
       case '/NewTripPage':
         return MaterialPageRoute(builder: (_) => const NewTripPage());
+      case '/MorePage':
+        return MaterialPageRoute(builder: (_) => const MorePage());
+      case '/OrderRequestPage':
+        return MaterialPageRoute(builder: (_) => const OrderRequestPage());
       default:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
     }
