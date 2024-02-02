@@ -82,7 +82,9 @@ class TripController extends AppController {
               senderId: activeUser.value.id,
               postFee: trip.postageFee,
               recieverId: trip.travellersId,
-              tripId: trip.id,
+              trip: trip,
+              travelledAt: trip.travelledAt,
+              senderName: activeUser.value.username,
               createdAt: DateTime.now().toString(),
               packageId: activePackage.value.id,
               status: "active");

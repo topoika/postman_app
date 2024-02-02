@@ -3,6 +3,7 @@ import 'address.dart';
 class Package {
   String? id;
   String? senderId;
+  String? senderName;
   String? name;
   double? value;
   double? approximateValue;
@@ -32,6 +33,7 @@ class Package {
   Package({
     this.id,
     this.senderId,
+    this.senderName,
     this.name,
     this.value,
     this.approximateValue,
@@ -60,6 +62,7 @@ class Package {
     return <String, dynamic>{
       'id': id,
       'senderId': senderId,
+      'senderName': senderName,
       'name': name,
       'value': value,
       'approximateValue': approximateValue,
@@ -114,6 +117,8 @@ class Package {
     return Package(
       id: map['id'] != null ? map['id'] as String : null,
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
+      senderName:
+          map['senderName'] != null ? map['senderName'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       value: map['value'] != null ? map['value'] as double : null,
       approximateValue: map['approximateValue'] != null

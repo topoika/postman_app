@@ -7,6 +7,7 @@ import '../../views/pages/dashboard.dart';
 import '../../views/pages/input/new.package.dart';
 import '../../views/pages/input/new.trip.dart';
 import '../../views/pages/input/reciever.details.dart';
+import '../../views/pages/more/help.and.support.dart';
 import '../../views/pages/more/more.screen.dart';
 import '../../views/pages/more/order.requests.dart';
 import '../../views/pages/my.packages.dart';
@@ -70,6 +71,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const NewTripPage());
       case '/MorePage':
         return MaterialPageRoute(builder: (_) => const MorePage());
+      case '/HelpAndSupport':
+        return MaterialPageRoute(builder: (_) => const HelpAndSupport());
       case '/OrderRequestPage':
         return MaterialPageRoute(builder: (_) => const OrderRequestPage());
       default:

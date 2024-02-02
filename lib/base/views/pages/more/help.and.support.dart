@@ -1,65 +1,61 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:postman_app/base/data/helper/constants.dart';
 
+import '../../../data/helper/constants.dart';
 import '../../components/universal.widgets.dart';
 
-class MorePage extends StatefulWidget {
-  const MorePage({super.key});
+class HelpAndSupport extends StatefulWidget {
+  const HelpAndSupport({super.key});
 
   @override
-  State<MorePage> createState() => _MorePageState();
+  State<HelpAndSupport> createState() => _HelpAndSupportState();
 }
 
-class _MorePageState extends State<MorePage> {
+class _HelpAndSupportState extends State<HelpAndSupport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BlackAppBar(
         title: const Text(
-          "More",
+          "Help & Support",
           textScaleFactor: 1,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        cancel: true,
+        cancel: false,
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        children: moreItems.map((e) {
+        children: items.map((e) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, e.link!),
+            // onTap: () => Navigator.pushNamed(context, e.link!),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: greenColor.withOpacity(.09),
-                    ),
-                    alignment: Alignment.center,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
                     child: Image.asset(
-                      "assets/icons/${e.icon}",
+                      "assets/icons/${e['icon']}",
                       color: greenColor,
                       height: 24,
                     ),
                   ),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 25),
                   Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              e.txt!,
+                              e['name'],
                               textScaleFactor: 1,
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             Container(
+                              margin: const EdgeInsets.only(top: 10),
                               padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -73,7 +69,16 @@ class _MorePageState extends State<MorePage> {
                             )
                           ],
                         ),
-                        const SizedBox(height: 13),
+                        Text(
+                          e['desc'],
+                          textAlign: TextAlign.left,
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey),
+                        ),
+                        const SizedBox(height: 6),
                         const Divider(
                           color: Colors.black12,
                           thickness: .6,
@@ -89,31 +94,25 @@ class _MorePageState extends State<MorePage> {
       ),
     );
   }
-}
 
-class MoreItem {
-  String? icon;
-  String? txt;
-  String? link;
-  MoreItem({
-    this.icon,
-    this.txt,
-    this.link,
-  });
+  List items = [
+    {
+      "name": "Help Center",
+      "icon": "center.png",
+      "desc": "Fast answers to all of the most common questions.",
+      "link": ""
+    },
+    {
+      "name": "Contact Support",
+      "icon": "cantact_support.png",
+      "desc": "Chat with our team of experts",
+      "link": ""
+    },
+    {
+      "name": "Call Center",
+      "icon": "call_center.png",
+      "desc": "Call us to speak to a support agent",
+      "link": ""
+    },
+  ];
 }
-
-List<MoreItem> moreItems = [
-  MoreItem(
-      txt: "Order Requests", icon: "orders.png", link: "/OrderRequestPage"),
-  MoreItem(txt: "Active Packages", icon: "orders.png", link: "/MyPackagesPage"),
-  MoreItem(txt: "Payment Method", icon: "payment.png", link: "/PaymentMethods"),
-  MoreItem(
-      txt: "Frequently asked questions",
-      icon: "faq.png",
-      link: "/PaymentMethods"),
-  MoreItem(txt: "Help & Support", icon: "help.png", link: "/HelpAndSupport"),
-  MoreItem(
-      txt: "About - Legal & Policy",
-      icon: "about.png",
-      link: "/HelpAndSupport"),
-];

@@ -1,5 +1,5 @@
 const functions = require("firebase-functions");
-const STRIPE_KEY = require("./variables");
+const STRIPE_KEY = require("../functions/variables");
 const stripe = require("stripe")(STRIPE_KEY);
 
 var admin = require("firebase-admin");
@@ -19,11 +19,11 @@ exports.makeCustomToken = functions.https.onRequest(async (req, res) => {
   admin
     .auth()
     .createCustomToken(instagramToken)
-    .then((customToken) => {
+    .then(function (customToken) {
       console.log(customToken);
       res.json({ customToken: `${customToken}` });
     })
-    .catch((error) => {
+    .catch(function (error) {
       res.json({ result: `makeCustomToken error` });
       console.log("Error creating custom token:", error);
     });
@@ -162,7 +162,5 @@ exports.getUserOrderRequests = functions.https.onRequest(async (req, res) => {
       message: "Order requests returned successfully",
       success: true,
     });
-  } catch (error) {
-    res.status(404).send({ success: false, error: error.message });
-  }
+  } catch (error) {}
 });
