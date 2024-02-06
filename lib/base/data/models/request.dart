@@ -1,5 +1,4 @@
 import 'trip.dart';
-import 'user.dart';
 
 class Request {
   String? id;

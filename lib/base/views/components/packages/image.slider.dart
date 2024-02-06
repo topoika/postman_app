@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:postman_app/base/data/helper/constants.dart';
@@ -31,11 +30,11 @@ class _SliderWithIndicatorsState extends State<SliderWithIndicators> {
             onPageChanged: (int page) {
               setState(() {
                 _currentPage = page;
-              });
+              }); 
             },
             itemBuilder: (context, index) {
               return Image.network(
-                widget.images![index],
+                widget.images![index], 
                 fit: BoxFit.cover,
               );
             },
