@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
-import '../../data/bloc/events/packages.events.dart';
-import '../../data/bloc/providers/package.provider.dart';
-import '../../data/bloc/state/packages.state.dart';
-import '../components/packages/packages.list.dart';
-import '../components/universal.widgets.dart';
+import '../../../data/bloc/events/packages.events.dart';
+import '../../../data/bloc/providers/package.provider.dart';
+import '../../../data/bloc/state/packages.state.dart';
+import '../../components/packages/packages.list.dart';
+import '../../components/universal.widgets.dart';
 
 class MyPackagesPage extends StatefulWidget {
   const MyPackagesPage({super.key});
@@ -31,7 +31,13 @@ class _MyPackagesPageState extends StateMVC<MyPackagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "My Packages"),
+      appBar: BlackAppBar(
+        title: const Text(
+          "My Packages",
+          textScaleFactor: 1,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           init();
@@ -52,14 +58,11 @@ class _MyPackagesPageState extends StateMVC<MyPackagesPage> {
                     return emptyWidget(context, error.message);
                   case PackagesLoadedState:
                     final suc = state as PackagesLoadedState;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15)
-                          .copyWith(left: 11),
-                      child: suc.packages.isEmpty
-                          ? emptyWidget(
-                              context, "You don't have packages at the moment")
-                          : packagesItems(context, suc.packages, mine: true),
-                    );
+                    return suc.packages.isEmpty
+                        ? emptyWidget(
+                            context, "You don't have packages at the moment")
+                        : packagesItems(context, suc.packages, mine: true);
+
                   default:
                     return const SizedBox();
                 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/controllers/app.controller.dart';
+import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
 import '../../../data/models/package.dart';
 
@@ -26,7 +27,8 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
           margin: const EdgeInsets.only(bottom: 10),
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: btnColor.withOpacity(.1),
+            // color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
@@ -60,6 +62,7 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
                       }).toList(),
                     ),
                   ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Row(
                       children: [

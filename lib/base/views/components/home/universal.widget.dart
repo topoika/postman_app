@@ -1,9 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/strings.dart';
-import '../../../data/helper/theme.dart';
 import '../buttons.dart';
 
 Widget statsItem(context, txt, stat) {
@@ -56,60 +54,52 @@ class _MyDialogState extends State<MyDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15)
-          .copyWith(bottom: 60),
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [
-            primaryColor,
-            Colors.white,
-            Colors.white,
-            Colors.white,
-            Colors.white,
-            Colors.white,
-            Colors.white
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(colors: [
+            Color.fromARGB(255, 190, 233, 192),
+            Color.fromARGB(255, 163, 228, 201),
+            Color.fromARGB(255, 213, 236, 227),
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight)),
+      child: Stack(
         children: <Widget>[
-          Row(
-            children: [
-              const Flexible(
-                flex: 2,
-                child: Text(
-                  you_can_make_title,
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Image.asset(
+              "assets/images/earn.png",
+              height: 150,
+              opacity: const AlwaysStoppedAnimation(.8),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "You can make money\nanywhere you go",
                   textScaleFactor: 1,
                   style: TextStyle(
                       fontSize: 21,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       color: Colors.black),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Image.asset(
-                  "assets/images/undraw_savings.png",
-                  height: 100,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            you_can_make_desc,
-            textScaleFactor: 1,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
+                SizedBox(height: 10),
+                Text(
+                  you_can_make_desc,
+                  textScaleFactor: 1,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      height: 1.45,
+                      color: Colors.black),
+                )
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

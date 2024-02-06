@@ -10,7 +10,7 @@ import '../../views/pages/input/reciever.details.dart';
 import '../../views/pages/more/help.and.support.dart';
 import '../../views/pages/more/more.screen.dart';
 import '../../views/pages/more/order.requests.dart';
-import '../../views/pages/my.packages.dart';
+import '../../views/pages/more/my.packages.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/order.page.dart';
 import '../../views/pages/rate.transaction.dart';
