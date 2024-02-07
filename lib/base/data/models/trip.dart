@@ -18,6 +18,8 @@ class Trip {
   User? traveller;
   String? travellersId;
   String? travelledAt;
+  bool? available;
+  String? status;
 
   // Extras
 
@@ -39,6 +41,8 @@ class Trip {
     this.traveller,
     this.travellersId,
     this.travelledAt,
+    this.available,
+    this.status,
 
     // Extras
     this.city,
@@ -62,6 +66,10 @@ class Trip {
       'postageFee': postageFee,
       'travellersId': travellersId,
       'travelledAt': travelledAt,
+      'available': available,
+      'status': status,
+
+      // extras
     };
   }
 
@@ -126,6 +134,8 @@ class Trip {
           map['travellersId'] != null ? map['travellersId'] as String : null,
       travelledAt:
           map['travelledAt'] != null ? map['travelledAt'] as String : null,
+      status: map['status'] != null ? map['status'] as String : null,
+      available: map['available'] != null ? map['available'] as bool : null,
     );
   }
 }

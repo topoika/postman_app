@@ -4,3 +4,8 @@ import 'package:flutter/material.dart';
 abstract class RequestsEvent {}
 
 class FetchMyRequestsEvent extends RequestsEvent {}
+
+class FetchPackageRequestsEvent extends RequestsEvent {
+  final String id;
+  FetchPackageRequestsEvent(this.id);
+}

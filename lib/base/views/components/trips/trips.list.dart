@@ -226,15 +226,15 @@ Widget tripDetailWidget(context, Trip trip, {bool end = false}) {
   );
 }
 
-Widget myTripsList(context, List<Trip> trips) => ListView.builder(
+Widget myTripsList(context, List<Trip?> trips) => ListView.builder(
       shrinkWrap: true,
       itemCount: trips.length,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final trip = trips[index];
+        final trip = trips[index]!;
         return InkWell(
-          // onTap: () =>
-          //     Navigator.pushNamed(context, "/TripDetailsPage", arguments: trip),
+          onTap: () =>
+              Navigator.pushNamed(context, "/TripDetailsPage", arguments: trip),
           splashColor: Colors.transparent,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),

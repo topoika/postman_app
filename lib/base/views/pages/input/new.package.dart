@@ -62,7 +62,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: btnColor,
+                            color: btnColor.withOpacity(.4),
                           ),
                           child: const Column(
                             mainAxisSize: MainAxisSize.max,

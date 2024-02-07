@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../views/components/auth/success.dialog.dart';
 import '../helper/helper.dart';
 import '../models/request.dart';
 import '../models/trip.dart';
@@ -28,12 +27,8 @@ class TripController extends AppController {
         await value.update({"id": value.id});
       });
       loader.remove();
-      showSuccessDialogBox(
-          scaffoldKey.currentContext!,
-          "Your itinerary has been posted!",
-          "Your will receive order alerts for  packages going your way",
-          "/",
-          "View your itinerary");
+      showSuccessDialog(
+          "Your itinerary has been posted!", "", "View your trip", "/");
     } catch (e) {
       loader.remove();
       log(e.toString());
@@ -66,15 +61,43 @@ class TripController extends AppController {
     });
   }
 
+  Future<void> updatePostmanStatus(String id, value) async {
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      await db.collection(tripsCol).doc(id).update({"available": value});
+      loader.remove();
+      toastShow(
+          scaffoldKey.currentContext!, "Status Updated Successfully", 'suc');
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+      rethrow;
+    }
+  }
+
+  Future<void> cancelTrip(String id) async {
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      await db.collection(tripsCol).doc(id).update({"status": "canceled"});
+      loader.remove();
+      toastShow(
+          scaffoldKey.currentContext!, "Trip Canceled Successfully", 'suc');
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+      rethrow;
+    }
+  }
+
   Future<void> sendRequest(Trip trip) async {
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     await requestAllreadySend(trip).then((value) async {
       if (value) {
         loader.remove();
         toastShow(
-            scaffoldKey.currentContext!,
-            "Request was already send, you will be notified if the postman accept or decline your request",
-            'suc');
+            scaffoldKey.currentContext!, "Request was already send", 'suc');
         return null;
       } else {
         try {
@@ -87,7 +110,7 @@ class TripController extends AppController {
               senderName: activeUser.value.username,
               createdAt: DateTime.now().toString(),
               packageId: activePackage.value.id,
-              status: "active");
+              status: "pending");
           await db
               .collection(requestColl)
               .add(request.toMap())
@@ -104,9 +127,7 @@ class TripController extends AppController {
               .then((value) {
             if (value) {
               loader.remove();
-              toastShow(
-                  scaffoldKey.currentContext!,
-                  "Request was send succesfully, you will be notified if the postman accept or decline your request",
+              toastShow(scaffoldKey.currentContext!, "Request send succesfully",
                   'suc');
             } else {
               loader.remove();

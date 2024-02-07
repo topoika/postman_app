@@ -116,8 +116,8 @@ Widget chatTileItem(context, Conversation conversation, index) {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  activeUser.value.image != null
-                      ? showLargeImage(context, activeUser.value.image, null)
+                  reciever.image != null
+                      ? showLargeImage(context, reciever.image, null)
                       : toastShow(context, "No profile picture", "nor");
                 },
                 child: Container(

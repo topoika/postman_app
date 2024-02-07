@@ -2,15 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/data/controllers/app.controller.dart';
 import 'package:postman_app/base/data/helper/constants.dart';
 import 'package:postman_app/base/data/helper/helper.dart';
 
-import '../../data/controllers/package.controller.dart';
-import '../../data/models/package.dart';
-import '../components/buttons.dart';
-import '../components/packages/image.slider.dart';
-import '../components/universal.widgets.dart';
-import 'trip.details.dart';
+import '../../../data/controllers/package.controller.dart';
+import '../../../data/models/package.dart';
+import '../../components/buttons.dart';
+import '../../components/packages/image.slider.dart';
+import '../../components/universal.widgets.dart';
+import '../trip.details.dart';
 
 class NewOrderPage extends StatefulWidget {
   final String? id;
@@ -42,6 +43,8 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool mine =
+        (package != null ? package!.senderId : "") == activeUser.value.id;
     return Scaffold(
       appBar: BlackAppBar(
         title: const Text(
@@ -49,6 +52,28 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
           textScaleFactor: 1,
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
         ),
+        actions: [
+          Visibility(
+            visible: mine,
+            child: GestureDetector(
+              // onTap: () => con.logOut(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  children: [
+                    Image.asset("assets/icons/edit.png", height: 14),
+                    const Text(
+                      " Edit",
+                      textScaleFactor: 1,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
       ),
       body: package == null
           ? const Center(
@@ -251,76 +276,136 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 15),
-                      Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 15),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(.06),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                      Visibility(
+                        visible: !mine,
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
+                            margin: const EdgeInsets.only(top: 15, bottom: 25),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(.06),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  "Shipper",
+                                  textScaleFactor: 1,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: greenColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  package!.senderName ?? "Shipper One",
+                                  textScaleFactor: 1,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: greenColor,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              ],
+                            )),
+                      ),
+                      Visibility(
+                        visible: !mine,
+                        child: InkWell(
+                          onTap: () {
+                            // TODO: Make a conversation for the two users
+                          },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
+                              Image.asset("assets/icons/chats.png",
+                                  height: 22, color: Colors.black),
+                              const SizedBox(width: 10),
                               const Text(
-                                "Shipper",
+                                "Contact Shipper",
                                 textScaleFactor: 1,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w600,
                                   color: greenColor,
-                                  fontSize: 14,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Text(
-                                package!.senderName ?? "Shipper One",
-                                textScaleFactor: 1,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: greenColor,
-                                  fontSize: 16,
-                                ),
-                              )
+                              const Spacer(),
+                              const Icon(Icons.arrow_forward_ios,
+                                  color: greenColor, size: 20),
                             ],
-                          )),
-                      const SizedBox(height: 25),
-                      InkWell(
-                        onTap: () {
-                          // TODO: Make a conversation for the two users
-                        },
-                        child: Row(
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: mine,
+                        child: Column(
                           children: <Widget>[
-                            Image.asset("assets/icons/chats.png",
-                                height: 22, color: Colors.black),
-                            const SizedBox(width: 10),
-                            const Text(
-                              "Contact Shipper",
-                              textScaleFactor: 1,
-                              style: TextStyle(
-                                color: greenColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Expanded(
+                                    child: postManButton("Find Postman", false,
+                                        () {
+                                  activePackage.value = package!;
+                                  Navigator.pushNamed(
+                                      context, "/AvailableTripsPage");
+                                })),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                    child: postManButton("Requests", true, () {
+                                  Navigator.pushNamed(
+                                      context, "/PackageRequests",
+                                      arguments: package!.id);
+                                })),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            GestureDetector(
+                              // onTap: () => con.cancelTrip(trip!.id!),
+                              child: Container(
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.delete,
+                                        color: Colors.redAccent, size: 18),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "Delete Package",
+                                      textScaleFactor: 1,
+                                      style: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            const Spacer(),
-                            const Icon(Icons.arrow_forward_ios,
-                                color: greenColor, size: 20),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
                       const SizedBox(height: 30),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Expanded(
-                              child: postManButton("Decline", false,
-                                  () => Navigator.pop(context))),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: postManButton("Accept", true, () {
-                            // TODO: make a convesation for the two users
-                          })),
-                        ],
+                      Visibility(
+                        visible: !mine,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(
+                                child: postManButton("Decline", false,
+                                    () => Navigator.pop(context))),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                child: postManButton("Accept", true, () {
+                              // TODO: make a convesation for the two users
+                            })),
+                          ],
+                        ),
                       )
                     ],
                   ),

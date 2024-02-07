@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/views/components/universal.widgets.dart';
 
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
@@ -16,9 +17,7 @@ class _ShipmentsPageState extends StateMVC<ShipmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
+      appBar: BlackAppBar(
         title: Text(
           appBarDate(),
           textScaleFactor: 1,

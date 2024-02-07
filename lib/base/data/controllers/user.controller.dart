@@ -7,7 +7,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../views/components/auth/success.dialog.dart';
 import '../helper/helper.dart';
 import '../models/user.dart' as userModel;
 import 'app.controller.dart';
@@ -118,9 +117,10 @@ class UserController extends EmailController {
         await auth.sendPasswordResetEmail(email: email).then((value) {
           loader.remove();
           showSuccessDialog(
-              scaffoldKey.currentContext!,
               "Password reset link has been sent to the proviced email",
-              "Back to login");
+              "",
+              "Back to login",
+              "/Login");
         });
       } catch (e) {
         loader.remove();
@@ -148,8 +148,8 @@ class UserController extends EmailController {
       )
           .then((value) {
         loader.remove();
-        showSuccessDialog(scaffoldKey.currentContext!,
-            "Your Password Reset Succssfully", "Back to login");
+        showSuccessDialog(
+            "Your Password Reset Succssfully", "Back to login", "", "/Login");
       });
     } catch (e) {
       log(e.toString());

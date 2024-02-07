@@ -25,4 +25,26 @@ class RequestsRepo {
       throw Exception(e);
     }
   }
+
+  // get all the user order requests
+  static Future<List<Request>> fetchPackageRequests(String id) async {
+    try {
+      CollectionReference requestCol =
+          FirebaseFirestore.instance.collection('requests');
+      QuerySnapshot querySnapshot = await requestCol
+          .where("senderId", isEqualTo: activeUser.value.id)
+          .where("packageId", isEqualTo: id)
+          .orderBy("createdAt", descending: true)
+          .get()
+          .onError((error, stackTrace) =>
+              throw Exception('Failed to load requests'));
+      // Convert documents to Package objects
+      List<Request> requests = querySnapshot.docs
+          .map((doc) => Request.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+      return requests;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

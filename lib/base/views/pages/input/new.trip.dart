@@ -41,6 +41,8 @@ class _NewTripPageState extends StateMVC<NewTripPage>
       con.trip.vehicleDetails = VehicleDetails();
       con.trip.departureDetails = DepartureDetails();
       con.trip.destinationDetails = DepartureDetails();
+      con.trip.planDetails = PlaneDetails();
+      con.trip.trainDetails = TrainDetails();
     });
   }
 
@@ -113,6 +115,74 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                       ),
                     );
                   }).toList(),
+                ),
+                Visibility(
+                  visible: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 10),
+                      mainHeading(context, "Upload Ticket"),
+                      GestureDetector(
+                        onTap: () => auth.showPickOptionsDialog(
+                            context,
+                            () => loadProfilePicker(
+                                ImageSource.camera,
+                                context,
+                                (val) => setState(() => ticket = File(val)),
+                                "id"),
+                            () => loadProfilePicker(
+                                ImageSource.gallery,
+                                context,
+                                (val) => setState(() => ticket = File(val)),
+                                "id")),
+                        child: ticket == null
+                            ? Container(
+                                height: getHeight(context, 15.5),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: btnColor.withOpacity(.1),
+                                ),
+                                child: const Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.image_outlined, size: 42),
+                                    Text(
+                                      'Upload Ticket Here',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                margin: const EdgeInsets.only(right: 15),
+                                height: getHeight(context, 25),
+                                // width: getWidth(context, 70),
+                                alignment: Alignment.topRight,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: btnColor,
+                                  image: DecorationImage(
+                                    image: FileImage(ticket!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                      )
+                    ],
+                  ),
                 ),
                 Visibility(
                   visible: ![1, 4].contains(con.trip.travelMethod!.id),
@@ -224,74 +294,6 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const SizedBox(height: 10),
-                      mainHeading(context, "Upload Ticket"),
-                      GestureDetector(
-                        onTap: () => auth.showPickOptionsDialog(
-                            context,
-                            () => loadProfilePicker(
-                                ImageSource.camera,
-                                context,
-                                (val) => setState(() => ticket = File(val)),
-                                "id"),
-                            () => loadProfilePicker(
-                                ImageSource.gallery,
-                                context,
-                                (val) => setState(() => ticket = File(val)),
-                                "id")),
-                        child: ticket == null
-                            ? Container(
-                                height: getHeight(context, 15.5),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: btnColor,
-                                ),
-                                child: const Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.image_outlined, size: 42),
-                                    Text(
-                                      'Upload plane ticket',
-                                      textAlign: TextAlign.center,
-                                      textScaleFactor: 1,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                margin: const EdgeInsets.only(right: 15),
-                                height: getHeight(context, 25),
-                                // width: getWidth(context, 70),
-                                alignment: Alignment.topRight,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: btnColor,
-                                  image: DecorationImage(
-                                    image: FileImage(ticket!),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                      )
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: [1].contains(con.trip.travelMethod!.id),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(height: 10),
                       mainHeading(context, "Airline Details"),
                       InputFieldItem(
                         hint: "Plane Name",
@@ -331,7 +333,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   children: <Widget>[
                     Expanded(
                         child: datePicker(context, "", "Date", () async {
-                      await con.pickDateTime(context).then((value) {
+                      await con.pickDate(context).then((value) {
                         if (value != null) {
                           con.trip.departureDetails!.date = value.toString();
                         } else {
@@ -376,7 +378,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   children: <Widget>[
                     Expanded(
                         child: datePicker(context, "", "Date", () async {
-                      await con.pickDateTime(context).then((value) {
+                      await con.pickDate(context).then((value) {
                         if (value != null) {
                           con.trip.destinationDetails!.date = value.toString();
                         } else {
@@ -440,7 +442,6 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                     if (desterror != null || deperror != null) {
                       toastShow(context, desterror ?? deperror ?? "", 'err');
                     } else {
-                      log(con.trip.toMap().toString());
                       con.addTrip(con.trip, ticket);
                     }
                   } else {

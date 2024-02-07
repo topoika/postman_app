@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../controllers/app.controller.dart';
@@ -32,17 +34,20 @@ class TripsRepo {
       CollectionReference tripsColl =
           FirebaseFirestore.instance.collection('trips');
       QuerySnapshot querySnapshot = await tripsColl
+          // TODO: Uncomment this line for production
           // .where("travelledAt", isGreaterThan: DateTime.now().toString())
           .get()
-          .onError(
-              (error, stackTrace) => throw Exception('Failed to load trips'));
+          .onError((error, stackTrace) =>
+              throw Exception('Failed to load trips${error.toString()}'));
       // Convert documents to Trip objects
       List<Trip> trips = querySnapshot.docs
           .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
+          .where((trip) => trip.travellersId != activeUser.value.id)
           .toList();
 
       return trips;
     } catch (e) {
+      log(e.toString());
       throw Exception(e);
     }
   }

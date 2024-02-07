@@ -69,7 +69,7 @@ String dateOnLy(dateTime) {
   if (dateTime.toString().isEmpty) {
     return "";
   }
-  return DateFormat("D-MM-yyyy").format(DateTime.parse(dateTime));
+  return DateFormat("dd-MM-yyyy").format(DateTime.parse(dateTime));
 }
 
 String timeOnly(dateTime) {

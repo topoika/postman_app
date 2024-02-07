@@ -12,7 +12,9 @@ import '../../views/pages/more/more.screen.dart';
 import '../../views/pages/more/order.requests.dart';
 import '../../views/pages/more/my.packages.dart';
 import '../../views/pages/onboading.dart';
-import '../../views/pages/order.page.dart';
+import '../../views/pages/package/package.details.dart';
+import '../../views/pages/package/request.details.dart';
+import '../../views/pages/package/requests.page.dart';
 import '../../views/pages/rate.transaction.dart';
 import '../../views/pages/splash.dart';
 import '../../views/pages/trip.details.dart';
@@ -21,6 +23,7 @@ import '../../views/pages/user/login.dart';
 import '../../views/pages/user/otp.verification.dart';
 import '../../views/pages/user/password.reset.dart';
 import '../../views/pages/user/register.dart';
+import '../models/request.dart';
 import '../models/trip.dart';
 import '../models/user.dart';
 
@@ -64,6 +67,12 @@ class RouteGenerator {
       case '/NewOrderPage':
         return MaterialPageRoute(
             builder: (_) => NewOrderPage(id: args as String));
+      case '/PackageRequests':
+        return MaterialPageRoute(
+            builder: (_) => PackageRequests(id: args as String));
+      case '/RequestDetails':
+        return MaterialPageRoute(
+            builder: (_) => RequestDetails(request: args as Request));
       case '/ReceiverDetailsPage':
         return MaterialPageRoute(
             builder: (_) => ReceiverDetailsPage(data: args));

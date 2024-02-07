@@ -39,9 +39,7 @@ class _TripsPageState extends StateMVC<TripsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
+      appBar: BlackAppBar(
         title: Text(
           appBarDate(),
           textScaleFactor: 1,

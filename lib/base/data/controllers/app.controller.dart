@@ -13,6 +13,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:postman_app/base/data/models/package.dart';
 
+import '../../../main.dart';
+import '../../views/components/auth/success.dialog.dart';
 import '../models/user.dart' as userModel;
 
 import '../helper/constants.dart';
@@ -74,6 +76,23 @@ class AppController extends MainController {
       print('Error uploading image to Firebase Storage: $e');
       return null;
     }
+  }
+
+  void showSuccessDialog(title, desc, btn, route) {
+    showDialog(
+      context: Get.context!,
+      barrierColor: Colors.black26,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: SuccessDialog(
+              title: title, description: desc, btnText: btn, route: route),
+        );
+      },
+    );
   }
 
   Future<List<String>?> uploadImagesToFirebase(

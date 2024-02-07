@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -53,7 +51,8 @@ class _HomepageState extends StateMVC<Homepage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () => log(activeUser.value.deviceToken!),
+            onTap: () =>
+                con.showSuccessDialog("title", "desc", "View Moer", "/"),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Icon(

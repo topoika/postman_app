@@ -24,7 +24,7 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
       key: con.scaffoldKey,
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () => con.openDrawer(),
+          onTap: () => Navigator.pushNamed(context, "/MorePage"),
           child: const Icon(
             Icons.sort,
             size: 32,
@@ -76,7 +76,7 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
               return ListView.builder(
                 itemCount: chats.length,
                 shrinkWrap: true,
-                reverse: true,
+                reverse: false,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final chat = chats[index];

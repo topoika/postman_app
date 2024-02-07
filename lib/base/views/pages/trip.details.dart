@@ -7,6 +7,7 @@ import '../../data/controllers/trip.controller.dart';
 import '../../data/helper/constants.dart';
 import '../../data/models/trip.dart';
 import '../components/buttons.dart';
+import '../components/custom.switch.dart';
 import '../components/universal.widgets.dart';
 
 class TripDetailsPage extends StatefulWidget {
@@ -38,21 +39,14 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool myTrip = widget.trip.travellersId == activeUser.value.id;
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: AppBar(
-        leadingWidth: 64,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Image.asset("assets/icons/back.png")),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        title: const Text(
-          "Postman",
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+      appBar: BlackAppBar(
+        title: Text(
+          myTrip ? "Trip Details" : "Postman",
+          textScaleFactor: 1,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
         ),
       ),
       body: RefreshIndicator(
@@ -73,8 +67,11 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            showLargeImage(
-                                context, activeUser.value.image, null);
+                            trip!.traveller!.image != null
+                                ? showLargeImage(
+                                    context, trip!.traveller!.image, null)
+                                : toastShow(
+                                    context, "No profile picture", "nor");
                           },
                           child: Container(
                             height: getWidth(context, 20),
@@ -213,19 +210,22 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 15),
-                    margin: const EdgeInsets.only(bottom: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: greyColor,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        detailsItem("Distance From Customer",
-                            "${calculateDistance(trip!.traveller!.address!).toStringAsFixed(1)} KM"),
-                      ],
+                  Visibility(
+                    visible: !myTrip,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      margin: const EdgeInsets.only(bottom: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: greyColor,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          detailsItem("Distance From Customer",
+                              "${calculateDistance(trip!.traveller!.address!).toStringAsFixed(1)} KM"),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -264,28 +264,94 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                       ],
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Expanded(
-                          child: postManButton(
-                              "Message",
-                              false,
-                              () => Navigator.pushReplacementNamed(
-                                  context, "/ConversationPage",
-                                  arguments: trip!.traveller))),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: postManButton(
-                          "Hire Postman",
-                          true,
-                          () {
-                            con.sendRequest(trip!);
-                            // TODO: send a notification and reuest to the postman device
-                          },
+                  Visibility(
+                    visible: myTrip,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          margin: const EdgeInsets.only(bottom: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: greyColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              const Text(
+                                "Available for Packages",
+                                textScaleFactor: 1,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              CustomSwitch(
+                                  value: trip!.available ?? true,
+                                  onChanged: (val) {
+                                    // update event availability
+                                    setState(() => trip!.available = val);
+                                    con.updatePostmanStatus(trip!.id!, val);
+                                  }),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        buttonOne("Edit Trip", true, () {}),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () => con.cancelTrip(trip!.id!),
+                          child: Container(
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.close,
+                                    color: Colors.redAccent, size: 18),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Cancel Trip",
+                                  textScaleFactor: 1,
+                                  style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: !myTrip,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Expanded(
+                            child: postManButton(
+                                "Message",
+                                false,
+                                () => Navigator.pushReplacementNamed(
+                                    context, "/ConversationPage",
+                                    arguments: trip!.traveller))),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: postManButton(
+                            "Send Request",
+                            true,
+                            () {
+                              con.sendRequest(trip!);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),

@@ -25,19 +25,21 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
     return Scaffold(
       key: con.scaffoldKey,
       appBar: AppBar(
-        leadingWidth: 70,
+        // systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: GestureDetector(
-          onTap: () => con.openDrawer(),
+          onTap: () => Navigator.pushNamed(context, "/MorePage"),
           child: const Icon(
             Icons.sort,
             size: 32,
+            color: Colors.black,
           ),
         ),
         centerTitle: true,
         elevation: 0,
         title: const Text(
           "Profile",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          textScaleFactor: 1,
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
         ),
         actions: [
           GestureDetector(

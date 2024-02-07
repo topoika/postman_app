@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/controllers/app.controller.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
 import '../../../data/models/package.dart';
@@ -14,13 +13,13 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
       final package = packages[index];
       return GestureDetector(
         onTap: () {
-          if (mine) {
-            activePackage.value = package;
-            Navigator.pushReplacementNamed(context, "/AvailableTripsPage");
-          } else {
-            Navigator.pushNamed(context, "/NewOrderPage",
-                arguments: package.id);
-          }
+          Navigator.pushNamed(context, "/NewOrderPage", arguments: package.id);
+          // if (mine) {
+          //   activePackage.value = package;
+          //   Navigator.pushReplacementNamed(context, "/AvailableTripsPage");
+          // } else {
+
+          // }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -28,7 +27,6 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
             color: btnColor.withOpacity(.1),
-            // color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(
