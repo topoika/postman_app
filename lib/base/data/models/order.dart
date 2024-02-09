@@ -1,10 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package.dart';
 import 'travel.method.dart';
 import 'user.dart';
 
 class Order {
   String? id;
-  String? orderID;
+  String? requestId;
   double? postManFee;
   double? tipAmount;
   double? totalAmount;
@@ -18,9 +20,12 @@ class Order {
   String? createdAt;
   String? packageDeliverdAt;
   String? postManReceivedAt;
+
+  // card
+  Payment? payment;
   Order({
     this.id,
-    this.orderID,
+    this.requestId,
     this.postManFee,
     this.tipAmount,
     this.totalAmount,
@@ -34,12 +39,13 @@ class Order {
     this.createdAt,
     this.packageDeliverdAt,
     this.postManReceivedAt,
+    this.payment,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'orderID': orderID,
+      'requestId': requestId,
       'postManFee': postManFee,
       'tipAmount': tipAmount,
       'totalAmount': totalAmount,
@@ -47,6 +53,7 @@ class Order {
       'tripId': tripId,
       'package': package?.toMap(),
       'postMan': postMan?.toMap(),
+      'payment': payment?.toMap(),
       'senderId': senderId,
       'postmanId': postmanId,
       'status': status,
@@ -59,7 +66,7 @@ class Order {
   factory Order.fromMap(Map<String, dynamic> map) {
     return Order(
       id: map['id'] != null ? map['id'] as String : null,
-      orderID: map['orderID'] != null ? map['orderID'] as String : null,
+      requestId: map['requestId'] != null ? map['requestId'] as String : null,
       postManFee:
           map['postManFee'] != null ? map['postManFee'] as double : null,
       tipAmount: map['tipAmount'] != null ? map['tipAmount'] as double : null,
@@ -85,6 +92,41 @@ class Order {
       postManReceivedAt: map['postManReceivedAt'] != null
           ? map['postManReceivedAt'] as String
           : null,
+    );
+  }
+}
+
+class Payment {
+  String? holdersName;
+  String? cardNumber;
+  String? expiry;
+  String? cvc;
+  String? status;
+  Payment({
+    this.holdersName,
+    this.cardNumber,
+    this.expiry,
+    this.cvc,
+    this.status,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'holdersName': holdersName,
+      'cardNumber': cardNumber,
+      'expiry': expiry,
+      'status': status,
+    };
+  }
+
+  factory Payment.fromMap(Map<String, dynamic> map) {
+    return Payment(
+      holdersName:
+          map['holdersName'] != null ? map['holdersName'] as String : null,
+      cardNumber:
+          map['cardNumber'] != null ? map['cardNumber'] as String : null,
+      expiry: map['expiry'] != null ? map['expiry'] as String : null,
+      cvc: map['status'] != null ? map['status'] as String : null,
     );
   }
 }

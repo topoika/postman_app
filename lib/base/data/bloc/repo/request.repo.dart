@@ -11,7 +11,7 @@ class RequestsRepo {
           FirebaseFirestore.instance.collection('requests');
       QuerySnapshot querySnapshot = await requestCol
           .where("recieverId", isEqualTo: activeUser.value.id)
-          .where("status", isEqualTo: "active")
+          .where("status", isEqualTo: "pending")
           .orderBy("createdAt", descending: true)
           .get()
           .onError((error, stackTrace) =>

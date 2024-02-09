@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/controllers/app.controller.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
+import '../../../data/models/order.dart';
 import '../buttons.dart';
 import '../universal.widgets.dart';
 
-Widget shipmentItem(context, index) {
+Widget shipmentItem(context, Order shipment) {
   return Container(
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: 15),
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(15),
-      color: btnColor.withOpacity(.5),
+      color: Colors.grey[200],
     ),
     child: Column(
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
-              'Order #12345',
+            Text(
+              'Order #${shipment.id!.substring(0, 7)}',
               textScaleFactor: 1,
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: index.isEven ? blackColor : greenColor,
+                color: greenColor,
               ),
-              child: Text(
-                index.isEven ? "Completed" : "Active",
-                style: const TextStyle(
+              child: const Text(
+                "Active",
+                style: TextStyle(
                     fontSize: 11,
                     color: Colors.white,
                     fontWeight: FontWeight.w500),
@@ -41,69 +42,93 @@ Widget shipmentItem(context, index) {
           ],
         ),
         const SizedBox(height: 10),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'Date: 25/01/2023',
+              'Date: ${dateOnLy(shipment.createdAt)}',
               textScaleFactor: 1,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Text(
-              '\$45.00',
+              '\$${shipment.totalAmount!.toStringAsFixed(2)}',
               textScaleFactor: 1,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             )
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.redAccent.withOpacity(.12),
+              ),
+              child: const Icon(Icons.location_on_rounded,
+                  color: Colors.redAccent, size: 18),
+            ),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                "${shipment.package!.shipmentAddress!.address!.address} - ${shipment.package!.shipmentAddress!.intersection}",
+                textScaleFactor: 1,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          alignment: Alignment.centerLeft,
+          height: 20,
+          child: VerticalDivider(
+            color: Colors.redAccent.withOpacity(.5),
+          ),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.redAccent.withOpacity(.12),
+              ),
+              child: const Icon(Icons.location_on_rounded,
+                  color: Colors.redAccent, size: 18),
+            ),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                "${shipment.package!.destinationAddress!.address!.address} - ${shipment.package!.destinationAddress!.intersection}",
+                textScaleFactor: 1,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 10),
         Column(
           children: <Widget>[
-            const Row(
-              children: <Widget>[
-                Icon(Icons.location_on_rounded,
-                    color: Colors.black, size: 14.5),
-                SizedBox(width: 5),
-                Text(
-                  '12 Garlfield Crescent',
-                  textScaleFactor: 1,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            const Divider(
+              height: 30,
+              color: Colors.black12,
+              thickness: .9,
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              alignment: Alignment.centerLeft,
-              height: 15,
-              child: const VerticalDivider(),
-            ),
-            const Row(
-              children: <Widget>[
-                Icon(Icons.location_on_rounded,
-                    color: Colors.black, size: 14.5),
-                SizedBox(width: 5),
-                Text(
-                  '123 Solo Street, IDN',
-                  textScaleFactor: 1,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Divider(
-                color: greenColor.withOpacity(.3), thickness: .9, height: 15),
             Row(
               children: <Widget>[
                 Expanded(
@@ -111,9 +136,9 @@ Widget shipmentItem(context, index) {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          activeUser.value.image != null
+                          shipment.postMan!.image != null
                               ? showLargeImage(
-                                  context, activeUser.value.image, null)
+                                  context, shipment.postMan!.image, null)
                               : toastShow(context, "No profile picture", "nor");
                         },
                         child: Container(
@@ -122,17 +147,17 @@ Widget shipmentItem(context, index) {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(.3),
-                            image: activeUser.value.image != null
+                            image: shipment.postMan!.image != null
                                 ? DecorationImage(
                                     image: cachedImage(
-                                        activeUser.value.image ?? noUserImage),
+                                        shipment.postMan!.image ?? noUserImage),
                                     fit: BoxFit.fill,
                                   )
                                 : null,
                             shape: BoxShape.circle,
                             border: Border.all(width: 2, color: Colors.white),
                           ),
-                          child: activeUser.value.image == null
+                          child: shipment.postMan!.image == null
                               ? const Icon(
                                   Icons.person,
                                   color: Colors.black,
@@ -143,7 +168,7 @@ Widget shipmentItem(context, index) {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        activeUser.value.username ?? "",
+                        shipment.postMan!.username ?? "",
                         textScaleFactor: 1,
                         maxLines: 1,
                         style: const TextStyle(
@@ -155,7 +180,7 @@ Widget shipmentItem(context, index) {
                   ),
                 ),
                 Visibility(
-                  visible: index.isEven,
+                  visible: shipment.status == "complete",
                   child: Container(
                     child: Row(
                       children: [1, 2, 3, 4, 5]
@@ -170,11 +195,14 @@ Widget shipmentItem(context, index) {
                 )
               ],
             ),
-            Divider(
-                color: greenColor.withOpacity(.3), thickness: .9, height: 15),
+            const Divider(
+              height: 30,
+              color: Colors.black12,
+              thickness: .9,
+            ),
             const SizedBox(height: 5),
             Visibility(
-              visible: index.isEven,
+              visible: shipment.tipAmount! > 0.0,
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -200,7 +228,7 @@ Widget shipmentItem(context, index) {
               ),
             ),
             Visibility(
-              visible: !index.isEven,
+              visible: shipment.status == "complete",
               child: whiteButton(
                 "Rate Transaction",
                 () => Navigator.pushNamed(
@@ -217,4 +245,135 @@ Widget shipmentItem(context, index) {
   );
 }
 
-
+Widget shipmentItemOne(Order shipment) {
+  return InkWell(
+    // onTap: () =>
+    //     Navigator.pushNamed(context, "/TripDetailsPage", arguments: trip),
+    splashColor: Colors.transparent,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(.09),
+            spreadRadius: 2,
+            blurRadius: 3,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Row(
+                  children: <Widget>[
+                    Text(
+                      'Starting City',
+                      textScaleFactor: 1,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 10),
+                          Expanded(
+                            child:
+                                Divider(color: Color(0xffF95959), thickness: 1),
+                          ),
+                          SizedBox(width: 3),
+                          Icon(
+                            Icons.location_on_rounded,
+                            size: 15,
+                            color: Color(0xffF95959),
+                          ),
+                          SizedBox(width: 3),
+                          Expanded(
+                            child:
+                                Divider(color: Color(0xffF95959), thickness: 1),
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      'Destination City',
+                      textScaleFactor: 1,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            shipment.package!.shipmentAddress!.address!.city!,
+                            textScaleFactor: 1,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            timeOnly(shipment.createdAt!),
+                            textScaleFactor: 1,
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            shipment
+                                .package!.destinationAddress!.address!.city!,
+                            textScaleFactor: 1,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            // timeOnly(shipment.packageDeliverdAt),
+                            "${shipment.packageDeliverdAt}",
+                            textScaleFactor: 1,
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}

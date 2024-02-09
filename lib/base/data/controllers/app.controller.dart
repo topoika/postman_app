@@ -15,6 +15,7 @@ import 'package:postman_app/base/data/models/package.dart';
 
 import '../../../main.dart';
 import '../../views/components/auth/success.dialog.dart';
+import '../models/request.dart';
 import '../models/user.dart' as userModel;
 
 import '../helper/constants.dart';
@@ -37,6 +38,7 @@ class AppController extends MainController {
   String messagesColl = "messages";
   String packageColl = "packages";
   String requestColl = "requests";
+  String orderCol = "orders";
 
   void openDrawer() => Scaffold.of(scaffoldKey.currentContext!).openDrawer();
   Future<String> getFCM() async {
@@ -114,7 +116,7 @@ class AppController extends MainController {
     }
   }
 
-  Future<bool>? sendNotification(String token, String title, String id,
+  Future<bool>? sendNotification(String token, String title, Request request,
       {String type = "message"}) async {
     final Map<String, dynamic> data = {
       'to': token,
@@ -123,7 +125,7 @@ class AppController extends MainController {
         'body':
             "You have a new ${type == "request" ? "Order request" : "Message"}",
       },
-      "data": {"id": id, "type": type}
+      "data": {"id": request.packageId, "requestId": request.id, "type": type}
     };
 
     final http.Response response = await http.post(

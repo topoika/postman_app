@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
 import '../../../data/models/package.dart';
+import '../../../data/models/request.dart';
 
 Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
   return ListView.builder(
@@ -13,7 +14,8 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
       final package = packages[index];
       return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/NewOrderPage", arguments: package.id);
+          Navigator.pushNamed(context, "/NewOrderPage",
+              arguments: Request(packageId: package.id));
           // if (mine) {
           //   activePackage.value = package;
           //   Navigator.pushReplacementNamed(context, "/AvailableTripsPage");

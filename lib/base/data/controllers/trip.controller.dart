@@ -121,8 +121,7 @@ class TripController extends AppController {
             throw Error();
           });
           String? postManToken = await getUserFCM(trip.travellersId);
-          await sendNotification(
-                  postManToken, "New Order Request", request.packageId!,
+          await sendNotification(postManToken, "New Order Request", request,
                   type: "request")!
               .then((value) {
             if (value) {

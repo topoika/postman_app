@@ -18,7 +18,7 @@ Widget requestItems(context, List<Request> requests, {bool mine = false}) {
         return GestureDetector(
           onTap: () => Navigator.pushNamed(
               context, mine ? "/RequestDetails" : "/NewOrderPage",
-              arguments: mine ? request : request.packageId),
+              arguments: request),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
             margin: const EdgeInsets.symmetric(vertical: 10),
@@ -130,7 +130,23 @@ Widget requestItems(context, List<Request> requests, {bool mine = false}) {
                           color: greenColor,
                           fontSize: 16,
                         ),
-                      )
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: statusColor(request.status!),
+                        ),
+                        child: Text(
+                          request.status!.toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ],
                   ),
                 )

@@ -33,7 +33,7 @@ class PackagesRepo {
           FirebaseFirestore.instance.collection('packages');
       QuerySnapshot querySnapshot = await tripsColl
           .where("senderId", isEqualTo: activeUser.value.id)
-          .where("ordered", isEqualTo: false)
+          // .where("ordered", isEqualTo: false)
           .orderBy("createAt", descending: true)
           .get()
           .onError(

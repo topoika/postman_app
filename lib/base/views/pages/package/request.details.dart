@@ -257,7 +257,8 @@ class _RequestDetailsState extends StateMVC<RequestDetails> {
                               : "Message Postman",
                           true, () {
                         if (widget.request.status == "accepted") {
-                          // TODO: Go to pay now page
+                          Navigator.pushNamed(context, "/PaymentPage",
+                              arguments: widget.request);
                         } else {
                           Navigator.pushReplacementNamed(
                               context, "/ConversationPage",

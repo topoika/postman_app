@@ -39,7 +39,17 @@ class _TripsPageState extends StateMVC<TripsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: BlackAppBar(
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => Navigator.pushNamed(context, "/MorePage"),
+          child: const Icon(
+            Icons.sort,
+            size: 32,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0,
         title: Text(
           appBarDate(),
           textScaleFactor: 1,

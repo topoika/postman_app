@@ -13,6 +13,7 @@ import '../../views/pages/more/order.requests.dart';
 import '../../views/pages/more/my.packages.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/package/package.details.dart';
+import '../../views/pages/package/payment.page.dart';
 import '../../views/pages/package/request.details.dart';
 import '../../views/pages/package/requests.page.dart';
 import '../../views/pages/rate.transaction.dart';
@@ -66,13 +67,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const AvailableTripsPage());
       case '/NewOrderPage':
         return MaterialPageRoute(
-            builder: (_) => NewOrderPage(id: args as String));
+            builder: (_) => NewOrderPage(request: args as Request));
       case '/PackageRequests':
         return MaterialPageRoute(
             builder: (_) => PackageRequests(id: args as String));
       case '/RequestDetails':
         return MaterialPageRoute(
             builder: (_) => RequestDetails(request: args as Request));
+      case '/PaymentPage':
+        return MaterialPageRoute(
+            builder: (_) => PaymentPage(request: args as Request));
       case '/ReceiverDetailsPage':
         return MaterialPageRoute(
             builder: (_) => ReceiverDetailsPage(data: args));

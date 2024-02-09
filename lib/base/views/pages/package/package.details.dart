@@ -8,14 +8,16 @@ import 'package:postman_app/base/data/helper/helper.dart';
 
 import '../../../data/controllers/package.controller.dart';
 import '../../../data/models/package.dart';
+import '../../../data/models/request.dart';
+import '../../../data/models/user.dart';
 import '../../components/buttons.dart';
 import '../../components/packages/image.slider.dart';
 import '../../components/universal.widgets.dart';
 import '../trip.details.dart';
 
 class NewOrderPage extends StatefulWidget {
-  final String? id;
-  const NewOrderPage({super.key, required this.id});
+  final Request? request;
+  const NewOrderPage({super.key, required this.request});
 
   @override
   _NewOrderPageState createState() => _NewOrderPageState();
@@ -34,7 +36,7 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
   }
 
   void setPackage() async {
-    await con.getOnePackage(widget.id!).then((value) {
+    await con.getOnePackage(widget.request!.packageId!).then((value) {
       setState(() => package = value);
     }).onError((error, stackTrace) {
       log(error.toString());
@@ -46,11 +48,12 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
     bool mine =
         (package != null ? package!.senderId : "") == activeUser.value.id;
     return Scaffold(
+      key: con.scaffoldKey,
       appBar: BlackAppBar(
-        title: const Text(
-          "New Order",
+        title: Text(
+          mine ? "Package Detais" : "New Order",
           textScaleFactor: 1,
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
         ),
         actions: [
           Visibility(
@@ -315,8 +318,18 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                       Visibility(
                         visible: !mine,
                         child: InkWell(
-                          onTap: () {
-                            // TODO: Make a conversation for the two users
+                          splashColor: Colors.transparent,
+                          onTap: () async {
+                            await con.db
+                                .collection(con.userCol)
+                                .doc(package!.senderId)
+                                .get()
+                                .then((value) {
+                              Navigator.pushReplacementNamed(
+                                  context, "/ConversationPage",
+                                  arguments: User.fromMap(
+                                      value.data() as Map<String, dynamic>));
+                            });
                           },
                           child: Row(
                             children: <Widget>[
@@ -347,13 +360,16 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Expanded(
-                                    child: postManButton("Find Postman", false,
-                                        () {
-                                  activePackage.value = package!;
-                                  Navigator.pushNamed(
-                                      context, "/AvailableTripsPage");
-                                })),
+                                Visibility(
+                                  visible: !package!.ordered!,
+                                  child: Expanded(
+                                      child: postManButton(
+                                          "Find Postman", false, () {
+                                    activePackage.value = package!;
+                                    Navigator.pushNamed(
+                                        context, "/AvailableTripsPage");
+                                  })),
+                                ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                     child: postManButton("Requests", true, () {
@@ -397,12 +413,16 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Expanded(
-                                child: postManButton("Decline", false,
-                                    () => Navigator.pop(context))),
+                                child: postManButton(
+                                    "Decline",
+                                    false,
+                                    () => con
+                                        .declineRequest(widget.request!.id))),
                             const SizedBox(width: 10),
                             Expanded(
                                 child: postManButton("Accept", true, () {
                               // TODO: make a convesation for the two users
+                              con.acceptRequest(widget.request!.id);
                             })),
                           ],
                         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/data/helper/helper.dart';
 
 import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/user.controller.dart';
@@ -51,8 +52,7 @@ class _HomepageState extends StateMVC<Homepage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () =>
-                con.showSuccessDialog("title", "desc", "View Moer", "/"),
+            onTap: () => toastShow(context, "Coming soon....", "nor"),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Icon(

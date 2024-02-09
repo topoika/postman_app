@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../../main.dart';
 import '../../views/components/home/universal.widget.dart';
+import '../models/request.dart';
 
 class NotificationController {
   static Future<void> requestPermission() async {
@@ -42,7 +42,8 @@ class NotificationController {
             Navigator.of(Get.context!)
                 .pushReplacementNamed("/Pages", arguments: 2);
             Navigator.pushNamed(Get.context!, "/NewOrderPage",
-                arguments: "one");
+                arguments:
+                    Request(id: payload['id'], packageId: payload['id']));
           } else {
             Navigator.of(Get.context!)
                 .pushReplacementNamed("/Pages", arguments: 3);
@@ -69,12 +70,14 @@ class NotificationController {
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 insetPadding: EdgeInsets.zero,
-                child: NewOrderDialog(requestId: message.data['id']),
+                child: NewOrderDialog(
+                    request: Request(
+                        id: message.data['id'], packageId: message.data['id'])),
               );
             },
           );
         } else {
-          showNotification(message, flutterLocalNotificationsPlugin, false);
+          // showNotification(message, flutterLocalNotificationsPlugin, false);
         }
       }
     });
@@ -99,60 +102,61 @@ class NotificationController {
 
   //
 
-  static Future<void> showNotification(RemoteMessage message,
-      FlutterLocalNotificationsPlugin fln, bool data) async {
-    if (!Platform.isIOS) {
-      String? title;
-      String? body;
-      String? requestId;
-      NotificationBody notificationBody = convertNotification(message.data);
-      if (data) {
-        title = message.data['title'];
-        body = message.data['body'];
-        requestId = message.data['id'];
-      }
-      await showBigTextNotification(
-          title, body ?? "", requestId, notificationBody, fln);
-    }
-  }
+//   static Future<void> showNotification(RemoteMessage message,
+//       FlutterLocalNotificationsPlugin fln, bool data) async {
+//     if (!Platform.isIOS) {
+//       String? title;
+//       String? body;
+//       String? requestId;
+//       NotificationBody notificationBody = convertNotification(message.data);
+//       if (data) {
+//         title = message.data['title'];
+//         body = message.data['body'];
+//         requestId = message.data['id'];
+//       }
+//       await showBigTextNotification(
+//           title, body ?? "", requestId, notificationBody, fln);
+//     }
+//   }
 
-  static Future<void> showBigTextNotification(
-      String? title,
-      String body,
-      String? requestId,
-      NotificationBody? notificationBody,
-      FlutterLocalNotificationsPlugin fln) async {
-    BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-      body,
-      htmlFormatBigText: true,
-      contentTitle: title,
-      htmlFormatContentTitle: true,
-    );
-    AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'postman',
-      'postman',
-      importance: Importance.max,
-      styleInformation: bigTextStyleInformation,
-      priority: Priority.max,
-      playSound: true,
-      sound: const RawResourceAndroidNotificationSound('notification'),
-    );
-    NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, title, body, platformChannelSpecifics,
-        payload: notificationBody != null
-            ? jsonEncode(notificationBody.toJson())
-            : null);
-  }
+//   static Future<void> showBigTextNotification(
+//       String? title,
+//       String body,
+//       String? requestId,
+//       NotificationBody? notificationBody,
+//       FlutterLocalNotificationsPlugin fln) async {
+//     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
+//       body,
+//       htmlFormatBigText: true,
+//       contentTitle: title,
+//       htmlFormatContentTitle: true,
+//     );
+//     AndroidNotificationDetails androidPlatformChannelSpecifics =
+//         AndroidNotificationDetails(
+//       'postman',
+//       'postman',
+//       importance: Importance.max,
+//       styleInformation: bigTextStyleInformation,
+//       priority: Priority.max,
+//       playSound: true,
+//       sound: const RawResourceAndroidNotificationSound('notification'),
+//     );
+//     NotificationDetails platformChannelSpecifics =
+//         NotificationDetails(android: androidPlatformChannelSpecifics);
+//     await fln.show(0, title, body, platformChannelSpecifics,
+//         payload: notificationBody != null
+//             ? jsonEncode(notificationBody.toJson())
+//             : null);
+//   }
 
-  static NotificationBody convertNotification(Map<String, dynamic> data) {
-    if (data['type'] == 'request') {
-      return NotificationBody(type: 'notification', id: data['id']);
-    } else {
-      return NotificationBody(type: 'chats');
-    }
-  }
+//   static NotificationBody convertNotification(Map<String, dynamic> data) {
+//     if (data['type'] == 'request') {
+//       return NotificationBody(type: 'notification', id: data['id']);
+//     } else {
+//       return NotificationBody(type: 'chats');
+//     }
+//   }
+// }
 }
 
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
@@ -174,24 +178,24 @@ Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
   }
 }
 
-class NotificationBody {
-  String? id;
-  String? type;
+// class NotificationBody {
+//   String? id;
+//   String? type;
 
-  NotificationBody({
-    this.id,
-    this.type,
-  });
+//   NotificationBody({
+//     this.id,
+//     this.type,
+//   });
 
-  NotificationBody.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    type = json['type'];
-  }
+//   NotificationBody.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     type = json['type'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['type'] = type;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['id'] = id;
+//     data['type'] = type;
+//     return data;
+//   }
+// }

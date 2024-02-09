@@ -147,10 +147,9 @@ class ChatsController extends AppController {
       String receiverId = conversation.participants!
           .firstWhere((i) => i != activeUser.value.id);
       result[receiverId] ??= conversation.unreadMessages[receiverId] ?? [];
-      result[receiverId]!.add(message!.id ?? "");
+      message!.id != null ? result[receiverId]!.add(message.id) : null;
       result[activeUser.value.id!] ??= [];
     }
-
     return result;
   }
 

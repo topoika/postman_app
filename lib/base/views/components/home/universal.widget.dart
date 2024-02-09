@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/strings.dart';
+import '../../../data/models/request.dart';
 import '../buttons.dart';
 
 Widget statsItem(context, txt, stat) {
@@ -107,10 +108,10 @@ class _MyDialogState extends State<MyDialog> {
 }
 
 class NewOrderDialog extends StatefulWidget {
-  final String requestId;
+  final Request request;
   const NewOrderDialog({
     Key? key,
-    required this.requestId,
+    required this.request,
   }) : super(key: key);
 
   @override
@@ -174,7 +175,7 @@ class _NewOrderDialogState extends State<NewOrderDialog> {
                 buttonOne("View Order", true, () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, "/NewOrderPage",
-                      arguments: widget.requestId);
+                      arguments: widget.request);
                 }),
               ],
             ),
