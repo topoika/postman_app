@@ -4,7 +4,6 @@ import 'package:geocoding/geocoding.dart' hide Location;
 
 import 'package:place_picker/place_picker.dart';
 
-import '../../../env.dart';
 import '../helper/helper.dart';
 import '../models/address.dart';
 
@@ -109,7 +108,7 @@ class MainController extends ControllerMVC {
           await Navigator.of(scaffoldKey.currentContext!).push(
         MaterialPageRoute(
           builder: (context) => PlacePicker(
-            MAP_API,
+            "AIzaSyAqTWxt9ryyEjchATORRXb4sHmROgWbFHI",
             defaultLocation: const LatLng(56.1304, 106.3468),
           ),
         ),

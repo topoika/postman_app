@@ -1,7 +1,6 @@
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:otp/otp.dart';
-import 'package:postman_app/env.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/constants.dart';
@@ -18,7 +17,7 @@ class EmailController extends AppController {
 
   String generateRandomCode() {
     return OTP.generateTOTPCodeString(
-        SECRET_KEY, DateTime.now().millisecondsSinceEpoch,
+        "SECRET_KEY", DateTime.now().millisecondsSinceEpoch,
         length: 4);
   }
 
@@ -29,8 +28,8 @@ class EmailController extends AppController {
   }
 
   Future<void> sendEmail(String recipient, String otpCode) async {
-    String username = EMAIL;
-    String password = PASSWORD;
+    String username = "EMAIL";
+    String password = "PASSWORD";
 
     final smtpServer = gmail(username, password);
 
