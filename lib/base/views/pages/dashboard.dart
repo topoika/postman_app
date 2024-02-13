@@ -41,9 +41,9 @@ class _DashboardState extends State<Dashboard> {
           selectedItemColor: greenColor,
           unselectedItemColor: navItems,
           selectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
           unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
           items: [
             BottomNavigationBarItem(
               activeIcon: Image.asset("assets/icons/home.png",

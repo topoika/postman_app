@@ -122,7 +122,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const SizedBox(height: 10),
-                      mainHeading(context, "Upload Ticket"),
+                      mainHeading(context, "Upload Ticket if you have one"),
                       GestureDetector(
                         onTap: () => auth.showPickOptionsDialog(
                             context,
@@ -154,7 +154,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                                   children: <Widget>[
                                     Icon(Icons.image_outlined, size: 42),
                                     Text(
-                                      'Upload Ticket Here',
+                                      'Upload Ticket if you have one',
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1,
                                       style: TextStyle(
