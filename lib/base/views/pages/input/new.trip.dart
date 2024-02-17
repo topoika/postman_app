@@ -315,15 +315,16 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                 ),
                 const SizedBox(height: 10),
                 mainHeading(context, "Departing Details"),
-                pickAddressFields(context, "Pick Address", "Pick Address", () {
+                pickAddressFields(
+                    context, "Departing Address", "Departing Address", () {
                   con.pickLocation().then((value) {
                     con.trip.departureDetails!.address = value;
                     setState(() {});
                   });
                 }, address: con.trip.departureDetails),
                 InputFieldItem(
-                  hint: "Departure meetup place",
-                  label: "Meetup Place Or Spot",
+                  hint: "Nearby Places",
+                  label: "Nearby Places",
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) =>
@@ -360,15 +361,16 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                 ),
                 const SizedBox(height: 10),
                 mainHeading(context, "Destination Details"),
-                pickAddressFields(context, "Pick Address", "Pick Address", () {
+                pickAddressFields(
+                    context, "Destination Address", "Destination Address", () {
                   con.pickLocation().then((value) {
                     con.trip.destinationDetails!.address = value;
                     setState(() {});
                   });
                 }, address: con.trip.destinationDetails),
                 InputFieldItem(
-                  hint: "Destination meetup place",
-                  label: "Meetup Place Or Spot",
+                  hint: "Nearby Places",
+                  label: "Nearby Places",
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) =>

@@ -20,6 +20,7 @@ class TripController extends AppController {
       trip.ticketUrl = await uploadImageToFirebase(ticket, "trips/images");
     }
     trip.traveller = activeUser.value;
+    trip.createdAt = serverTime;
     trip.travellersId = activeUser.value.id;
     trip.travelledAt = trip.departureDetails!.date;
     try {
@@ -28,10 +29,10 @@ class TripController extends AppController {
       });
       loader.remove();
       showSuccessDialog(
-          "Your itinerary has been posted!", "", "View your trip", "/");
+          "Your itinerary has been posted!", "", "View your trip", "/Pages",
+          args: 1);
     } catch (e) {
       loader.remove();
-      log(e.toString());
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');
     }

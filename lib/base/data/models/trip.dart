@@ -20,6 +20,8 @@ class Trip {
   String? travelledAt;
   bool? available;
   String? status;
+  String? createdAt;
+  String? updatedAt;
 
   // Extras
 
@@ -43,6 +45,8 @@ class Trip {
     this.travelledAt,
     this.available,
     this.status,
+    this.createdAt,
+    this.updatedAt,
 
     // Extras
     this.city,
@@ -68,6 +72,8 @@ class Trip {
       'travelledAt': travelledAt,
       'available': available,
       'status': status,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
 
       // extras
     };
@@ -135,6 +141,8 @@ class Trip {
       travelledAt:
           map['travelledAt'] != null ? map['travelledAt'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
+      createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
+      updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
       available: map['available'] != null ? map['available'] as bool : null,
     );
   }

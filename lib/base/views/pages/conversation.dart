@@ -45,7 +45,6 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
   @override
   Widget build(BuildContext context) {
     if (conversation.id != null) {
-      
       con.updateUnreadMessage(conversation);
     }
     return Scaffold(
@@ -178,16 +177,13 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                       con.addMessage(
                           conversation,
                           Message(
-                              text: message.text,
-                              createAt: DateTime.now().toString(),
-                              sendBy: activeUser.value.id));
+                              text: message.text, sendBy: activeUser.value.id));
                     } else {
                       con
                           .addMessageToNewChat(
                               widget.user,
                               Message(
                                   text: message.text,
-                                  createAt: DateTime.now().toString(),
                                   sendBy: activeUser.value.id))
                           .then(
                               (value) => setState(() => conversation = value));

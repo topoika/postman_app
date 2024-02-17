@@ -143,6 +143,7 @@ class SuccessDialog extends StatefulWidget {
   final String title;
   final String description;
   final String route;
+  final dynamic args;
   final String btnText;
 
   const SuccessDialog({
@@ -150,6 +151,7 @@ class SuccessDialog extends StatefulWidget {
     required this.title,
     required this.description,
     required this.route,
+    this.args,
     required this.btnText,
   }) : super(key: key);
 
@@ -214,7 +216,8 @@ class _SuccessDialogState extends State<SuccessDialog> {
                 const SizedBox(height: 20),
                 buttonOne(widget.btnText, true, () {
                   Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, widget.route);
+                  Navigator.pushReplacementNamed(context, widget.route,
+                      arguments: widget.args);
                 }),
               ],
             ),

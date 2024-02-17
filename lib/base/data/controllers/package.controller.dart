@@ -24,16 +24,17 @@ class PackageController extends AppController {
             await uploadImagesToFirebase(images, "packages/images");
       }
       package.senderId = activeUser.value.id!;
-      log(package.toMap().toString());
+      package.createAt = serverTime;
       await db.collection(packageColl).add(package.toMap()).then((value) {
+        package.id = value.id;
         value.update({'id': value.id});
         loader.remove();
-        showSuccessDialog(
-            "Your package has been posted!", "", "Find a Postman", "/");
+        activePackage.value = package;
+        showSuccessDialog("Your package has been posted!", "", "Find a Postman",
+            "/AvailableTripsPage");
       });
     } catch (e) {
       loader.remove();
-      log(e.toString());
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');
     }
@@ -53,7 +54,7 @@ class PackageController extends AppController {
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     Order order = Order(
       package: package,
-      createdAt: DateTime.now().toString(),
+      createdAt: serverTime,
       postMan: request.trip!.traveller!,
       postManFee: request.postFee,
       tipAmount: 0.0,

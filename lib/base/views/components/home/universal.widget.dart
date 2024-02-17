@@ -70,7 +70,7 @@ class _MyDialogState extends State<MyDialog> {
             top: 0,
             child: Image.asset(
               "assets/images/earn.png",
-              height: 150,
+              height: 110,
               opacity: const AlwaysStoppedAnimation(.8),
             ),
           ),

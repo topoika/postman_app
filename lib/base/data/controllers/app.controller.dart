@@ -27,6 +27,7 @@ class AppController extends MainController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  String serverTime = FieldValue.serverTimestamp().toString();
 
   bool isloggedIn = FirebaseAuth.instance.currentUser != null;
 
@@ -43,6 +44,29 @@ class AppController extends MainController {
   void openDrawer() => Scaffold.of(scaffoldKey.currentContext!).openDrawer();
   Future<String> getFCM() async {
     return await firebaseMessaging.getToken().then((value) => value.toString());
+  }
+
+  Future<String?> getServerTimestamp() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Use a temporary document to generate a server timestamp
+      DocumentReference tempDoc = firestore.collection('temp_collection').doc();
+
+      await tempDoc.set({'timestamp': FieldValue.serverTimestamp()});
+
+      DocumentSnapshot snapshot = await tempDoc.get();
+
+      if (snapshot.exists) {
+        Timestamp? timestamp = snapshot['timestamp'] as Timestamp?;
+        return timestamp?.toDate().toString();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting server timestamp: $e');
+      return null;
+    }
   }
 
   Future<String> getUserFCM(String? id) async => await db
@@ -80,7 +104,7 @@ class AppController extends MainController {
     }
   }
 
-  void showSuccessDialog(title, desc, btn, route) {
+  void showSuccessDialog(title, desc, btn, route, {dynamic args}) {
     showDialog(
       context: Get.context!,
       barrierColor: Colors.black26,
@@ -91,7 +115,11 @@ class AppController extends MainController {
           shadowColor: Colors.transparent,
           insetPadding: EdgeInsets.zero,
           child: SuccessDialog(
-              title: title, description: desc, btnText: btn, route: route),
+              title: title,
+              description: desc,
+              btnText: btn,
+              route: route,
+              args: args),
         );
       },
     );

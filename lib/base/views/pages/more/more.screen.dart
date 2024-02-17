@@ -105,12 +105,11 @@ class MoreItem {
 List<MoreItem> moreItems = [
   MoreItem(
       txt: "Order Requests", icon: "orders.png", link: "/OrderRequestPage"),
-  MoreItem(txt: "Active Packages", icon: "orders.png", link: "/MyPackagesPage"),
+  MoreItem(
+      txt: "Active Packages", icon: "my_packages.png", link: "/MyPackagesPage"),
   MoreItem(txt: "Payment Method", icon: "payment.png", link: "/PaymentMethods"),
   MoreItem(
-      txt: "Frequently asked questions",
-      icon: "faq.png",
-      link: "/PaymentMethods"),
+      txt: "Frequently asked questions", icon: "faq.png", link: "/FAQsPage"),
   MoreItem(txt: "Help & Support", icon: "help.png", link: "/HelpAndSupport"),
   MoreItem(
       txt: "About - Legal & Policy",

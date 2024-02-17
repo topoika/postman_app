@@ -46,6 +46,8 @@ class ChatsController extends AppController {
   // add Message to a conversation
 
   void addMessage(Conversation conversation, Message message) async {
+    String? serverTimestamp = await getServerTimestamp();
+    message.createAt = serverTimestamp;
     DocumentReference docRef = await db
         .collection(chatsColl)
         .doc(conversation.id)
@@ -60,7 +62,7 @@ class ChatsController extends AppController {
         .then((value) => Message.fromMap(value.data() as Map<String, dynamic>));
 
     conversation.lastMessage = message0;
-    conversation.updatedAt = DateTime.now().toString();
+    conversation.updatedAt = serverTimestamp;
     conversation.unreadMessages = getUnreadMessages(conversation, message0);
     await db
         .collection(chatsColl)
@@ -82,13 +84,15 @@ class ChatsController extends AppController {
   // CREATE CONVERSATION AND ADD A FIRST MESSAGE
 
   Future<Conversation> createConversation(User user) async {
+    String? serverTimestamp = await getServerTimestamp();
+
     try {
       Conversation conversation0 = Conversation(
         participants: [activeUser.value.id!, user.id!],
         involved: [activeUser.value, user],
         package: activePackage.value,
-        createAt: DateTime.now().toString(),
-        updatedAt: DateTime.now().toString(),
+        createAt: serverTimestamp,
+        updatedAt: serverTimestamp,
         unreadMessages: getUnreadMessages(
             Conversation(participants: [activeUser.value.id!, user.id!]), null),
       );

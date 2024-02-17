@@ -26,9 +26,9 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         children: items.map((e) {
           return GestureDetector(
-            // onTap: () => Navigator.pushNamed(context, e.link!),
+            onTap: () => Navigator.pushNamed(context, e['link']),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 7),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -97,22 +97,22 @@ class _HelpAndSupportState extends State<HelpAndSupport> {
 
   List items = [
     {
-      "name": "Help Center",
-      "icon": "center.png",
-      "desc": "Fast answers to all of the most common questions.",
-      "link": ""
-    },
-    {
       "name": "Contact Support",
       "icon": "cantact_support.png",
       "desc": "Chat with our team of experts",
       "link": ""
     },
     {
-      "name": "Call Center",
-      "icon": "call_center.png",
-      "desc": "Call us to speak to a support agent",
-      "link": ""
+      "name": "News Feeds",
+      "icon": "news_feeds.png",
+      "desc": "Explore the latest updates related to transportation",
+      "link": "/NewsFeedPage"
+    },
+    {
+      "name": "Frequently Asked Questions",
+      "icon": "faqs.png",
+      "desc": "Everything's you need to know about New Postman",
+      "link": "/FAQsPage"
     },
   ];
 }
