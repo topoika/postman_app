@@ -14,7 +14,9 @@ import '../../components/input/universal.widget.dart';
 import '../../components/universal.widgets.dart';
 
 class NewPackagePage extends StatefulWidget {
-  const NewPackagePage({super.key});
+  final Package package;
+
+  const NewPackagePage({super.key, required this.package});
 
   @override
   _NewPackagePageState createState() => _NewPackagePageState();
@@ -27,6 +29,12 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
     con = controller as PackageController;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() => con.package = widget.package);
+  }
+
   List<File> packageImage = [];
   bool insurance = false;
   bool packBySender = true;
@@ -34,9 +42,16 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
 
   @override
   Widget build(BuildContext context) {
+    final bool edit = widget.package.id != null;
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: CustomAppBar(title: "Create a new shipment"),
+      appBar: BlackAppBar(
+        title: Text(
+          edit ? "Update Packge" : "Create a new shipment",
+          textScaleFactor: 1,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: con.formKey,
@@ -54,7 +69,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                       () => loadImages(context).then((val) {
                             setState(() => packageImage.addAll(val));
                           })),
-                  child: packageImage.isEmpty
+                  child: packageImage.isEmpty && !edit
                       ? Container(
                           height: getHeight(context, 15.5),
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -62,7 +77,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: btnColor.withOpacity(.4),
+                            color: btnColor.withOpacity(.2),
                           ),
                           child: const Column(
                             mainAxisSize: MainAxisSize.max,
@@ -126,6 +141,47 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                                       ),
                                     )
                                     .toList(),
+                                ...con.package.images!
+                                    .map(
+                                      (i) => Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 15),
+                                        height: getHeight(context, 25),
+                                        width: getWidth(context, 70),
+                                        alignment: Alignment.topRight,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: btnColor,
+                                          image: DecorationImage(
+                                            image: NetworkImage(i),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          onTap: () => setState(() => con
+                                              .package.images!
+                                              .removeAt(con.package.images!
+                                                  .indexOf(i))),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: Colors.black,
+                                            ),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                                 Container(
                                   height: getHeight(context, 12),
                                   width: getWidth(context, 70),
@@ -147,6 +203,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) => con.package.name = val,
+                  init: con.package.name,
                 ),
                 InputFieldItem(
                   hint: "Item value",
@@ -154,6 +211,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   onValidate: (val) => con.setError(val),
                   type: "number",
                   onsaved: (val) => con.package.value = double.parse(val),
+                  init: con.package.value.toString(),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,6 +249,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   onValidate: (val) => con.setError(val),
                   type: "description",
                   onsaved: (val) => con.package.description = val,
+                  init: con.package.description,
                 ),
                 Visibility(
                   visible: insurance,
@@ -199,6 +258,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                     label: "Approximate item value",
                     onValidate: (val) => con.setError(val),
                     type: "number",
+                    init: con.package.approximateValue.toString(),
                     onsaved: (val) =>
                         con.package.approximateValue = double.parse(val),
                   ),
@@ -232,6 +292,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                         label: "Length",
                         onValidate: (val) => con.setError(val),
                         type: "number",
+                        init: con.package.dimLength.toString(),
                         onsaved: (val) =>
                             con.package.dimLength = double.parse(val),
                       ),
@@ -243,6 +304,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                         label: "Width",
                         onValidate: (val) => con.setError(val),
                         type: "number",
+                        init: con.package.dimWidth.toString(),
                         onsaved: (val) =>
                             con.package.dimWidth = double.parse(val),
                       ),
@@ -254,6 +316,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                         label: "Height",
                         onValidate: (val) => con.setError(val),
                         type: "number",
+                        init: con.package.dimHeight.toString(),
                         onsaved: (val) =>
                             con.package.dimHeight = double.parse(val),
                       ),
@@ -262,11 +325,13 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                 ),
                 mainHeading(context, "Shipment Address"),
                 pickAddressFields(context, "Shipment Address", "Address", () {
-                  con.pickLocation().then((value) {
-                    con.package.shipmentAddress =
-                        PackageAddress(address: value);
-                    setState(() {});
-                  });
+                  con.pickLocation().then(
+                    (value) {
+                      con.package.shipmentAddress =
+                          PackageAddress(address: value);
+                      setState(() {});
+                    },
+                  );
                 }, address: con.package.shipmentAddress),
                 InputFieldItem(
                   hint: "Shipment nearest intersection",
@@ -275,6 +340,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   type: "text",
                   onsaved: (val) =>
                       con.package.shipmentAddress!.intersection = val,
+                  init: edit ? con.package.shipmentAddress!.intersection : "",
                 ),
                 mainHeading(context, "Destination Address"),
                 pickAddressFields(context, "Destination Address", "Address",
@@ -292,6 +358,8 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   type: "text",
                   onsaved: (val) =>
                       con.package.destinationAddress!.intersection = val,
+                  init:
+                      edit ? con.package.destinationAddress!.intersection : "",
                 ),
                 mainHeading(context, "Date"),
                 datePicker(context, "23-01-2023", "", () async {
@@ -305,10 +373,12 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                   });
                 }, date: con.package.date),
                 const SizedBox(height: 20),
-                buttonOne("Add Package Reciever", true, () {
+                buttonOne("${edit ? "Update" : "Add"} Package Reciever", true,
+                    () {
                   if (con.formKey.currentState!.validate()) {
                     con.formKey.currentState!.save();
-                    if (packageImage.isEmpty) {
+                    if (packageImage.isEmpty &&
+                        (con.package.images ?? []).isEmpty) {
                       toastShow(
                           context, "Select package images to continue", 'err');
                     } else if (con.package.shipmentAddress!.address == null ||
@@ -318,7 +388,6 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                     } else if (con.package.date == null) {
                       toastShow(context, "Select date to continue", 'err');
                     } else {
-                      toastShow(context, "Success on this", 'suc');
                       con.package.insurance = insurance;
                       con.package.packBySender = packBySender;
                       con.package.weight = weight;

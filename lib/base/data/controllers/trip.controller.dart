@@ -15,12 +15,14 @@ class TripController extends AppController {
   setError(val) => setState(() => error = val);
 
   Future<void> addTrip(Trip trip, File? ticket) async {
+    String? serverTimestamp = await getServerTimestamp();
+
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     if (ticket != null) {
       trip.ticketUrl = await uploadImageToFirebase(ticket, "trips/images");
     }
     trip.traveller = activeUser.value;
-    trip.createdAt = serverTime;
+    trip.createdAt = serverTimestamp;
     trip.travellersId = activeUser.value.id;
     trip.travelledAt = trip.departureDetails!.date;
     try {
@@ -31,6 +33,33 @@ class TripController extends AppController {
       showSuccessDialog(
           "Your itinerary has been posted!", "", "View your trip", "/Pages",
           args: 1);
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+    }
+  }
+
+  // Edit trip
+  void updateTrip(Trip trip, File? ticket) async {
+    String? serverTimestamp = await getServerTimestamp();
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      if (ticket != null) {
+        trip.ticketUrl = await uploadImageToFirebase(ticket, "trips/images");
+      }
+      trip.travelledAt = trip.departureDetails!.date;
+      trip.updatedAt = serverTimestamp;
+      await db
+          .collection(tripsCol)
+          .doc(trip.id)
+          .update(trip.toMap())
+          .then((value) {
+        loader.remove();
+        showSuccessDialog("Trip Updated Successfully",
+            "Your itinerary has been update!", "View your trip", "/Pages",
+            args: 1);
+      });
     } catch (e) {
       loader.remove();
       toastShow(scaffoldKey.currentContext!,

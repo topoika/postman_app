@@ -300,7 +300,12 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        buttonOne("Edit Trip", true, () {}),
+                        buttonOne(
+                            "Edit Trip",
+                            true,
+                            () => Navigator.pushReplacementNamed(
+                                context, "/NewTripPage",
+                                arguments: trip)),
                         const SizedBox(height: 10),
                         GestureDetector(
                           onTap: () => con.cancelTrip(trip!.id!),

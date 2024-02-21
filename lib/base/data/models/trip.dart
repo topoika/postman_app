@@ -26,6 +26,7 @@ class Trip {
   // Extras
 
   String? city;
+  String? destCity;
   String? time;
   Trip({
     this.id,
@@ -50,6 +51,7 @@ class Trip {
 
     // Extras
     this.city,
+    this.destCity,
     this.time,
   });
 
@@ -74,6 +76,9 @@ class Trip {
       'status': status,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'city': departureDetails!.address!.city,
+      'destCity': destinationDetails!.address!.city,
+      'time': departureDetails!.time,
 
       // extras
     };
@@ -83,6 +88,7 @@ class Trip {
     return <String, dynamic>{
       'id': id,
       'city': departureDetails!.address!.city,
+      'destCity': destinationDetails!.address!.city,
       'time': departureDetails!.time,
       'travelMethod': travelMethod?.id,
     };
@@ -92,6 +98,7 @@ class Trip {
     return Trip(
       id: map['id'] != null ? map['id'] as String : null,
       city: map['city'] != null ? map['city'] as String : null,
+      destCity: map['destCity'] != null ? map['destCity'] as String : null,
       time: map['time'] != null ? map['time'] as String : null,
       travelMethod: map['travelMethod'] != null
           ? travelMethods.firstWhere((i) => i.id == map['travelMethod'])

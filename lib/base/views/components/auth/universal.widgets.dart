@@ -104,7 +104,7 @@ Widget profileItem(context, txt, desc) {
 List<String> errors = [];
 
 Widget authInputField(context, image, hint, type, onSaved, onValidate,
-    {bool obs = false, Function? setObs}) {
+    {bool obs = false, Function? setObs, dynamic init}) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
     margin: const EdgeInsets.symmetric(vertical: 7),
@@ -155,9 +155,10 @@ Widget authInputField(context, image, hint, type, onSaved, onValidate,
               return error;
             },
             obscureText: obs,
+            initialValue: init ?? "",
             keyboardType: getKeyboardInputType(type),
             style: const TextStyle(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
               fontSize: 18,
             ),

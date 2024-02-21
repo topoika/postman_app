@@ -6,6 +6,8 @@ import 'package:postman_app/base/data/helper/helper.dart';
 import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/user.controller.dart';
 import '../../../data/helper/constants.dart';
+import '../../../data/models/package.dart';
+import '../../../data/models/trip.dart';
 import '../../components/buttons.dart';
 import '../../components/home/universal.widget.dart';
 
@@ -25,6 +27,7 @@ class _HomepageState extends StateMVC<Homepage> {
   @override
   void initState() {
     super.initState();
+    con.getHomeStats();
   }
 
   @override
@@ -134,17 +137,19 @@ class _HomepageState extends StateMVC<Homepage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 statsItem(context, "Available for withdrawal",
-                                    "\$280"),
-                                statsItem(
-                                    context, "Earnings this month", "\$340")
+                                    "\$${homeStats.value.availableForWithrawal.toStringAsFixed(2)}"),
+                                statsItem(context, "Earnings this month",
+                                    "\$${homeStats.value.monthEarnings.toStringAsFixed(2)}")
                               ],
                             ),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                statsItem(context, "Active orders", "6"),
-                                statsItem(context, "Complete orders", "20")
+                                statsItem(context, "Active orders",
+                                    homeStats.value.activeOrders.toString()),
+                                statsItem(context, "Complete orders",
+                                    homeStats.value.completedOrders.toString())
                               ],
                             )
                           ],
@@ -175,8 +180,9 @@ class _HomepageState extends StateMVC<Homepage> {
                     children: <Widget>[
                       Expanded(
                           child: GestureDetector(
-                        onTap: () =>
-                            Navigator.pushNamed(context, "/NewTripPage"),
+                        onTap: () => Navigator.pushNamed(
+                            context, "/NewTripPage",
+                            arguments: Trip()),
                         child: Column(
                           children: <Widget>[
                             Container(
@@ -227,8 +233,9 @@ class _HomepageState extends StateMVC<Homepage> {
                       ),
                       Expanded(
                         child: GestureDetector(
-                          onTap: () =>
-                              Navigator.pushNamed(context, "/NewPackagePage"),
+                          onTap: () => Navigator.pushNamed(
+                              context, "/NewPackagePage",
+                              arguments: Package()),
                           child: Column(
                             children: <Widget>[
                               Container(

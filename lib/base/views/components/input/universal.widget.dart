@@ -76,12 +76,14 @@ class InputFieldItem extends StatefulWidget {
     required this.onsaved,
     required this.type,
     required this.onValidate,
+    this.init,
   }) : super(key: key);
   final String hint;
   final String label;
   final Function onsaved;
   final String type;
   final Function onValidate;
+  final dynamic init;
 
   @override
   State<InputFieldItem> createState() => _InputFieldItemState();
@@ -108,6 +110,7 @@ class _InputFieldItemState extends State<InputFieldItem> {
           errors.clear();
           return error;
         },
+        initialValue: widget.init == "null" ? "" : widget.init,
         textCapitalization: TextCapitalization.sentences,
         minLines: widget.type == "description" ? 5 : 1,
         maxLines: widget.type == "description" ? 5 : 1,

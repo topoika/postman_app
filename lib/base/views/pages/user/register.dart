@@ -31,168 +31,225 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: con.scaffoldKey,
-      body: Form(
-        key: con.formKey,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-          children: [
-            const SizedBox(height: 30),
-            Image.asset("assets/images/logo.png", height: 120),
-            const SizedBox(height: 20),
-            topColumnText(context, "Let’s create your account",
-                "Enter your details to get things started."),
-            const SizedBox(height: 20),
-            Center(
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (activeUser.value.image != null || image != null) {
-                        showLargeImage(context, activeUser.value.image, image);
-                      }
-                    },
-                    child: Container(
-                      height: getWidth(context, 20),
-                      width: getWidth(context, 20),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(.3),
-                        image: image != null
-                            ? DecorationImage(
-                                image: FileImage(image!),
-                                fit: BoxFit.cover,
-                              )
-                            : activeUser.value.image != null
+      body: SingleChildScrollView(
+        child: Form(
+          key: con.formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+            child: Column(
+              children: [
+                const SizedBox(height: 30),
+                Image.asset("assets/images/logo.png", height: 120),
+                const SizedBox(height: 20),
+                topColumnText(context, "Let’s create your account",
+                    "Enter your details to get things started."),
+                const SizedBox(height: 20),
+                Center(
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (activeUser.value.image != null || image != null) {
+                            showLargeImage(
+                                context, activeUser.value.image, image);
+                          }
+                        },
+                        child: Container(
+                          height: getWidth(context, 20),
+                          width: getWidth(context, 20),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(.3),
+                            image: image != null
                                 ? DecorationImage(
-                                    image: cachedImage(
-                                        activeUser.value.image ?? noUserImage),
-                                    fit: BoxFit.fill,
+                                    image: FileImage(image!),
+                                    fit: BoxFit.cover,
                                   )
-                                : null,
-                        shape: BoxShape.circle,
-                        border: Border.all(width: .7, color: Colors.grey),
+                                : activeUser.value.image != null
+                                    ? DecorationImage(
+                                        image: cachedImage(
+                                            activeUser.value.image ??
+                                                noUserImage),
+                                        fit: BoxFit.fill,
+                                      )
+                                    : null,
+                            shape: BoxShape.circle,
+                            border: Border.all(width: .7, color: Colors.grey),
+                          ),
+                          child: activeUser.value.image == null && image == null
+                              ? const Icon(
+                                  Icons.person,
+                                  color: Colors.black,
+                                  size: 30,
+                                )
+                              : const SizedBox(),
+                        ),
                       ),
-                      child: activeUser.value.image == null && image == null
-                          ? const Icon(
-                              Icons.person,
-                              color: Colors.black,
-                              size: 30,
-                            )
-                          : const SizedBox(),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  GestureDetector(
-                    onTap: () => showPickOptionsDialog(
-                        context,
-                        () => loadProfilePicker(
-                            ImageSource.camera,
-                            context,
-                            (val) => setState(() => image = File(val)),
-                            "profile"),
-                        () => loadProfilePicker(
-                            ImageSource.gallery,
-                            context,
-                            (val) => setState(() => image = File(val)),
-                            "profile"),
-                        profile: false),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Upload ',
-                          textScaleFactor: 1,
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
-                        ),
-                        Icon(
-                          Icons.edit_outlined,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            authInputField(
-                context,
-                "user.png",
-                "Username",
-                "username",
-                (val) => activeUser.value.username = val,
-                (val) => con.setError(val)),
-            authInputField(
-                context,
-                "email.png",
-                "Email Address",
-                "email",
-                (val) => activeUser.value.email = val,
-                (val) => con.setError(val)),
-            authInputField(
-                context,
-                "password.png",
-                "Password",
-                "password",
-                (val) => activeUser.value.password = val,
-                (val) => con.setError(val),
-                obs: con.obs,
-                setObs: con.setObs),
-            pickAddressFields(
-              context,
-              "Address",
-              () {
-                con.pickLocation().then((value) {
-                  activeUser.value.address = value;
-                  setState(() {});
-                });
-              },
-              image: "address.png",
-              initial: activeUser.value.address != null
-                  ? activeUser.value.address!.nameAddress ?? ""
-                  : "",
-            ),
-            // authInputField(
-            //     context,
-            //     ,
-            //     "Address",
-            //     "address",
-            //     (val) => activeUser.value.address = val,
-            //     (val) => con.setError(val)),
-            authInputField(
-                context,
-                "phone.png",
-                "Phone No",
-                "phone",
-                (val) => activeUser.value.phone = val,
-                (val) => con.setError(val)),
-            authInputField(
-                context,
-                "bank.png",
-                "ID Number",
-                "id",
-                (val) => activeUser.value.governmentId = val,
-                (val) => con.setError(val)),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: GestureDetector(
+                      const SizedBox(height: 12),
+                      GestureDetector(
                         onTap: () => showPickOptionsDialog(
-                              context,
-                              () => loadProfilePicker(
-                                  ImageSource.camera,
-                                  context,
-                                  (val) => setState(() => gvnId = File(val)),
-                                  "id"),
-                              () => loadProfilePicker(
-                                  ImageSource.gallery,
-                                  context,
-                                  (val) => setState(() => gvnId = File(val)),
-                                  "id"),
+                            context,
+                            () => loadProfilePicker(
+                                ImageSource.camera,
+                                context,
+                                (val) => setState(() => image = File(val)),
+                                "profile"),
+                            () => loadProfilePicker(
+                                ImageSource.gallery,
+                                context,
+                                (val) => setState(() => image = File(val)),
+                                "profile"),
+                            profile: false),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Upload ',
+                              textScaleFactor: 1,
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w500),
                             ),
+                            Icon(
+                              Icons.edit_outlined,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                authInputField(
+                    context,
+                    "user.png",
+                    "Username",
+                    "username",
+                    (val) => activeUser.value.username = val,
+                    (val) => con.setError(val)),
+                authInputField(
+                    context,
+                    "email.png",
+                    "Email Address",
+                    "email",
+                    (val) => activeUser.value.email = val,
+                    (val) => con.setError(val)),
+                authInputField(
+                    context,
+                    "password.png",
+                    "Password",
+                    "password",
+                    (val) => activeUser.value.password = val,
+                    (val) => con.setError(val),
+                    obs: con.obs,
+                    setObs: con.setObs),
+                pickAddressFields(
+                  context,
+                  "Address",
+                  () {
+                    con.pickLocation().then((value) {
+                      activeUser.value.address = value;
+                      setState(() {});
+                    });
+                  },
+                  image: "address.png",
+                  initial: activeUser.value.address != null
+                      ? activeUser.value.address!.nameAddress ?? ""
+                      : "",
+                ),
+                authInputField(
+                    context,
+                    "phone.png",
+                    "Phone No",
+                    "phone",
+                    (val) => activeUser.value.phone = val,
+                    (val) => con.setError(val)),
+                authInputField(
+                    context,
+                    "bank.png",
+                    "ID Number",
+                    "id",
+                    (val) => activeUser.value.idNumber = val,
+                    (val) => con.setError(val)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: GestureDetector(
+                            onTap: () => showPickOptionsDialog(
+                                  context,
+                                  () => loadProfilePicker(
+                                      ImageSource.camera,
+                                      context,
+                                      (val) =>
+                                          setState(() => gvnId = File(val)),
+                                      "id"),
+                                  () => loadProfilePicker(
+                                      ImageSource.gallery,
+                                      context,
+                                      (val) =>
+                                          setState(() => gvnId = File(val)),
+                                      "id"),
+                                ),
+                            child: Container(
+                              height: getHeight(context, 13.5),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: btnColor,
+                                  image: gvnId != null
+                                      ? DecorationImage(
+                                          image: FileImage(gvnId!),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : activeUser.value.governmentId != null
+                                          ? DecorationImage(
+                                              image: cachedImage(activeUser
+                                                      .value.governmentId ??
+                                                  noUserImage),
+                                              fit: BoxFit.fill,
+                                            )
+                                          : null),
+                              child: gvnId != null
+                                  ? const SizedBox()
+                                  : const Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.upload),
+                                        SizedBox(height: 15),
+                                        Text(
+                                          'Upload Government ID',
+                                          textAlign: TextAlign.center,
+                                          textScaleFactor: 1,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                            )),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                          child: GestureDetector(
+                        onTap: () => showPickOptionsDialog(
+                          context,
+                          () => loadProfilePicker(
+                              ImageSource.camera,
+                              context,
+                              (val) => setState(() => passport = File(val)),
+                              "id"),
+                          () => loadProfilePicker(
+                              ImageSource.gallery,
+                              context,
+                              (val) => setState(() => passport = File(val)),
+                              "id"),
+                        ),
                         child: Container(
                           height: getHeight(context, 13.5),
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -200,20 +257,20 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: btnColor,
-                              image: gvnId != null
+                              image: passport != null
                                   ? DecorationImage(
-                                      image: FileImage(gvnId!),
+                                      image: FileImage(passport!),
                                       fit: BoxFit.cover,
                                     )
-                                  : activeUser.value.governmentId != null
+                                  : activeUser.value.passport != null
                                       ? DecorationImage(
                                           image: cachedImage(
-                                              activeUser.value.governmentId ??
+                                              activeUser.value.passport ??
                                                   noUserImage),
                                           fit: BoxFit.fill,
                                         )
                                       : null),
-                          child: gvnId != null
+                          child: passport != null
                               ? const SizedBox()
                               : const Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -222,7 +279,7 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                     Icon(Icons.upload),
                                     SizedBox(height: 15),
                                     Text(
-                                      'Upload Government ID',
+                                      'Passport/Driver License ',
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1,
                                       style: TextStyle(
@@ -231,85 +288,39 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                     ),
                                   ],
                                 ),
-                        )),
+                        ),
+                      ))
+                    ],
                   ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                      child: GestureDetector(
-                    onTap: () => showPickOptionsDialog(
-                      context,
-                      () => loadProfilePicker(ImageSource.camera, context,
-                          (val) => setState(() => passport = File(val)), "id"),
-                      () => loadProfilePicker(ImageSource.gallery, context,
-                          (val) => setState(() => passport = File(val)), "id"),
-                    ),
-                    child: Container(
-                      height: getHeight(context, 13.5),
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: btnColor,
-                          image: passport != null
-                              ? DecorationImage(
-                                  image: FileImage(passport!),
-                                  fit: BoxFit.cover,
-                                )
-                              : activeUser.value.passport != null
-                                  ? DecorationImage(
-                                      image: cachedImage(
-                                          activeUser.value.passport ??
-                                              noUserImage),
-                                      fit: BoxFit.fill,
-                                    )
-                                  : null),
-                      child: passport != null
-                          ? const SizedBox()
-                          : const Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(Icons.upload),
-                                SizedBox(height: 15),
-                                Text(
-                                  'Passport/Driver License ',
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                    ),
-                  ))
-                ],
-              ),
-            ),
-            buttonOne("Register", true, () {
-              if (con.formKey.currentState!.validate()) {
-                con.formKey.currentState!.save();
-                if (gvnId == null) {
-                  toastShow(context, "Upload Government ID to continue", "err");
-                } else if (image == null) {
-                  toastShow(context, "Upload profile image to continue", "err");
-                } else {
-                  if (activeUser.value.address != null) {
-                    con.register(activeUser.value, image, gvnId, passport);
+                ),
+                buttonOne("Register", true, () {
+                  if (con.formKey.currentState!.validate()) {
+                    con.formKey.currentState!.save();
+                    if (gvnId == null) {
+                      toastShow(
+                          context, "Upload Government ID to continue", "err");
+                    } else if (image == null) {
+                      toastShow(
+                          context, "Upload profile image to continue", "err");
+                    } else {
+                      if (activeUser.value.address != null) {
+                        con.register(activeUser.value, image, gvnId, passport);
+                      } else {
+                        toastShow(context,
+                            "Please pick and address to continue", "err");
+                      }
+                    }
                   } else {
-                    toastShow(
-                        context, "Please pick and address to continue", "err");
+                    con.error != null
+                        ? toastShow(context, con.error.toString(), "err")
+                        : null;
                   }
-                }
-              } else {
-                con.error != null
-                    ? toastShow(context, con.error.toString(), "err")
-                    : null;
-              }
-            }),
-            const LoginOrSignUpText(
-                link: "Login", main: "Already have and account? "),
-          ],
+                }),
+                const LoginOrSignUpText(
+                    link: "Login", main: "Already have and account? "),
+              ],
+            ),
+          ),
         ),
       ),
     );

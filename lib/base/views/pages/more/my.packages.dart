@@ -5,6 +5,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import '../../../data/bloc/events/packages.events.dart';
 import '../../../data/bloc/providers/package.provider.dart';
 import '../../../data/bloc/state/packages.state.dart';
+import '../../../data/models/package.dart';
 import '../../components/packages/packages.list.dart';
 import '../../components/universal.widgets.dart';
 
@@ -37,6 +38,18 @@ class _MyPackagesPageState extends StateMVC<MyPackagesPage> {
           textScaleFactor: 1,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
+        actions: [
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, "/NewPackagePage",
+                arguments: Package()),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Icon(
+                Icons.add,
+              ),
+            ),
+          )
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {

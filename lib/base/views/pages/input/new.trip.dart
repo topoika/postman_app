@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,7 +17,8 @@ import '../../components/universal.widgets.dart';
 import 'new.package.dart';
 
 class NewTripPage extends StatefulWidget {
-  const NewTripPage({super.key});
+  const NewTripPage({super.key, required this.trip});
+  final Trip trip;
 
   @override
   _NewTripPageState createState() => _NewTripPageState();
@@ -35,7 +35,9 @@ class _NewTripPageState extends StateMVC<NewTripPage>
   @override
   void initState() {
     super.initState();
-    setState(() {
+    if (widget.trip.id != null) {
+      con.trip = widget.trip;
+    } else {
       con.trip.travellerIs = "Driver";
       con.trip.travelMethod = travelMethods.firstWhere((i) => i.id == 3);
       con.trip.vehicleDetails = VehicleDetails();
@@ -43,14 +45,23 @@ class _NewTripPageState extends StateMVC<NewTripPage>
       con.trip.destinationDetails = DepartureDetails();
       con.trip.planDetails = PlaneDetails();
       con.trip.trainDetails = TrainDetails();
-    });
+    }
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool edit = widget.trip.id != null;
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: CustomAppBar(title: "Travel Details"),
+      appBar: BlackAppBar(
+        title: Text(
+          edit ? "Update Trip Details" : "Travel Details",
+          textScaleFactor: 1,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: con.formKey,
@@ -69,15 +80,15 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                       onTap: () => setState(() {
                         con.trip.travelMethod = e;
                         if ([1, 4].contains(e.id)) {
-                          con.trip.vehicleDetails = null;
+                          con.trip.vehicleDetails = con.trip.vehicleDetails;
                         } else {
-                          con.trip.vehicleDetails = VehicleDetails();
+                          con.trip.vehicleDetails = con.trip.vehicleDetails;
                         }
                         if ([1, 2, 3, 5, 6].contains(e.id)) {
-                          con.trip.trainDetails = null;
+                          con.trip.trainDetails = con.trip.trainDetails;
                         } else {
                           ticket = null;
-                          con.trip.planDetails = null;
+                          con.trip.planDetails = con.trip.planDetails;
                         }
                       }),
                       child: Column(
@@ -136,7 +147,9 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                                 context,
                                 (val) => setState(() => ticket = File(val)),
                                 "id")),
-                        child: ticket == null
+                        child: ticket == null &&
+                                !edit &&
+                                con.trip.ticketUrl == null
                             ? Container(
                                 height: getHeight(context, 15.5),
                                 padding:
@@ -174,10 +187,17 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: btnColor,
-                                  image: DecorationImage(
-                                    image: FileImage(ticket!),
-                                    fit: BoxFit.cover,
-                                  ),
+                                  image: ticket == null &&
+                                          con.trip.ticketUrl != null
+                                      ? DecorationImage(
+                                          image:
+                                              NetworkImage(con.trip.ticketUrl!),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : DecorationImage(
+                                          image: FileImage(ticket!),
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                       )
@@ -242,6 +262,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.vehicleDetails!.vehicleIdentity = val,
+                        init: con.trip.vehicleDetails!.vehicleIdentity,
                       ),
                       InputFieldItem(
                         hint: "Transport Company",
@@ -250,6 +271,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.vehicleDetails!.transportCompany = val,
+                        init: con.trip.vehicleDetails!.transportCompany,
                       ),
                       InputFieldItem(
                         hint: "License Plate",
@@ -258,6 +280,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.vehicleDetails!.vehicleLicencePlate = val,
+                        init: con.trip.vehicleDetails!.vehicleLicencePlate,
                       ),
                     ],
                   ),
@@ -276,6 +299,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.trainDetails!.trainName = val,
+                        init: con.trip.trainDetails!.trainName,
                       ),
                       InputFieldItem(
                         hint: "Train Number",
@@ -284,6 +308,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.trainDetails!.trainNumber = val,
+                        init: con.trip.trainDetails!.trainNumber,
                       ),
                     ],
                   ),
@@ -301,6 +326,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         onValidate: (val) => con.setError(val),
                         type: "text",
                         onsaved: (val) => con.trip.planDetails!.planeName = val,
+                        init: con.trip.planDetails!.planeName,
                       ),
                       InputFieldItem(
                         hint: "Plane Number",
@@ -309,6 +335,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                         type: "text",
                         onsaved: (val) =>
                             con.trip.planDetails!.planeNumber = val,
+                        init: con.trip.planDetails!.planeNumber,
                       ),
                     ],
                   ),
@@ -329,6 +356,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   type: "text",
                   onsaved: (val) =>
                       con.trip.departureDetails!.meetUpPlace = val,
+                  init: con.trip.departureDetails!.meetUpPlace,
                 ),
                 Row(
                   children: <Widget>[
@@ -375,6 +403,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   type: "text",
                   onsaved: (val) =>
                       con.trip.destinationDetails!.meetUpPlace = val,
+                  init: con.trip.destinationDetails!.meetUpPlace,
                 ),
                 Row(
                   children: <Widget>[
@@ -413,6 +442,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) => con.trip.packagePrefernces = val,
+                  init: con.trip.packagePrefernces,
                 ),
                 const SizedBox(height: 10),
                 mainHeading(context, "Guide to meet up"),
@@ -422,6 +452,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   onValidate: (val) => con.setError(val),
                   type: "description",
                   onsaved: (val) => con.trip.guideToMeet = val,
+                  init: con.trip.guideToMeet,
                 ),
                 const SizedBox(height: 10),
                 mainHeading(context, "Postage fee"),
@@ -431,20 +462,22 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                   onValidate: (val) => con.setError(val),
                   type: "number",
                   onsaved: (val) => con.trip.postageFee = double.parse(val),
+                  init: con.trip.postageFee.toString(),
                 ),
                 const SizedBox(height: 20),
-                buttonOne("Go Live", true, () {
+                buttonOne(edit ? "Update Trip" : "Go Live", true, () {
                   if (con.formKey.currentState!.validate()) {
                     con.formKey.currentState!.save();
                     String? desterror =
                         getError(con.trip.destinationDetails!, "destination");
                     String? deperror =
                         getError(con.trip.departureDetails!, "departure");
-                    log(desterror.toString());
                     if (desterror != null || deperror != null) {
                       toastShow(context, desterror ?? deperror ?? "", 'err');
                     } else {
-                      con.addTrip(con.trip, ticket);
+                      edit
+                          ? con.updateTrip(con.trip, ticket)
+                          : con.addTrip(con.trip, ticket);
                     }
                   } else {
                     con.error != null

@@ -36,6 +36,11 @@ class TripsRepo {
       QuerySnapshot querySnapshot = await tripsColl
           // TODO: Uncomment this line for production
           // .where("travelledAt", isGreaterThan: DateTime.now().toString())
+          .where("city",
+              isEqualTo: activePackage.value.shipmentAddress!.address!.city)
+          .where("destCity",
+              isEqualTo: activePackage.value.destinationAddress!.address!.city)
+          .orderBy("createdAt", descending: true)
           .get()
           .onError((error, stackTrace) =>
               throw Exception('Failed to load trips${error.toString()}'));

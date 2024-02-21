@@ -15,8 +15,10 @@ import 'package:postman_app/base/data/models/package.dart';
 
 import '../../../main.dart';
 import '../../views/components/auth/success.dialog.dart';
+import '../models/home.stats.dart';
 import '../models/request.dart';
 import '../models/user.dart' as userModel;
+import '../models/order.dart' as orderModel;
 
 import '../helper/constants.dart';
 import 'main.controller.dart';
@@ -27,7 +29,6 @@ class AppController extends MainController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  String serverTime = FieldValue.serverTimestamp().toString();
 
   bool isloggedIn = FirebaseAuth.instance.currentUser != null;
 
@@ -40,6 +41,8 @@ class AppController extends MainController {
   String packageColl = "packages";
   String requestColl = "requests";
   String orderCol = "orders";
+  String faqsCol = "faqs";
+  String feedsCol = "feeds";
 
   void openDrawer() => Scaffold.of(scaffoldKey.currentContext!).openDrawer();
   Future<String> getFCM() async {
@@ -67,6 +70,26 @@ class AppController extends MainController {
       print('Error getting server timestamp: $e');
       return null;
     }
+  }
+
+  // Get homepage stats
+  dynamic getHomeStats() async {
+    homeStats.dispose();
+    final ordersColl = await db
+        .collection(orderCol)
+        .where("postmanId", isEqualTo: activeUser.value.id)
+        .get();
+
+    final List<orderModel.Order> usersOrder =
+        ordersColl.docs.map((e) => orderModel.Order.fromMap(e.data())).toList();
+    for (orderModel.Order order in usersOrder) {
+      if (order.status == "completed") {
+        homeStats.value.completedOrders += 1;
+      } else {
+        homeStats.value.activeOrders += 1;
+      }
+    }
+    setState(() {});
   }
 
   Future<String> getUserFCM(String? id) async => await db
@@ -179,9 +202,18 @@ class AppController extends MainController {
 ValueNotifier<userModel.User> activeUser =
     ValueNotifier<userModel.User>(userModel.User());
 ValueNotifier<Package> activePackage = ValueNotifier<Package>(Package());
+ValueNotifier<HomeStats> homeStats = ValueNotifier<HomeStats>(HomeStats(
+    activeOrders: 0,
+    availableForWithrawal: 0.0,
+    completedOrders: 0,
+    monthEarnings: 0.0));
 
 final filePicker = ImagePicker();
 
+bool isAdmin() => [
+      "WglSeMHva0dPT6k1kzxakbzZbZU2",
+      "tCWXPcPdQmhOvkSw1nrD3XtsuhE3"
+    ].contains(activeUser.value.id);
 void loadProfilePicker(ImageSource source, context, onsaved, type) async {
   final pickedFile = await filePicker.pickImage(
       source: source,

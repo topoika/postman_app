@@ -1,18 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:postman_app/base/data/helper/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mvc_pattern/mvc_pattern.dart';
 
+import '../../../data/bloc/events/extras.events.dart';
+import '../../../data/bloc/providers/extras.provider.dart';
+import '../../../data/bloc/state/extras.state.dart';
+import '../../../data/controllers/app.controller.dart';
+import '../../../data/controllers/extras.controller.dart';
 import '../../../data/models/faq.dart';
+import '../../components/exras/faqs.dart';
 import '../../components/universal.widgets.dart';
 
 class FAQsPage extends StatefulWidget {
   const FAQsPage({super.key});
 
   @override
-  State<FAQsPage> createState() => _FAQsPageState();
+  _FAQsPageState createState() => _FAQsPageState();
 }
 
-class _FAQsPageState extends State<FAQsPage> {
-  int? active = 0;
+class _FAQsPageState extends StateMVC<FAQsPage> {
+  late ExtraController con;
+  _FAQsPageState() : super(ExtraController()) {
+    con = controller as ExtraController;
+  }
+
+  ExtrasBloc faqsBloc = ExtrasBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() {
+    faqsBloc.add(FetchFAQsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,107 +45,75 @@ class _FAQsPageState extends State<FAQsPage> {
           textScaleFactor: 1,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-      ),
-      body: ListView.builder(
-        itemCount: faqs.length,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        itemBuilder: (context, index) {
-          final faq = faqs[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 25),
-            child: Column(
-              children: <Widget>[
-                InkWell(
-                  onTap: () => setState(() => faq.open = !faq.open),
-                  splashColor: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          faq.title!,
-                          textScaleFactor: 1,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: greenColor,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12, width: .9),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          faq.open
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded,
-                          color: Colors.black54,
-                          size: 18,
-                        ),
-                      )
-                    ],
-                  ),
+        actions: [
+          Visibility(
+            visible: isAdmin(),
+            child: InkWell(
+              onTap: () {
+                showFaqInputForm(context, FAQ(), () => init());
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Icon(
+                  Icons.add,
                 ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: faq.open,
-                  child: Text(
-                    faq.description!,
-                    textScaleFactor: 1,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.6,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          );
+          )
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          init();
+          await Future.delayed(const Duration(seconds: 1));
         },
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            BlocConsumer<ExtrasBloc, ExtrasState>(
+              bloc: faqsBloc,
+              listener: (context, state) {},
+              builder: (context, state) {
+                switch (state.runtimeType) {
+                  case FAQsLoadingState:
+                    return const Center(child: CircularProgressIndicator());
+                  case FAQsErrorState:
+                    final error = state as FAQsErrorState;
+                    return emptyWidget(context, error.message);
+                  case FAQsLoadedState:
+                    final suc = state as FAQsLoadedState;
+                    return suc.faqs.isEmpty
+                        ? emptyWidget(
+                            context, "There are no FAQs at the moment")
+                        : FAQsList(faqs: suc.faqs, init: () => init());
+
+                  default:
+                    return const SizedBox();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
+}
 
-  List<FAQ> faqs = [
-    FAQ(
-        title: 'What is Flutter?',
-        description:
-            'Flutter is an open-source UI software development kit created by Google. It is used to develop applications for mobile, web, and desktop from a single codebase.',
-        open: true),
-    FAQ(
-      title: 'What are the advantages of using Flutter?',
-      open: false,
-      description:
-          'Flutter offers fast development, expressive and flexible UI, native performance, and built-in testing capabilities.',
-    ),
-    FAQ(
-      title: 'What platforms can I target with Flutter?',
-      open: false,
-      description:
-          'Flutter allows you to build applications for mobile (iOS and Android), web, and desktop (Windows, MacOS, and Linux).',
-    ),
-    FAQ(
-      title: 'What are the prerequisites for learning Flutter?',
-      open: false,
-      description:
-          'To get started with Flutter, you need a basic understanding of programming concepts, preferably in a language such as Java, C#, or JavaScript. You also need to have a code editor (such as Visual Studio Code) and the Flutter SDK installed on your machine.',
-    ),
-    FAQ(
-      title: 'How do I create a Flutter app?',
-      open: false,
-      description:
-          'To create a new Flutter app, open your terminal or command prompt, navigate to the desired directory, and run the command `flutter create <app_name>`. Then, navigate to the app directory and run `flutter run` to launch the app on an emulator or physical device.',
-    ),
-    FAQ(
-      title: 'Where can I find Flutter resources and documentation?',
-      open: false,
-      description:
-          'You can find the official Flutter documentation, tutorials, and samples on the Flutter website (<https://flutter.dev/>). There are also many community-driven resources available, such as blogs, videos, and online courses.',
-    ),
-  ];
+void showFaqInputForm(context, FAQ faq, init) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black26,
+    barrierDismissible: true,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: FAQInputForm(
+          faq: faq,
+          onSubmit: () => init(),
+        ),
+      );
+    },
+  );
 }

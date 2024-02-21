@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:flutter/material.dart';
 
 import '../helper/helper.dart';
@@ -18,19 +19,62 @@ class PackageController extends AppController {
 
   void addPackage(Package package, List<File> images) async {
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    String? serverTimestamp = await getServerTimestamp();
     try {
       if (images.isNotEmpty) {
         package.images =
             await uploadImagesToFirebase(images, "packages/images");
       }
       package.senderId = activeUser.value.id!;
-      package.createAt = serverTime;
+      package.createAt = serverTimestamp;
       await db.collection(packageColl).add(package.toMap()).then((value) {
         package.id = value.id;
         value.update({'id': value.id});
         loader.remove();
         activePackage.value = package;
         showSuccessDialog("Your package has been posted!", "", "Find a Postman",
+            "/AvailableTripsPage");
+      });
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+    }
+  }
+
+// Update package info
+  void updatePackage(Package package, List<File> images) async {
+    // Initiate request for server timestamp without waiting
+    Future<String?> serverTimestampFuture = getServerTimestamp();
+
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+
+    try {
+      if (images.isNotEmpty) {
+        final newImages =
+            await uploadImagesToFirebase(images, "packages/images");
+        for (var i in newImages!) {
+          package.images!.add(i);
+        }
+      }
+
+      // Wait for the server timestamp to complete
+      String? serverTimestamp = await serverTimestampFuture;
+
+      // Set the updatedAt field
+      package.updatedAt = serverTimestamp;
+
+      await db
+          .collection(packageColl)
+          .doc(package.id)
+          .update(package.toMap())
+          .then((value) {
+        loader.remove();
+        activePackage.value = package;
+        showSuccessDialog(
+            "Update Successfully",
+            "Your package info was updated successfully",
+            "Find a Postman",
             "/AvailableTripsPage");
       });
     } catch (e) {
@@ -51,10 +95,12 @@ class PackageController extends AppController {
 
   // Create order from reqquest and package
   void createOrder(Request request, Package package) async {
+    String? serverTimestamp = await getServerTimestamp();
+
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     Order order = Order(
       package: package,
-      createdAt: serverTime,
+      createdAt: serverTimestamp,
       postMan: request.trip!.traveller!,
       postManFee: request.postFee,
       tipAmount: 0.0,
@@ -100,7 +146,8 @@ class PackageController extends AppController {
     await db.collection(requestColl).doc(request.id).update({"status": "done"});
     await db.collection(packageColl).doc(package.id).update({
       "ordered": true,
-      "updatedAt": DateTime.now().toString(),
+      "updatedAt":
+          (FieldValue.serverTimestamp() as Timestamp).toDate().toString()
     });
   }
 

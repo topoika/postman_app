@@ -57,9 +57,10 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
         ),
         actions: [
           Visibility(
-            visible: mine,
+            visible: mine && package != null,
             child: GestureDetector(
-              // onTap: () => con.logOut(),
+              onTap: () => Navigator.pushNamed(context, "/NewPackagePage",
+                  arguments: package),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(

@@ -1,17 +1,17 @@
-class FAQ {
+import 'user.dart';
+
+class Feed {
   String? id;
   String? title;
   String? description;
-  bool? open;
+  User? createBy;
   String? createdAt;
-  String? createBy;
-  FAQ({
+  Feed({
     this.id,
     this.title,
     this.description,
-    this.createdAt,
     this.createBy,
-     this.open,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,21 +19,21 @@ class FAQ {
       'id': id,
       'title': title,
       'description': description,
-      'open': open ?? false,
+      'createBy': createBy?.toMap(),
       'createdAt': createdAt,
-      'createBy': createBy,
     };
   }
 
-  factory FAQ.fromMap(Map<String, dynamic> map) {
-    return FAQ(
+  factory Feed.fromMap(Map<String, dynamic> map) {
+    return Feed(
       id: map['id'] != null ? map['id'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
-      open: map['open'] as bool,
+      createBy: map['createBy'] != null
+          ? User.fromMap(map['createBy'] as Map<String, dynamic>)
+          : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
-      createBy: map['createBy'] != null ? map['createBy'] as String : null,
     );
   }
 }

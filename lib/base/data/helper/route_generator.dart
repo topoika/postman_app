@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:postman_app/base/data/models/package.dart';
 
 import '../../views/pages/available.order.dart';
 import '../../views/pages/available.trips.dart';
@@ -21,6 +22,7 @@ import '../../views/pages/package/requests.page.dart';
 import '../../views/pages/rate.transaction.dart';
 import '../../views/pages/splash.dart';
 import '../../views/pages/trip.details.dart';
+import '../../views/pages/user/edit.profile.dart';
 import '../../views/pages/user/forget.password.dart';
 import '../../views/pages/user/login.dart';
 import '../../views/pages/user/otp.verification.dart';
@@ -39,7 +41,8 @@ class RouteGenerator {
       case '/Onboading':
         return MaterialPageRoute(builder: (_) => const Onboading());
       case '/Pages':
-        return MaterialPageRoute(builder: (_) => const Dashboard());
+        return MaterialPageRoute(
+            builder: (_) => Dashboard(active: (args ?? 0) as int));
       case '/Login':
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case '/ForgotPassword':
@@ -50,6 +53,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const PasswordReset());
       case '/Register':
         return MaterialPageRoute(builder: (_) => const RegisterPage());
+      case '/EditProfilePage':
+        return MaterialPageRoute(builder: (_) => const EditProfilePage());
       case '/ConversationPage':
         return MaterialPageRoute(
             builder: (_) => ConversationPage(user: args as User));
@@ -60,7 +65,8 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => TripDetailsPage(trip: args as Trip));
       case '/NewPackagePage':
-        return MaterialPageRoute(builder: (_) => const NewPackagePage());
+        return MaterialPageRoute(
+            builder: (_) => NewPackagePage(package: args as Package));
       case '/AvailableOrdersPage':
         return MaterialPageRoute(builder: (_) => const AvailableOrdersPage());
       case '/MyPackagesPage':
@@ -83,7 +89,8 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => ReceiverDetailsPage(data: args));
       case '/NewTripPage':
-        return MaterialPageRoute(builder: (_) => const NewTripPage());
+        return MaterialPageRoute(
+            builder: (_) => NewTripPage(trip: args as Trip));
       case '/MorePage':
         return MaterialPageRoute(builder: (_) => const MorePage());
       case '/HelpAndSupport':

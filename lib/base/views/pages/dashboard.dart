@@ -9,7 +9,8 @@ import 'tabs/shipments.dart';
 import 'tabs/trips.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard({super.key, this.active});
+  final int? active;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -17,6 +18,12 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    setState(() => _currentIndex = widget.active ?? 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

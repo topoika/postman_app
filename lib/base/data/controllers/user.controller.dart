@@ -105,6 +105,25 @@ class UserController extends EmailController {
     }
   }
 
+// Update user infomation
+  void updateUserInfo(userModel.User user, profile, id, passport) async {
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      await uploadUserImages(profile, id, passport);
+      final deviceToken = await getFCM();
+      activeUser.value.deviceToken = deviceToken.toString();
+      activeUser.value.updtedAt = DateTime.now().toString();
+      await updateUser(activeUser.value);
+      loader.remove();
+      toastShow(
+          scaffoldKey.currentContext!, "User info updated successfully", 'suc');
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "Something went wrong, please try again!", 'err');
+    }
+  }
+
 //Call a clouse function to send email to with the password reset OTP
   void resetPassword(String email) async {
     // check if user exists

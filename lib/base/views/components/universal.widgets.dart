@@ -21,7 +21,9 @@ showLargeImage(context, img, fl) => showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           insetPadding: EdgeInsets.zero,
           child: userImage(context, img, fl),
         );

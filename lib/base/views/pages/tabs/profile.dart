@@ -44,15 +44,20 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
         actions: [
           GestureDetector(
             // onTap: () => con.logOut(),
+            onTap: () => Navigator.pushNamed(context, "/EditProfilePage"),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 children: [
-                  Image.asset("assets/icons/edit.png", height: 14),
+                  Image.asset("assets/icons/edit.png",
+                      height: 14, color: greenColor),
                   const Text(
                     " Edit",
                     textScaleFactor: 1,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: greenColor),
                   ),
                 ],
               ),
@@ -69,7 +74,9 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    showLargeImage(context, activeUser.value.image, null);
+                    if (activeUser.value.image != null) {
+                      showLargeImage(context, activeUser.value.image, null);
+                    }
                   },
                   child: Container(
                     height: getWidth(context, 20),
@@ -130,6 +137,8 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
                   : ""),
           profileItem(context, "Password",
               activeUser.value.password ?? "*************"),
+          profileItem(context, "ID Number",
+              "******${(activeUser.value.idNumber ?? "12345678").substring((activeUser.value.idNumber ?? "12345678").length - 3)}"),
           buttonBlackOne("Sign Out", true, () {
             con.logOut();
           }),

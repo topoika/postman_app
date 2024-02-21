@@ -26,12 +26,27 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
   }
 
   UserDetails userDetails = UserDetails();
+  Package? package;
+  @override
+  void initState() {
+    super.initState();
+    package = widget.data[0];
+    package!.id != null ? userDetails = package!.userDetails! : null;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool edit = package != null && package!.id != null;
     return Scaffold(
       key: con.scaffoldKey,
-      appBar: CustomAppBar(title: "Receiver Details"),
+      appBar: BlackAppBar(
+        title: Text(
+          edit ? "Update Receiver Details" : "Receiver Details",
+          textScaleFactor: 1,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: con.formKey,
@@ -47,6 +62,7 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) => userDetails.senderName = val,
+                  init: userDetails.senderName,
                 ),
                 InputFieldItem(
                   hint: "Sender Mobile",
@@ -54,6 +70,7 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "number",
                   onsaved: (val) => userDetails.senderMobile = val,
+                  init: userDetails.senderMobile,
                 ),
                 mainHeading(context, "Receiver Details"),
                 InputFieldItem(
@@ -62,6 +79,7 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "text",
                   onsaved: (val) => userDetails.recieverName = val,
+                  init: userDetails.recieverName,
                 ),
                 InputFieldItem(
                   hint: "Receiver’s Mobile",
@@ -69,6 +87,7 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "number",
                   onsaved: (val) => userDetails.recieverMobile = val,
+                  init: userDetails.recieverMobile,
                 ),
                 InputFieldItem(
                   hint: "Alternate Mobile No.",
@@ -76,6 +95,7 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "number",
                   onsaved: (val) => userDetails.recieverALtMobile = val,
+                  init: userDetails.recieverALtMobile,
                 ),
                 mainHeading(context, "Note For Postman"),
                 InputFieldItem(
@@ -84,15 +104,18 @@ class _ReceiverDetailsPageState extends StateMVC<ReceiverDetailsPage>
                   onValidate: (val) => con.setError(val),
                   type: "description",
                   onsaved: (val) => userDetails.noteToPostman = val,
+                  init: userDetails.noteToPostman,
                 ),
                 const SizedBox(height: 20),
-                buttonOne("Find a Postman", true, () {
+                buttonOne(edit ? "Update Package Info" : "Find a Postman", true,
+                    () {
                   if (con.formKey.currentState!.validate()) {
                     con.formKey.currentState!.save();
                     List<File> images = widget.data[1];
-                    Package package = widget.data[0];
-                    package.userDetails = userDetails;
-                    con.addPackage(package, images);
+                    package!.userDetails = userDetails;
+                    edit
+                        ? con.updatePackage(package!, images)
+                        : con.addPackage(package!, images);
                   } else {
                     con.error != null
                         ? toastShow(context, con.error.toString(), "err")

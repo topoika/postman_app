@@ -16,111 +16,169 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
         onTap: () {
           Navigator.pushNamed(context, "/NewOrderPage",
               arguments: Request(packageId: package.id));
-          // if (mine) {
-          //   activePackage.value = package;
-          //   Navigator.pushReplacementNamed(context, "/AvailableTripsPage");
-          // } else {
-
-          // }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          margin: const EdgeInsets.only(bottom: 10),
-          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+          margin: const EdgeInsets.only(bottom: 20),
           decoration: BoxDecoration(
-            color: btnColor.withOpacity(.1),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(.09),
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Column(
-            children: <Widget>[
+            children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: package.images!
-                          .sublist(
-                              0,
-                              (package.images!.length >= 3
-                                  ? 3
-                                  : package.images!.length))
-                          .map((e) {
-                        double i = package.images!.indexOf(e).toDouble();
-                        return Container(
-                          transform:
-                              Matrix4.translationValues(0 + (5 * i) + 5, 0, 0),
-                          height: 65 - (5 * i),
-                          width: 65 - (5 * i),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(e), fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(5),
-                              border:
-                                  Border.all(color: Colors.white, width: 1.2)),
-                        );
-                      }).toList(),
+                  Flexible(
+                    child: Text(
+                      package.name ?? "New Package",
+                      textScaleFactor: 1,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: package.ordered! ? btnColor : oranfeColor,
+                    ),
+                    child: Text(
+                      package.ordered! ? "Ordered" : "Pending",
+                      style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              const Row(
+                children: <Widget>[
+                  Text(
+                    'Departing City',
+                    textScaleFactor: 1,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
                   Expanded(
                     child: Row(
-                      children: [
+                      children: <Widget>[
+                        SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                "From:",
-                                textScaleFactor: 1,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              rowItem("City",
-                                  package.shipmentAddress!.address!.city),
-                              rowItem("Intersection",
-                                  package.shipmentAddress!.intersection),
-                              Text(
-                                "Date ${dateOnLy(package.date)}",
-                                textScaleFactor: 1,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
+                          child:
+                              Divider(color: Color(0xffF95959), thickness: 1),
                         ),
+                        SizedBox(width: 3),
+                        Icon(
+                          Icons.location_on_rounded,
+                          size: 15,
+                          color: Color(0xffF95959),
+                        ),
+                        SizedBox(width: 3),
                         Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                "To:",
-                                textScaleFactor: 1,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              rowItem("City",
-                                  package.destinationAddress!.address!.city),
-                              rowItem(
-                                  "Address",
-                                  package.destinationAddress!.address!
-                                      .nameAddress),
-                              rowItem("Intersection",
-                                  package.destinationAddress!.intersection),
-                            ],
-                          ),
+                          child:
+                              Divider(color: Color(0xffF95959), thickness: 1),
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    'Final destination',
+                    textScaleFactor: 1,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          package.shipmentAddress!.address!.city ?? "",
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'Date & Time',
+                          textScaleFactor: 1,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          dateAndTIme(package.date!),
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          package.destinationAddress!.address!.city ?? "",
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'Date & Time',
+                          textScaleFactor: 1,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          "-----------",
+                          textScaleFactor: 1,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               )
             ],
