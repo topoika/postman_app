@@ -18,6 +18,8 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
   _ChatsPageState() : super(ChatsController()) {
     con = controller as ChatsController;
   }
+
+  List<String> delete = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +83,7 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
                 itemBuilder: (context, index) {
                   final chat = chats[index];
                   return Dismissible(
+                    
                       key: ValueKey(chat.id),
                       onDismissed: (DismissDirection direction) {
                         con.deleteConversation(chat);

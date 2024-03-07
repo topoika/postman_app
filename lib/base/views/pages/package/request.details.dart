@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:postman_app/base/views/components/buttons.dart';
 
+import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/package.controller.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
@@ -43,6 +44,7 @@ class _RequestDetailsState extends StateMVC<RequestDetails> {
 
   @override
   Widget build(BuildContext context) {
+    bool mine = widget.request.recieverId! == activeUser.value.id;
     return Scaffold(
       appBar: BlackAppBar(
         title: const Text(
