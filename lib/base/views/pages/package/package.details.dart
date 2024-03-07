@@ -57,7 +57,7 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
         ),
         actions: [
           Visibility(
-            visible: mine && package != null,
+            visible: mine && package != null && !package!.ordered!,
             child: GestureDetector(
               onTap: () => Navigator.pushNamed(context, "/NewPackagePage",
                   arguments: package),
@@ -373,11 +373,16 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
-                                    child: postManButton("Requests", true, () {
-                                  Navigator.pushNamed(
-                                      context, "/PackageRequests",
-                                      arguments: package!.id);
-                                })),
+                                  child: postManButton(
+                                    "Requests",
+                                    true,
+                                    () {
+                                      Navigator.pushNamed(
+                                          context, "/PackageRequests",
+                                          arguments: package!.id);
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 15),

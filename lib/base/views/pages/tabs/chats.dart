@@ -80,7 +80,12 @@ class _ChatsPageState extends StateMVC<ChatsPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final chat = chats[index];
-                  return chatTileItem(context, chat, index);
+                  return Dismissible(
+                      key: ValueKey(chat.id),
+                      onDismissed: (DismissDirection direction) {
+                        con.deleteConversation(chat);
+                      },
+                      child: chatTileItem(context, chat, index));
                 },
               );
             },

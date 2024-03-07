@@ -212,7 +212,7 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: btnColor.withOpacity(.2),
+                                    color: Colors.grey.withOpacity(.2),
                                     image: gvnId != null
                                         ? DecorationImage(
                                             image: FileImage(gvnId!),
@@ -226,14 +226,15 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                                                 fit: BoxFit.fill,
                                               )
                                             : null),
-                                child: gvnId != null
+                                child: gvnId != null ||
+                                        activeUser.value.governmentId != null
                                     ? const SizedBox()
                                     : const Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
-                                          Icon(Icons.upload),
+                                          Icon(Icons.upload, color: greenColor),
                                           SizedBox(height: 15),
                                           Text(
                                             'Upload Government ID',
@@ -241,6 +242,10 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                                             textScaleFactor: 1,
                                             style: TextStyle(
                                                 fontSize: 12,
+                                                color: greenColor,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor: greenColor,
                                                 fontWeight: FontWeight.w500),
                                           ),
                                         ],
@@ -270,7 +275,7 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: btnColor.withOpacity(.2),
+                                  color: Colors.grey.withOpacity(.2),
                                   image: passport != null
                                       ? DecorationImage(
                                           image: FileImage(passport!),
@@ -284,14 +289,18 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                                               fit: BoxFit.fill,
                                             )
                                           : null),
-                              child: passport != null
+                              child: passport != null ||
+                                      activeUser.value.passport != null
                                   ? const SizedBox()
                                   : const Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Icon(Icons.upload),
+                                        Icon(
+                                          Icons.upload,
+                                          color: greenColor,
+                                        ),
                                         SizedBox(height: 15),
                                         Text(
                                           'Passport/Driver License ',
@@ -299,6 +308,10 @@ class _EditProfilePageState extends StateMVC<EditProfilePage> {
                                           textScaleFactor: 1,
                                           style: TextStyle(
                                               fontSize: 12,
+                                              color: greenColor,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor: greenColor,
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],

@@ -199,7 +199,7 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: btnColor,
+                                  color: Colors.grey.withOpacity(.2),
                                   image: gvnId != null
                                       ? DecorationImage(
                                           image: FileImage(gvnId!),
@@ -220,7 +220,10 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Icon(Icons.upload),
+                                        Icon(
+                                          Icons.upload,
+                                          color: greenColor,
+                                        ),
                                         SizedBox(height: 15),
                                         Text(
                                           'Upload Government ID',
@@ -228,6 +231,10 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                           textScaleFactor: 1,
                                           style: TextStyle(
                                               fontSize: 12,
+                                              color: greenColor,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor: greenColor,
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],
@@ -256,7 +263,7 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: btnColor,
+                              color: Colors.grey.withOpacity(.2),
                               image: passport != null
                                   ? DecorationImage(
                                       image: FileImage(passport!),
@@ -276,7 +283,10 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Icon(Icons.upload),
+                                    Icon(
+                                      Icons.upload,
+                                      color: greenColor,
+                                    ),
                                     SizedBox(height: 15),
                                     Text(
                                       'Passport/Driver License ',
@@ -284,6 +294,9 @@ class _RegisterPageState extends StateMVC<RegisterPage> {
                                       textScaleFactor: 1,
                                       style: TextStyle(
                                           fontSize: 12,
+                                          color: greenColor,
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: greenColor,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],

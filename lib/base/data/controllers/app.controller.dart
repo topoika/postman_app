@@ -210,14 +210,11 @@ ValueNotifier<HomeStats> homeStats = ValueNotifier<HomeStats>(HomeStats(
 
 final filePicker = ImagePicker();
 
-bool isAdmin() => [
-      "WglSeMHva0dPT6k1kzxakbzZbZU2",
-      "tCWXPcPdQmhOvkSw1nrD3XtsuhE3"
-    ].contains(activeUser.value.id);
+bool isAdmin() => activeUser.value.isAdmin ?? false;
 void loadProfilePicker(ImageSource source, context, onsaved, type) async {
   final pickedFile = await filePicker.pickImage(
       source: source,
-      preferredCameraDevice: CameraDevice.rear,
+      preferredCameraDevice: CameraDevice.front,
       imageQuality: 100);
   cropImage(File(pickedFile!.path), context, onsaved, type);
   Navigator.pop(context);

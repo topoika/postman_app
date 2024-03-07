@@ -12,6 +12,7 @@ class User {
   String? governmentId;
   String? idNumber;
   bool? idVerified;
+  bool? isAdmin;
   String? deviceToken;
   String? createdAt;
   String? updtedAt;
@@ -26,6 +27,7 @@ class User {
     this.passport,
     this.governmentId,
     this.idNumber,
+    this.isAdmin,
     this.deviceToken,
     this.idVerified,
     this.createdAt,
@@ -45,6 +47,7 @@ class User {
       'idNumber': idNumber,
       'deviceToken': deviceToken,
       'idVerified': idVerified,
+      'isAdmin': isAdmin ?? false,
       'createdAt': createdAt,
       'updtedAt': updtedAt ?? DateTime.now().toString(),
     };
@@ -64,6 +67,7 @@ class User {
       passport: map['passport'] != null ? map['passport'] as String : null,
       deviceToken:
           map['deviceToken'] != null ? map['deviceToken'] as String : null,
+      isAdmin: map['isAdmin'] != null ? map['isAdmin'] as bool : null,
       idVerified: map['idVerified'] != null ? map['idVerified'] as bool : null,
       governmentId:
           map['governmentId'] != null ? map['governmentId'] as String : null,

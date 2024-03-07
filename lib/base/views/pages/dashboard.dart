@@ -47,10 +47,12 @@ class _DashboardState extends State<Dashboard> {
           elevation: 5,
           selectedItemColor: greenColor,
           unselectedItemColor: navItems,
-          selectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-          unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          selectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14 / MediaQuery.of(context).textScaleFactor),
+          unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14 / MediaQuery.of(context).textScaleFactor),
           items: [
             BottomNavigationBarItem(
               activeIcon: Image.asset("assets/icons/home.png",
@@ -60,16 +62,10 @@ class _DashboardState extends State<Dashboard> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              activeIcon: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Image.asset("assets/icons/trips.png",
-                    height: 27, color: greenColor),
-              ),
-              icon: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Image.asset("assets/icons/trips.png",
-                    height: 27, color: navItems),
-              ),
+              activeIcon: Image.asset("assets/icons/trips.png",
+                  height: 27, color: greenColor),
+              icon: Image.asset("assets/icons/trips.png",
+                  height: 27, color: navItems),
               label: 'Trips',
             ),
             BottomNavigationBarItem(

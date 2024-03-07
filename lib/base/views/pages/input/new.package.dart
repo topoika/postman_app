@@ -141,7 +141,7 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                                       ),
                                     )
                                     .toList(),
-                                ...con.package.images!
+                                ...(con.package.images ?? [])
                                     .map(
                                       (i) => Container(
                                         margin:

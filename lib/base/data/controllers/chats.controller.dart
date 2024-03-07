@@ -81,6 +81,16 @@ class ChatsController extends AppController {
         .update({"unreadMessages": getUnreadMessages(conversation, Message())});
   }
 
+  // Delete conversation
+  void deleteConversation(Conversation conversation) async {
+    // delete conversation
+    await db
+        .collection(chatsColl)
+        .doc(conversation.id)
+        .delete()
+        .onError((error, stackTrace) => log(error.toString()));
+  }
+
   // CREATE CONVERSATION AND ADD A FIRST MESSAGE
 
   Future<Conversation> createConversation(User user) async {

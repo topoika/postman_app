@@ -30,20 +30,27 @@ class _SliderWithIndicatorsState extends State<SliderWithIndicators> {
             onPageChanged: (int page) {
               setState(() {
                 _currentPage = page;
-              }); 
+              });
             },
             itemBuilder: (context, index) {
               return Image.network(
-                widget.images![index], 
+                widget.images![index],
                 fit: BoxFit.cover,
               );
             },
           ),
         ),
-        const SizedBox(height: 10.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _buildPageIndicator(),
+        Visibility(
+          visible: widget.images!.length > 1,
+          child: Column(
+            children: [
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _buildPageIndicator(),
+              ),
+            ],
+          ),
         ),
       ],
     );

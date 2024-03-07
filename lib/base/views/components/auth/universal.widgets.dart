@@ -67,7 +67,8 @@ class LoginOrSignUpText extends StatelessWidget {
               textScaleFactor: 1,
               style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                color: greenColor,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
