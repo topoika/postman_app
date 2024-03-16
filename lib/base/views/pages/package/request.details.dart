@@ -44,7 +44,7 @@ class _RequestDetailsState extends StateMVC<RequestDetails> {
 
   @override
   Widget build(BuildContext context) {
-    bool mine = widget.request.recieverId! == activeUser.value.id;
+    // bool mine = widget.request.recieverId! == activeUser.value.id;
     return Scaffold(
       appBar: BlackAppBar(
         title: const Text(

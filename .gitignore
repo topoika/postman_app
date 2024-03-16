@@ -46,3 +46,4 @@ app.*.map.json
 node_modules/
 functions/serviceAccountKey.json
 functions/variables.js
+lib/base/data/controllers/order.controller.dart

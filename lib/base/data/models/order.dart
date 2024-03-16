@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:convert';
+
 import 'package.dart';
 import 'travel.method.dart';
 import 'user.dart';
@@ -97,36 +99,39 @@ class Order {
 }
 
 class Payment {
-  String? holdersName;
-  String? cardNumber;
-  String? expiry;
-  String? cvc;
+  String? clientSecret;
+  String? paymentId;
+  String? paymentMethod;
+  String? recieptUrl;
   String? status;
   Payment({
-    this.holdersName,
-    this.cardNumber,
-    this.expiry,
-    this.cvc,
+    this.clientSecret,
+    this.paymentId,
+    this.paymentMethod,
+    this.recieptUrl,
     this.status,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'holdersName': holdersName,
-      'cardNumber': cardNumber,
-      'expiry': expiry,
+      'clientSecret': clientSecret,
+      'paymentId': paymentId,
+      'paymentMethod': paymentMethod,
+      'recieptUrl': recieptUrl,
       'status': status,
     };
   }
 
   factory Payment.fromMap(Map<String, dynamic> map) {
     return Payment(
-      holdersName:
-          map['holdersName'] != null ? map['holdersName'] as String : null,
-      cardNumber:
-          map['cardNumber'] != null ? map['cardNumber'] as String : null,
-      expiry: map['expiry'] != null ? map['expiry'] as String : null,
-      cvc: map['status'] != null ? map['status'] as String : null,
+      clientSecret:
+          map['clientSecret'] != null ? map['clientSecret'] as String : null,
+      paymentId: map['paymentId'] != null ? map['paymentId'] as String : null,
+      paymentMethod:
+          map['paymentMethod'] != null ? map['paymentMethod'] as String : null,
+      recieptUrl:
+          map['recieptUrl'] != null ? map['recieptUrl'] as String : null,
+      status: map['status'] != null ? map['status'] as String : null,
     );
   }
 }

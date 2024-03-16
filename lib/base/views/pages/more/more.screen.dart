@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:postman_app/base/data/helper/constants.dart';
 
+import '../../../data/models/request.dart';
 import '../../components/universal.widgets.dart';
 
 class MorePage extends StatefulWidget {
@@ -27,7 +28,8 @@ class _MorePageState extends State<MorePage> {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         children: moreItems.map((e) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, e.link!),
+            onTap: () =>
+                Navigator.pushNamed(context, e.link!, arguments: Request()),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
@@ -107,7 +109,7 @@ List<MoreItem> moreItems = [
       txt: "Order Requests", icon: "orders.png", link: "/OrderRequestPage"),
   MoreItem(
       txt: "Active Packages", icon: "my_packages.png", link: "/MyPackagesPage"),
-  MoreItem(txt: "Payment Method", icon: "payment.png", link: "/PaymentMethods"),
+  // MoreItem(txt: "Payment Method", icon: "payment.png", link: "/PaymentPage"),
   MoreItem(
       txt: "Frequently asked questions", icon: "faq.png", link: "/FAQsPage"),
   MoreItem(txt: "Help & Support", icon: "help.png", link: "/HelpAndSupport"),

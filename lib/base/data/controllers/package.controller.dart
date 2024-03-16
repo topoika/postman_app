@@ -94,7 +94,7 @@ class PackageController extends AppController {
   }
 
   // Create order from reqquest and package
-  void createOrder(Request request, Package package) async {
+  void createOrder(Request request, Package package, Payment payment) async {
     String? serverTimestamp = await getServerTimestamp();
 
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
@@ -111,13 +111,7 @@ class PackageController extends AppController {
       totalAmount: request.postFee,
       tripId: request.trip!.id,
       travelMethod: request.trip!.travelMethod,
-      payment: Payment(
-        status: "paid",
-        cardNumber: "1234 1234 1234 1234",
-        expiry: "12/34",
-        holdersName: activeUser.value.username,
-        cvc: "123",
-      ),
+      payment: payment,
     );
     try {
       await db.collection(orderCol).add(order.toMap()).then((value) {

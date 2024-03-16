@@ -105,7 +105,7 @@ class UserController extends EmailController {
     }
   }
 
-// Update user infomation
+// upload user images
   void updateUserInfo(userModel.User user, profile, id, passport) async {
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     try {
@@ -276,6 +276,7 @@ class UserController extends EmailController {
     activeUser.value = userModel.User();
     Navigator.pushReplacementNamed(scaffoldKey.currentContext!, "/Login",
         arguments: 0);
+
     loader.remove();
   }
 
