@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:postman_app/base/data/helper/constants.dart';
+import 'package:postman_app/base/data/models/package.dart';
 
 import '../../data/bloc/events/trips.events.dart';
 import '../../data/bloc/providers/trips.provider.dart';
@@ -12,7 +15,8 @@ import '../components/trips/trips.list.dart';
 import '../components/universal.widgets.dart';
 
 class AvailableTripsPage extends StatefulWidget {
-  const AvailableTripsPage({super.key});
+  final Package package;
+  const AvailableTripsPage({super.key, required this.package});
 
   @override
   _AvailableTripsPageState createState() => _AvailableTripsPageState();
@@ -32,7 +36,7 @@ class _AvailableTripsPageState extends StateMVC<AvailableTripsPage> {
   }
 
   void init() {
-    tripsBloc.add(FetchRouteTripsEvent());
+    tripsBloc.add(FetchRouteTripsEvent(package: widget.package));
   }
 
   @override

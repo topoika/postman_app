@@ -9,9 +9,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../../main.dart';
 import '../../views/components/home/universal.widget.dart';
-import '../models/request.dart';
+import 'app.controller.dart';
 
-class NotificationController {
+class NotificationController extends AppController {
   static Future<void> requestPermission() async {
     await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -24,7 +24,7 @@ class NotificationController {
     );
   }
 
-  static Future<void> initialize(
+  Future<void> initialize(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     var androidInitialize =
         const AndroidInitializationSettings('notification_icon');
@@ -38,12 +38,19 @@ class NotificationController {
       try {
         if (load.payload!.isNotEmpty) {
           var payload = jsonDecode(load.payload!);
+
           if (payload['type'] == 'request') {
+            final request = await getOneRequest(payload['requestId']);
             Navigator.of(Get.context!)
                 .pushReplacementNamed("/Pages", arguments: 2);
             Navigator.pushNamed(Get.context!, "/NewOrderPage",
-                arguments:
-                    Request(id: payload['id'], packageId: payload['id']));
+                arguments: request);
+          } else if (payload['type'] == '"request-accept"') {
+            final request = await getOneRequest(payload['requestId']);
+            Navigator.of(Get.context!)
+                .pushReplacementNamed("/Pages", arguments: 2);
+            Navigator.pushNamed(Get.context!, "/RequestDetails",
+                arguments: request);
           } else {
             Navigator.of(Get.context!)
                 .pushReplacementNamed("/Pages", arguments: 3);
@@ -52,15 +59,15 @@ class NotificationController {
       } catch (_) {}
       return;
     });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if (kDebugMode) {
         print(
             "onMessage: ${message.notification!.title}/${message.notification!.body}/${message.notification!.titleLocKey}");
         print("onMessage type: ${message.data['type']}/${message.data['id']}");
       }
       if (FirebaseAuth.instance.currentUser != null) {
+        final request = await getOneRequest(message.data['requestId']);
         if (!kIsWeb && message.data['type'] == "request") {
-          // Only show the dialog if not running on the web and the message type is "request"
           showDialog(
             context: Get.context!,
             barrierColor: Colors.black26,
@@ -70,93 +77,48 @@ class NotificationController {
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 insetPadding: EdgeInsets.zero,
-                child: NewOrderDialog(
-                    request: Request(
-                        id: message.data['id'], packageId: message.data['id'])),
+                child: NewOrderDialog(request: request),
               );
             },
           );
-        } else {
-          // showNotification(message, flutterLocalNotificationsPlugin, false);
+        } else if (!kIsWeb && message.data['type'] == "request-accept") {
+          showDialog(
+            context: Get.context!,
+            barrierColor: Colors.black26,
+            barrierDismissible: true,
+            builder: (context) {
+              return Dialog(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  insetPadding: EdgeInsets.zero,
+                  child: RequestAcceptDialog(request: request));
+            },
+          );
         }
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       if (kDebugMode) {
         log("onOpenApp: ${message.notification!.title}/${message.notification!.body}/${message.data.toString()}");
       }
       if (FirebaseAuth.instance.currentUser != null) {
         try {
+          final request = await getOneRequest(message.data['requestId']);
+
           if (message.data['type'] == "request") {
             Navigator.pushNamed(Get.context!, "/NewOrderPage",
                 arguments: message.data['id']);
-          } else {
-            // log("It is a chat")
-            // TODO: get the user and navigate to the conversation page to chat
+          } else if (message.data['type'] == "request-accept") {
+            Navigator.of(Get.context!)
+                .pushReplacementNamed("/Pages", arguments: 2);
+            Navigator.pushNamed(Get.context!, "/RequestDetails",
+                arguments: request);
           }
         } catch (_) {}
       }
     });
   }
-
-  //
-
-//   static Future<void> showNotification(RemoteMessage message,
-//       FlutterLocalNotificationsPlugin fln, bool data) async {
-//     if (!Platform.isIOS) {
-//       String? title;
-//       String? body;
-//       String? requestId;
-//       NotificationBody notificationBody = convertNotification(message.data);
-//       if (data) {
-//         title = message.data['title'];
-//         body = message.data['body'];
-//         requestId = message.data['id'];
-//       }
-//       await showBigTextNotification(
-//           title, body ?? "", requestId, notificationBody, fln);
-//     }
-//   }
-
-//   static Future<void> showBigTextNotification(
-//       String? title,
-//       String body,
-//       String? requestId,
-//       NotificationBody? notificationBody,
-//       FlutterLocalNotificationsPlugin fln) async {
-//     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-//       body,
-//       htmlFormatBigText: true,
-//       contentTitle: title,
-//       htmlFormatContentTitle: true,
-//     );
-//     AndroidNotificationDetails androidPlatformChannelSpecifics =
-//         AndroidNotificationDetails(
-//       'postman',
-//       'postman',
-//       importance: Importance.max,
-//       styleInformation: bigTextStyleInformation,
-//       priority: Priority.max,
-//       playSound: true,
-//       sound: const RawResourceAndroidNotificationSound('notification'),
-//     );
-//     NotificationDetails platformChannelSpecifics =
-//         NotificationDetails(android: androidPlatformChannelSpecifics);
-//     await fln.show(0, title, body, platformChannelSpecifics,
-//         payload: notificationBody != null
-//             ? jsonEncode(notificationBody.toJson())
-//             : null);
-//   }
-
-//   static NotificationBody convertNotification(Map<String, dynamic> data) {
-//     if (data['type'] == 'request') {
-//       return NotificationBody(type: 'notification', id: data['id']);
-//     } else {
-//       return NotificationBody(type: 'chats');
-//     }
-//   }
-// }
 }
 
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {

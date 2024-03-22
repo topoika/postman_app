@@ -184,6 +184,7 @@ class _ConversationPageState extends StateMVC<ConversationPage> {
                               widget.user,
                               Message(
                                   text: message.text,
+                                  
                                   sendBy: activeUser.value.id))
                           .then(
                               (value) => setState(() => conversation = value));

@@ -54,10 +54,10 @@ Widget packagesItems(context, List<Package> packages, {bool mine = false}) {
                         const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      color: package.ordered! ? btnColor : oranfeColor,
+                      color: package.ordered! ? btnColor : Colors.blueGrey,
                     ),
                     child: Text(
-                      package.ordered! ? "Ordered" : "Pending",
+                      package.ordered! ? "Ordered" : "Not Ordered",
                       style: const TextStyle(
                           fontSize: 11,
                           color: Colors.white,

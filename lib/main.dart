@@ -24,9 +24,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  NotificationController.requestPermission();
-
-  await NotificationController.initialize(flutterLocalNotificationsPlugin);
+  await NotificationController().initialize(flutterLocalNotificationsPlugin);
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
   runApp(const MyApp());
 }

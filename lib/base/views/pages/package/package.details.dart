@@ -368,7 +368,8 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                                           "Find Postman", false, () {
                                     activePackage.value = package!;
                                     Navigator.pushNamed(
-                                        context, "/AvailableTripsPage");
+                                        context, "/AvailableTripsPage",
+                                        arguments: package);
                                   })),
                                 ),
                                 const SizedBox(width: 10),
@@ -428,7 +429,7 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                             Expanded(
                                 child: postManButton("Accept", true, () {
                               // TODO: make a convesation for the two users
-                              con.acceptRequest(widget.request!.id);
+                              con.acceptRequest(widget.request!);
                             })),
                           ],
                         ),

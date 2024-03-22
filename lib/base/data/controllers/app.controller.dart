@@ -51,19 +51,34 @@ class AppController extends MainController {
 
   Future<String?> getServerTimestamp() async {
     try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await db
+          .collection("server_timestamp")
+          .doc("HrcSrCUm22Xq7IzwA7fk")
+          .update({'timestamp': FieldValue.serverTimestamp()});
 
-      // Use a temporary document to generate a server timestamp
-      DocumentReference tempDoc = firestore.collection('temp_collection').doc();
-
-      await tempDoc.set({'timestamp': FieldValue.serverTimestamp()});
-
-      DocumentSnapshot snapshot = await tempDoc.get();
+      // Retrieve the document with the server timestamp field
+      DocumentSnapshot snapshot = await db
+          .collection("server_timestamp")
+          .doc("HrcSrCUm22Xq7IzwA7fk")
+          .get();
 
       if (snapshot.exists) {
-        Timestamp? timestamp = snapshot['timestamp'] as Timestamp?;
-        return timestamp?.toDate().toString();
+        var timestamp = snapshot['timestamp'];
+
+        if (timestamp is Timestamp) {
+          try {
+            DateTime dateTime = timestamp.toDate();
+            return dateTime.toString();
+          } catch (e) {
+            print('Error converting timestamp to DateTime: $e');
+            return null;
+          }
+        } else {
+          print('Error: Timestamp is not of type Timestamp');
+          return null;
+        }
       } else {
+        print('Error: Document does not exist');
         return null;
       }
     } catch (e) {
@@ -73,23 +88,30 @@ class AppController extends MainController {
   }
 
   // Get homepage stats
-  dynamic getHomeStats() async {
-    homeStats.dispose();
+  Future<HomeStats> getHomeStats() async {
+    HomeStats homeStats = HomeStats(
+        activeOrders: 0,
+        availableForWithrawal: 0.0,
+        completedOrders: 0,
+        monthEarnings: 0.0);
+    print("Getting home stats");
+    // homeStats.removeListener();
     final ordersColl = await db
         .collection(orderCol)
         .where("postmanId", isEqualTo: activeUser.value.id)
         .get();
-
+    log("Orders ${ordersColl.docs.length}");
     final List<orderModel.Order> usersOrder =
         ordersColl.docs.map((e) => orderModel.Order.fromMap(e.data())).toList();
     for (orderModel.Order order in usersOrder) {
       if (order.status == "completed") {
-        homeStats.value.completedOrders += 1;
+        homeStats.completedOrders += 1;
+        homeStats.monthEarnings += order.postManFee!;
       } else {
-        homeStats.value.activeOrders += 1;
+        homeStats.activeOrders += 1;
       }
     }
-    setState(() {});
+    return homeStats;
   }
 
   Future<String> getUserFCM(String? id) async => await db
@@ -173,8 +195,9 @@ class AppController extends MainController {
       'to': token,
       'notification': {
         'title': title,
-        'body':
-            "You have a new ${type == "request" ? "Order request" : "Message"}",
+        'body': type == "request-accept"
+            ? "Your request is accepted, proceeed to payment"
+            : "You have a new ${type == "request" ? "Order request" : "Message"}",
       },
       "data": {"id": request.packageId, "requestId": request.id, "type": type}
     };
@@ -195,6 +218,16 @@ class AppController extends MainController {
       log('Failed to send notification. Response code: ${response.statusCode}');
       log('Response body: ${response.body}');
       return false;
+    }
+  }
+
+  // Get one request
+  Future<Request> getOneRequest(String id) async {
+    try {
+      final doc = await db.collection(requestColl).doc(id).get();
+      return Request.fromMap(doc.data() as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
     }
   }
 }

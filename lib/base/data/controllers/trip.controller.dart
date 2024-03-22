@@ -128,7 +128,6 @@ class TripController extends AppController {
         loader.remove();
         toastShow(
             scaffoldKey.currentContext!, "Request was already send", 'suc');
-        return null;
       } else {
         try {
           Request request = Request(

@@ -20,6 +20,7 @@ class PaymentState extends Equatable {
   }) {
     return PaymentState(
       status: status ?? this.status,
+      payment: payment ?? this.payment,
       cardFieldInputDetails:
           cardFieldInputDetails ?? this.cardFieldInputDetails,
     );

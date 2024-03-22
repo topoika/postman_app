@@ -17,6 +17,7 @@ class Helper {
   static OverlayEntry overlayLoader() {
     OverlayEntry loader = OverlayEntry(
       builder: (BuildContext context) {
+        FocusScope.of(context).unfocus();
         return SafeArea(
           child: Container(
             height: double.infinity,
@@ -39,6 +40,7 @@ class Helper {
   static OverlayEntry overlayNotification() {
     OverlayEntry loader = OverlayEntry(
       builder: (BuildContext context) {
+        FocusScope.of(context).unfocus();
         return SafeArea(
           child: Container(
             height: double.infinity,

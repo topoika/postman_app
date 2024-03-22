@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:flutter/material.dart';
 
 import '../helper/helper.dart';
@@ -117,17 +116,16 @@ class PackageController extends AppController {
       await db.collection(orderCol).add(order.toMap()).then((value) {
         value.update({'id': value.id});
       });
+      await markPackageComplete(request, package, serverTimestamp!);
       loader.remove();
-      markPackageComplite(request, package);
       Navigator.pushReplacementNamed(scaffoldKey.currentContext!, "/Pages",
           arguments: 2);
-      showSuccessDialog(
-          "Your package has been posted!", "", "Find a Postman", "/");
       showSuccessDialog(
           "Order Succesfuly",
           "Wait / chat with the ${request.trip!.traveller!.username} to arrange on package pick up",
           "Message",
-          "/");
+          "/ConversationPage",
+          args: request.trip!.traveller!);
     } catch (e) {
       loader.remove();
       log(e.toString());
@@ -136,25 +134,42 @@ class PackageController extends AppController {
     }
   }
 
-  void markPackageComplite(Request request, Package package) async {
+  Future markPackageComplete(
+      Request request, Package package, String time) async {
     await db.collection(requestColl).doc(request.id).update({"status": "done"});
-    await db.collection(packageColl).doc(package.id).update({
-      "ordered": true,
-      "updatedAt":
-          (FieldValue.serverTimestamp() as Timestamp).toDate().toString()
-    });
+    await db
+        .collection(packageColl)
+        .doc(package.id)
+        .update({"ordered": true, "updatedAt": time});
   }
 
-  void acceptRequest(id) async {
+  void acceptRequest(Request request) async {
     Overlay.of(scaffoldKey.currentContext!).insert(loader);
     try {
       await db
           .collection(requestColl)
-          .doc(id)
-          .update({"status": "accepted"}).then((value) {
-        loader.remove();
-        toastShow(
-            scaffoldKey.currentContext!, "Request update succesfully", "suc");
+          .doc(request.id)
+          .update({"status": "accepted"}).then((value) async {
+        String? shipperToken = await getUserFCM(request.senderId);
+        await sendNotification(
+                shipperToken,
+                "Request Accept by ${request.trip!.traveller!.username!}",
+                request,
+                type: "request-accept")!
+            .then((value) {
+          if (value) {
+            loader.remove();
+            toastShow(scaffoldKey.currentContext!, "Request update succesfully",
+                'suc');
+          } else {
+            loader.remove();
+            toastShow(scaffoldKey.currentContext!,
+                "Unable to send notification", 'err');
+            throw Error();
+          }
+        }).onError((error, stackTrace) {
+          throw Error();
+        });
         Navigator.pop(scaffoldKey.currentContext!);
       });
     } catch (e) {

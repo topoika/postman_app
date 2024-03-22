@@ -38,6 +38,7 @@ class Request {
       'postFee': postFee,
       'deleted': deleted ?? false,
       'createdAt': createdAt,
+      'tripId': trip?.id,
       'travelledAt': travelledAt,
     };
   }

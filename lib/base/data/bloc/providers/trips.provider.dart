@@ -44,7 +44,9 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
       FetchRouteTripsEvent event, Emitter<TripsState> emit) async {
     emit(TripsLoadingState());
     try {
-      List<Trip> trips = await TripsRepo.fetchRouteTrips();
+      List<Trip> trips = await TripsRepo.fetchRouteTrips(
+          event.package.shipmentAddress!.address!.city!,
+          event.package.destinationAddress!.address!.city!);
 
       emit(TripsLoadedState(trips: trips));
     } catch (e) {

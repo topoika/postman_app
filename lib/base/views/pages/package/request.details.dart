@@ -2,14 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:postman_app/base/views/components/buttons.dart';
 
-import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/package.controller.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
 import '../../../data/models/package.dart';
 import '../../../data/models/request.dart';
+import '../../components/buttons.dart';
 import '../../components/packages/image.slider.dart';
 import '../../components/packages/request.list.dart';
 import '../../components/universal.widgets.dart';
@@ -81,7 +80,7 @@ class _RequestDetailsState extends StateMVC<RequestDetails> {
                               ),
                             ),
                             Text(
-                              '\$${widget.request.postFee!.toStringAsFixed(2)}',
+                              '\$${widget.request.postFee ?? 0.toStringAsFixed(2)}',
                               textScaleFactor: 1,
                               style: const TextStyle(
                                 fontSize: 19,

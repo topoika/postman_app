@@ -124,6 +124,8 @@ class ChatsController extends AppController {
   // CREATE CONVERSATION AND ADD A FIRST MESSAGE
   Future<Conversation> addMessageToNewChat(User user, Message message) async {
     Conversation conversation = await createConversation(user);
+    String? serverTimestamp = await getServerTimestamp();
+    message.createAt = serverTimestamp;
     try {
       DocumentReference docRef = await db
           .collection(chatsColl)

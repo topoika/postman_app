@@ -29,22 +29,19 @@ class TripsRepo {
   }
 
   // fetch all the route trips
-  static Future<List<Trip>> fetchRouteTrips() async {
+  static Future<List<Trip>> fetchRouteTrips(String startCity, destCity) async {
     try {
       CollectionReference tripsColl =
           FirebaseFirestore.instance.collection('trips');
       QuerySnapshot querySnapshot = await tripsColl
-          // TODO: Uncomment this line for production
-          // .where("travelledAt", isGreaterThan: DateTime.now().toString())
-          .where("city",
-              isEqualTo: activePackage.value.shipmentAddress!.address!.city)
-          .where("destCity",
-              isEqualTo: activePackage.value.destinationAddress!.address!.city)
+          .where("city", isEqualTo: startCity)
+          .where("destCity", isEqualTo: destCity)
           .orderBy("createdAt", descending: true)
           .get()
           .onError((error, stackTrace) =>
               throw Exception('Failed to load trips${error.toString()}'));
-      // Convert documents to Trip objects
+
+      log("Trips ${querySnapshot.docs.length}");
       List<Trip> trips = querySnapshot.docs
           .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
           .where((trip) => trip.travellersId != activeUser.value.id)

@@ -163,7 +163,7 @@ class _NewOrderDialogState extends State<NewOrderDialog> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  "Congratulations on your new order! Click the 'View Order' button to access order information.",
+                  "Congratulations on your new order request! Click the 'View Order' button to access order information.",
                   textScaleFactor: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -175,6 +175,85 @@ class _NewOrderDialogState extends State<NewOrderDialog> {
                 buttonOne("View Order", true, () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, "/NewOrderPage",
+                      arguments: widget.request);
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RequestAcceptDialog extends StatefulWidget {
+  final Request request;
+  const RequestAcceptDialog({
+    Key? key,
+    required this.request,
+  }) : super(key: key);
+
+  @override
+  State<RequestAcceptDialog> createState() => _RequestAcceptDialogState();
+}
+
+class _RequestAcceptDialogState extends State<RequestAcceptDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.only(bottom: 30),
+      color: Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.close,
+                        size: 18,
+                      ),
+                    )),
+                Image.asset(
+                  "assets/images/new_order.png",
+                  height: 145,
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  "Order Request Accepted",
+                  textScaleFactor: 1,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Congratulations on your order request was accepted by! Click the 'Next Step' button to to continue to payment",
+                  textScaleFactor: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black45),
+                ),
+                const SizedBox(height: 20),
+                buttonOne("Next Step", true, () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/RequestDetails",
                       arguments: widget.request);
                 }),
               ],

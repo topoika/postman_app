@@ -6,6 +6,7 @@ import 'package:postman_app/base/data/helper/helper.dart';
 import '../../../data/controllers/app.controller.dart';
 import '../../../data/controllers/user.controller.dart';
 import '../../../data/helper/constants.dart';
+import '../../../data/models/home.stats.dart';
 import '../../../data/models/package.dart';
 import '../../../data/models/trip.dart';
 import '../../components/buttons.dart';
@@ -23,11 +24,16 @@ class _HomepageState extends StateMVC<Homepage> {
   _HomepageState() : super(UserController()) {
     con = controller as UserController;
   }
+  HomeStats homeStats = HomeStats(
+      activeOrders: 0,
+      availableForWithrawal: 0.0,
+      completedOrders: 0,
+      monthEarnings: 0.0);
 
   @override
   void initState() {
     super.initState();
-    con.getHomeStats();
+    con.getHomeStats().then((value) => setState(() => homeStats = value));
   }
 
   @override
@@ -137,9 +143,9 @@ class _HomepageState extends StateMVC<Homepage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 statsItem(context, "Available for withdrawal",
-                                    "\$${homeStats.value.availableForWithrawal.toStringAsFixed(2)}"),
+                                    "\$${homeStats.availableForWithrawal.toStringAsFixed(2)}"),
                                 statsItem(context, "Earnings this month",
-                                    "\$${homeStats.value.monthEarnings.toStringAsFixed(2)}")
+                                    "\$${homeStats.monthEarnings.toStringAsFixed(2)}")
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -147,9 +153,9 @@ class _HomepageState extends StateMVC<Homepage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 statsItem(context, "Active orders",
-                                    homeStats.value.activeOrders.toString()),
+                                    homeStats.activeOrders.toString()),
                                 statsItem(context, "Complete orders",
-                                    homeStats.value.completedOrders.toString())
+                                    homeStats.completedOrders.toString())
                               ],
                             )
                           ],

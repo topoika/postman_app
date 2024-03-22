@@ -80,7 +80,7 @@ Widget conversationItem(context, byMe, read, Message message, {index}) {
             ),
             SizedBox(width: byMe ? 3 : 0),
             Text(
-              timeOnly(message.createAt),
+              timeOnly(message.createAt ?? DateTime.now().toString()),
               textScaleFactor: 1,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

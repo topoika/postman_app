@@ -72,7 +72,8 @@ class RouteGenerator {
       case '/MyPackagesPage':
         return MaterialPageRoute(builder: (_) => const MyPackagesPage());
       case '/AvailableTripsPage':
-        return MaterialPageRoute(builder: (_) => const AvailableTripsPage());
+        return MaterialPageRoute(
+            builder: (_) => AvailableTripsPage(package: args as Package));
       case '/NewOrderPage':
         return MaterialPageRoute(
             builder: (_) => NewOrderPage(request: args as Request));
