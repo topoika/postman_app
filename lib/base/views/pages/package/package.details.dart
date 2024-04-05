@@ -211,6 +211,32 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                           ],
                         ),
                       ),
+                      subheading("Note to Postman"),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(.06),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                package!.userDetails!.noteToPostman ?? "",
+                                textScaleFactor: 1,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       subheading("Description"),
                       Text(
                         package!.description!,
@@ -388,7 +414,7 @@ class _NewOrderPageState extends StateMVC<NewOrderPage> {
                             ),
                             const SizedBox(height: 15),
                             GestureDetector(
-                              // onTap: () => con.cancelTrip(trip!.id!),
+                              onTap: () => con.deletePackage(package!),
                               child: Container(
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

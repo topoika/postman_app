@@ -56,7 +56,9 @@ class Request {
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
       senderName:
           map['senderName'] != null ? map['senderName'] as String : null,
-      postFee: map['postFee'] != null ? map['postFee'] as double : null,
+      postFee: map['postFee'] != null
+          ? double.parse(map['postFee'].toString())
+          : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
       travelledAt:

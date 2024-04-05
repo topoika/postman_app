@@ -391,7 +391,8 @@ class _NewPackagePageState extends StateMVC<NewPackagePage>
                       con.package.insurance = insurance;
                       con.package.packBySender = packBySender;
                       con.package.weight = weight;
-                      Navigator.pushNamed(context, "/ReceiverDetailsPage",
+                      Navigator.pushReplacementNamed(
+                          context, "/ReceiverDetailsPage",
                           arguments: [con.package, packageImage]);
                     }
                   } else {

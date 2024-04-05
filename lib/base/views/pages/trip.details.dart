@@ -308,7 +308,7 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                                 arguments: trip)),
                         const SizedBox(height: 10),
                         GestureDetector(
-                          onTap: () => con.cancelTrip(trip!.id!),
+                          onTap: () => con.deleteTrip(trip!),
                           child: Container(
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -317,7 +317,7 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                                     color: Colors.redAccent, size: 18),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Cancel Trip",
+                                  "Delete Trip",
                                   textScaleFactor: 1,
                                   style: TextStyle(
                                     color: Colors.redAccent,

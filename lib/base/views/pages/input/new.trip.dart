@@ -195,7 +195,7 @@ class _NewTripPageState extends StateMVC<NewTripPage>
                                           fit: BoxFit.cover,
                                         )
                                       : DecorationImage(
-                                          image: FileImage(ticket!),
+                                          image: FileImage(ticket ?? File("")),
                                           fit: BoxFit.cover,
                                         ),
                                 ),

@@ -194,6 +194,7 @@ class AppController extends MainController {
     final Map<String, dynamic> data = {
       'to': token,
       'notification': {
+        "sound": "notification",
         'title': title,
         'body': type == "request-accept"
             ? "Your request is accepted, proceeed to payment"

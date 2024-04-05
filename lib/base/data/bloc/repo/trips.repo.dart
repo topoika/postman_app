@@ -36,6 +36,7 @@ class TripsRepo {
       QuerySnapshot querySnapshot = await tripsColl
           .where("city", isEqualTo: startCity)
           .where("destCity", isEqualTo: destCity)
+          .where("available", isEqualTo: true)
           .orderBy("createdAt", descending: true)
           .get()
           .onError((error, stackTrace) =>

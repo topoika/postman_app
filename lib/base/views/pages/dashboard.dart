@@ -37,7 +37,6 @@ class _DashboardState extends State<Dashboard> {
         return true;
       },
       child: Scaffold(
-        // drawer: const DrawerWidget(),
         body: _buildBody(),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,

@@ -7,11 +7,14 @@ import '../helper/helper.dart';
 import '../models/request.dart';
 import '../models/trip.dart';
 import 'app.controller.dart';
+import 'package.controller.dart';
 
-class TripController extends AppController {
+class TripController extends PackageController {
   Trip trip = Trip();
+  @override
   String? error;
 
+  @override
   setError(val) => setState(() => error = val);
 
   Future<void> addTrip(Trip trip, File? ticket) async {
@@ -67,6 +70,27 @@ class TripController extends AppController {
     }
   }
 
+  // delete trip and it's requests
+  void deleteTrip(Trip trip) async {
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      await db.collection(tripsCol).doc(trip.id).delete().then((value) async {
+        await deleteRequests(trip.id, "tripId");
+        loader.remove();
+        toastShow(
+            scaffoldKey.currentContext!, "Trip deleted successfully", "suc");
+        Navigator.pushNamedAndRemoveUntil(
+            scaffoldKey.currentContext!, "/Pages", (route) => false,
+            arguments: 0);
+      });
+    } catch (e) {
+      log(e.toString());
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+    }
+  }
+
   Future<Trip> getOneTrip(String id) async {
     try {
       final doc = await db.collection(tripsCol).doc(id).get();
@@ -114,6 +138,7 @@ class TripController extends AppController {
       toastShow(
           scaffoldKey.currentContext!, "Trip Canceled Successfully", 'suc');
     } catch (e) {
+      log(e.toString());
       loader.remove();
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');

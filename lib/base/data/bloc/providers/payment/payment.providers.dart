@@ -38,7 +38,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           useStripeSdk: true,
           paymentMethodId: paymentMethod.id,
           currency: "usd",
-          amount: event.amount);
+          amount: event.amount * 100);
 
       log(paymentIntentResults.toString());
 

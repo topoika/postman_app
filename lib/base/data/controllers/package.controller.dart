@@ -32,7 +32,8 @@ class PackageController extends AppController {
         loader.remove();
         activePackage.value = package;
         showSuccessDialog("Your package has been posted!", "", "Find a Postman",
-            "/AvailableTripsPage");
+            "/AvailableTripsPage",
+            args: package);
       });
     } catch (e) {
       loader.remove();
@@ -74,10 +75,51 @@ class PackageController extends AppController {
             "Update Successfully",
             "Your package info was updated successfully",
             "Find a Postman",
-            "/AvailableTripsPage");
+            "/AvailableTripsPage",
+            args: package);
       });
     } catch (e) {
       loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+    }
+  }
+
+  void deletePackage(Package package) async {
+    Overlay.of(scaffoldKey.currentContext!).insert(loader);
+    try {
+      await db
+          .collection(packageColl)
+          .doc(package.id)
+          .delete()
+          .then((value) async {
+        await deleteRequests(package.id, "packageId");
+        loader.remove();
+        toastShow(
+            scaffoldKey.currentContext!, "Package deleted successfully", "suc");
+        Navigator.pushNamedAndRemoveUntil(
+            scaffoldKey.currentContext!, "/Pages", (route) => false,
+            arguments: 0);
+      });
+    } catch (e) {
+      loader.remove();
+      toastShow(scaffoldKey.currentContext!,
+          "An error occurred, please try again", 'err');
+    }
+  }
+
+  Future<void> deleteRequests(id, type) async {
+    try {
+      await db
+          .collection(requestColl)
+          .where(type, isEqualTo: id)
+          .get()
+          .then((value) {
+        for (var i in value.docs) {
+          db.collection(requestColl).doc(i.id).delete();
+        }
+      });
+    } catch (e) {
       toastShow(scaffoldKey.currentContext!,
           "An error occurred, please try again", 'err');
     }
@@ -118,7 +160,8 @@ class PackageController extends AppController {
       });
       await markPackageComplete(request, package, serverTimestamp!);
       loader.remove();
-      Navigator.pushReplacementNamed(scaffoldKey.currentContext!, "/Pages",
+      Navigator.pushNamedAndRemoveUntil(
+          scaffoldKey.currentContext!, "/Pages", (route) => false,
           arguments: 2);
       showSuccessDialog(
           "Order Succesfuly",
