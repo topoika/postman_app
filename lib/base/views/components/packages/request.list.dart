@@ -3,7 +3,9 @@ import 'package:postman_app/base/data/controllers/app.controller.dart';
 import 'package:postman_app/base/data/helper/constants.dart';
 
 import '../../../data/helper/helper.dart';
+import '../../../data/models/order.dart';
 import '../../../data/models/request.dart';
+import '../shipments/widget.dart';
 import '../trips/trips.list.dart';
 import '../universal.widgets.dart';
 
@@ -153,6 +155,22 @@ Widget requestItems(context, List<Request> requests, {bool mine = false}) {
               ],
             ),
           ),
+        );
+      });
+}
+
+Widget tripOrderList(context, List<Order> orders,con, {bool mine = false}) {
+  return ListView.builder(
+      shrinkWrap: true,
+      itemCount: orders.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final order = orders[index];
+        return GestureDetector(
+          onTap: () => Navigator.pushReplacementNamed(
+              context, "/ShipmentDetails",
+              arguments: order.id),
+          child: shipmentItem(context, order, con),
         );
       });
 }

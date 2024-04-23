@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../../data/controllers/app.controller.dart';
+import '../../../data/controllers/order.controller.dart';
 import '../../../data/helper/constants.dart';
 import '../../../data/helper/helper.dart';
 import '../../../data/models/order.dart';
 import '../buttons.dart';
 import '../universal.widgets.dart';
 
-Widget shipmentItem(context, Order shipment) {
+Widget shipmentItem(context, Order shipment, OrderController con) {
+  bool mine = shipment.postmanId != activeUser.value.id;
   return Container(
     margin: const EdgeInsets.only(bottom: 15),
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -26,19 +29,19 @@ Widget shipmentItem(context, Order shipment) {
                   const TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: greenColor,
+                color: statusOrderColor(shipment.status ?? "pending"),
               ),
-              child: const Text(
-                "Active",
-                style: TextStyle(
+              child: Text(
+                shipment.status!.toUpperCase(),
+                style: const TextStyle(
                     fontSize: 11,
                     color: Colors.white,
                     fontWeight: FontWeight.w500),
               ),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 10),
@@ -91,7 +94,7 @@ Widget shipmentItem(context, Order shipment) {
         Container(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           alignment: Alignment.centerLeft,
-          height: 20,
+          height: 15,
           child: VerticalDivider(
             color: Colors.redAccent.withOpacity(.5),
           ),
@@ -122,127 +125,169 @@ Widget shipmentItem(context, Order shipment) {
           ],
         ),
         const SizedBox(height: 10),
-        Column(
-          children: <Widget>[
-            const Divider(
-              height: 30,
-              color: Colors.black12,
-              thickness: .9,
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          shipment.postMan!.image != null
-                              ? showLargeImage(
-                                  context, shipment.postMan!.image, null)
-                              : toastShow(context, "No profile picture", "nor");
-                        },
-                        child: Container(
-                          height: getWidth(context, 9),
-                          width: getWidth(context, 9),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(.3),
-                            image: shipment.postMan!.image != null
-                                ? DecorationImage(
-                                    image: cachedImage(
-                                        shipment.postMan!.image ?? noUserImage),
-                                    fit: BoxFit.fill,
-                                  )
-                                : null,
-                            shape: BoxShape.circle,
-                            border: Border.all(width: 2, color: Colors.white),
-                          ),
-                          child: shipment.postMan!.image == null
-                              ? const Icon(
-                                  Icons.person,
-                                  color: Colors.black,
-                                  size: 30,
-                                )
-                              : const SizedBox(),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        shipment.postMan!.username ?? "",
-                        textScaleFactor: 1,
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: shipment.status == "complete",
-                  child: Container(
-                    child: Row(
-                      children: [1, 2, 3, 4, 5]
-                          .map((e) => const Icon(
-                                Icons.star,
-                                color: oranfeColor,
-                                size: 19,
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const Divider(
-              height: 30,
-              color: Colors.black12,
-              thickness: .9,
-            ),
-            const SizedBox(height: 5),
-            Visibility(
-              visible: shipment.tipAmount! > 0.0,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Visibility(
+          visible: !mine && shipment.status != "completed",
+          child: buttonOne(
+            shipment.status == "pending" ? "Mark Collected" : "Mark Delivered",
+            true,
+            () async {
+              if (shipment.status == "pending") {
+                await con
+                    .updateOrderStatus(shipment.id!, "active")
+                    .then((value) {
+                  con.initOrders(shipment.tripId);
+                });
+              } else {
+                await con
+                    .updateOrderStatus(shipment.id!, "completed")
+                    .then((value) {
+                  con.initOrders(shipment.tripId);
+                });
+              }
+            },
+          ),
+        ),
+        Visibility(
+          visible: mine,
+          child: Column(
+            children: <Widget>[
+              const Divider(
+                height: 30,
+                color: Colors.black12,
+                thickness: .9,
+              ),
+              Row(
                 children: <Widget>[
-                  Text(
-                    'Tip',
-                    textScaleFactor: 1,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            shipment.postMan!.image != null
+                                ? showLargeImage(
+                                    context, shipment.postMan!.image, null)
+                                : toastShow(
+                                    context, "No profile picture", "nor");
+                          },
+                          child: Container(
+                            height: getWidth(context, 9),
+                            width: getWidth(context, 9),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(.3),
+                              image: shipment.postMan!.image != null
+                                  ? DecorationImage(
+                                      image: cachedImage(
+                                          shipment.postMan!.image ??
+                                              noUserImage),
+                                      fit: BoxFit.fill,
+                                    )
+                                  : null,
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 2, color: Colors.white),
+                            ),
+                            child: shipment.postMan!.image == null
+                                ? const Icon(
+                                    Icons.person,
+                                    color: Colors.black,
+                                    size: 30,
+                                  )
+                                : const SizedBox(),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          shipment.postMan!.username ?? "",
+                          textScaleFactor: 1,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    '\$5.00',
-                    textScaleFactor: 1,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
+                  Visibility(
+                    visible: shipment.status == "complete",
+                    child: Container(
+                      child: Row(
+                        children: [1, 2, 3, 4, 5]
+                            .map((e) => const Icon(
+                                  Icons.star,
+                                  color: oranfeColor,
+                                  size: 19,
+                                ))
+                            .toList(),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
-            ),
-            Visibility(
-              visible: shipment.status == "complete",
-              child: whiteButton(
-                "Rate Transaction",
-                () => Navigator.pushNamed(
-                  context,
-                  "/RateTransaction",
-                  arguments: "12",
+              const Divider(
+                height: 30,
+                color: Colors.black12,
+                thickness: .9,
+              ),
+              const SizedBox(height: 5),
+              Visibility(
+                visible: shipment.tipAmount! > 0.0,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Tip',
+                      textScaleFactor: 1,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '\$5.00',
+                      textScaleFactor: 1,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            )
-          ],
+              Visibility(
+                visible: mine && shipment.status == "completed",
+                child: whiteButton(
+                  "Rate Transaction",
+                  () => Navigator.pushNamed(
+                    context,
+                    "/RateTransaction",
+                    arguments: "12",
+                  ),
+                ),
+              )
+            ],
+          ),
         )
       ],
     ),
   );
+}
+
+Color statusOrderColor(String status) {
+  switch (status) {
+    case 'pending':
+      return oranfeColor;
+    case 'active':
+      return Colors.blueAccent;
+    case 'completed':
+      return greenColor;
+    case 'cancelled':
+      return Colors.redAccent;
+    default:
+      return Colors.black;
+  }
 }
 
 Widget shipmentItemOne(Order shipment) {

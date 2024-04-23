@@ -14,6 +14,8 @@ import '../../views/pages/more/more.screen.dart';
 import '../../views/pages/more/new.feeds.dart';
 import '../../views/pages/more/order.requests.dart';
 import '../../views/pages/more/my.packages.dart';
+import '../../views/pages/more/shipment.management.dart';
+import '../../views/pages/more/trip.orders.dart';
 import '../../views/pages/onboading.dart';
 import '../../views/pages/package/package.details.dart';
 import '../../views/pages/package/payment.page.dart';
@@ -80,6 +82,12 @@ class RouteGenerator {
       case '/PackageRequests':
         return MaterialPageRoute(
             builder: (_) => PackageRequests(id: args as String));
+      case '/TripOrders':
+        return MaterialPageRoute(
+            builder: (_) => TripOrders(id: args as String));
+      case '/ShipmentDetails':
+        return MaterialPageRoute(
+            builder: (_) => ShipmentDetails(id: args as String));
       case '/RequestDetails':
         return MaterialPageRoute(
             builder: (_) => RequestDetails(request: args as Request));

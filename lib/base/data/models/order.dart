@@ -80,6 +80,9 @@ class Order {
       postMan: map['postMan'] != null
           ? User.fromMap(map['postMan'] as Map<String, dynamic>)
           : null,
+      payment: map['payment'] != null
+          ? Payment.fromMap(map['payment'] as Map<String, dynamic>)
+          : null,
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
       postmanId: map['postmanId'] != null ? map['postmanId'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:postman_app/base/data/controllers/order.controller.dart';
 import 'package:postman_app/base/views/components/universal.widgets.dart';
 
 import '../../../data/bloc/events/shipments.event.dart';
@@ -102,6 +103,6 @@ Widget myShipmentItems(context, List<Order> shipments) => ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final shipment = shipments[index];
-        return shipmentItem(context, shipment);
+        return shipmentItem(context, shipment, OrderController());
       },
     );

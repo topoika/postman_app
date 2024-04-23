@@ -292,7 +292,6 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                               CustomSwitch(
                                   value: trip!.available ?? true,
                                   onChanged: (val) {
-                                    // update event availability
                                     setState(() => trip!.available = val);
                                     con.updatePostmanStatus(trip!.id!, val);
                                   }),
@@ -300,12 +299,28 @@ class _TripDetailsPageState extends StateMVC<TripDetailsPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        buttonOne(
-                            "Edit Trip",
-                            true,
-                            () => Navigator.pushReplacementNamed(
-                                context, "/NewTripPage",
-                                arguments: trip)),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(
+                                child: postManButton(
+                                    "Edit Trip",
+                                    false,
+                                    () => Navigator.pushReplacementNamed(
+                                        context, "/NewTripPage",
+                                        arguments: trip))),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: postManButton(
+                                "Orders",
+                                true,
+                                () => Navigator.pushNamed(
+                                    context, "/TripOrders",
+                                    arguments: trip!.id),
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 10),
                         GestureDetector(
                           onTap: () => con.deleteTrip(trip!),
