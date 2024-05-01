@@ -42,10 +42,8 @@ class TripsRepo {
           .onError((error, stackTrace) =>
               throw Exception('Failed to load trips${error.toString()}'));
 
-      log("Trips ${querySnapshot.docs.length}");
       List<Trip> trips = querySnapshot.docs
           .map((doc) => Trip.fromMap(doc.data() as Map<String, dynamic>))
-          .where((trip) => trip.travellersId != activeUser.value.id)
           .toList();
 
       return trips;
