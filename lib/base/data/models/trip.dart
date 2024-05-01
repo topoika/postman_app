@@ -72,7 +72,7 @@ class Trip {
       'postageFee': postageFee,
       'travellersId': travellersId,
       'travelledAt': travelledAt,
-      'available': available,
+      'available': available ?? true,
       'status': status,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
